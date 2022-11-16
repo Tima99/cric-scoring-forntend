@@ -1,0 +1,151 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* Utility Classes */
+
+.full-display{
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg);
+}
+.flex{
+    display: flex;
+}
+.flex-col{
+    display: flex;
+    flex-direction: column;
+}
+.center{
+    align-items: center;
+    justify-content: center;
+}
+.between{
+    justify-content: space-between;
+}
+.pd-1{
+    padding-inline: 1rem;
+}
+.gap-1{
+    gap: 1rem;
+}
+
+.primary-color{
+    color: var(--primary);
+}
+
+.margin-left-auto{
+    margin-left: auto;
+}
+
+.parent-full-width{
+    width: 100%;
+}
+.abs{
+    position: absolute;
+}
+.relative{
+    position: relative;
+}
+.top-0{
+    top: 0;
+}
+.left-0{
+    left: 0;
+}
+.parent-size{
+    width: 100%;
+    height: 100%;
+}
+.disable{
+    background-color: grey !important;
+    border: 1px solid gray !important;
+    cursor: no-drop !important;
+}
+.disable-link{
+    color: grey !important;
+    pointer-events: none;
+}
+.active-link{
+    color: dodgerblue !important;
+    pointer-events: auto;
+}
+
+/* ReUseable Components */
+.loader{
+    animation-name: Rotate;
+    animation-duration: .6s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@keyframes Rotate{
+    0%{
+        rotate: 0deg;
+    }
+    100%{
+        rotate: 360deg;
+    }
+}
+
+
+/* Login, Register, EntryLayout */
+
+.entry-container{
+    width: 100%;
+    max-width: 600px;
+    min-height: 250px;
+    height: auto;
+    background: #fff;
+    border-radius: .2rem;
+    -webkit-border-radius: .2rem;
+    -moz-border-radius: .2rem;
+    -ms-border-radius: .2rem;
+    -o-border-radius: .2rem;
+    box-shadow: var(--shadow);
+    padding-block: 1rem;
+    position: relative;
+}
+.forgot-password{
+    font-size: .85rem;
+    font-family: cursive;
+}
+/* // show loader or not in button  */
+.submit{
+    visibility: hidden;
+}
+.not-submit + div{
+    visibility: hidden;
+}
+.submit + div{
+    visibility: visible;
+}
+
+/* resend-otp */
+.resend-otp a{
+    font-family: cursive;
+    font-size: .75rem;
+    text-decoration: none;
+    color: black;
+    user-select: none;
+}
+
+@media screen and (max-width: 650px) {
+    form{
+        align-items: center;
+    }
+    .entry-container{
+        margin: 1rem;
+    }
+    .resend-otp > span{
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+    }
+    .resend-otp a:first-child{
+        padding: 0;
+    }
+
+}
