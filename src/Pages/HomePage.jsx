@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, Outlet } from 'react-router-dom'
 import { NavLayout } from '../Layouts'
 
 export const HomePage = () => {
@@ -11,6 +11,9 @@ export const HomePage = () => {
   return (
     <div>
       <NavLayout />
+      <div className="outlet-container">
+        <Outlet />
+      </div>
     </div>
   )
 }

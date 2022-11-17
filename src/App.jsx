@@ -7,6 +7,7 @@ import { EntryLayout } from './Layouts'
 import { LoginFeature, RegisterFeature, VerifyEmailFeature } from './Features'
 // Pages
 import { HomePage } from './Pages'
+import { ProfileOutlet } from './Outlets/ProfileOutlet'
 
 function App() {
 
@@ -21,7 +22,9 @@ function App() {
       
       
       {/* Home Page if user authenticated */}
-      <Route path='/home' element={<HomePage />} />
+      <Route path='/home' element={<HomePage />}>
+        <Route index element={<ProfileOutlet />}/>
+      </Route> 
       
     </Routes>
   )
