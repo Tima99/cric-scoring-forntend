@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export const useSubmitForm = (api, to, options) => {
+export const useSubmitForm = (api=new Function(), to= new String(), options= new Object()) => {
   const [isFormSubmit, setIsFormSubmit] = useState(false)
   const navigate = useNavigate()
   // message start with $ symbol means submission success otherwise not sucess

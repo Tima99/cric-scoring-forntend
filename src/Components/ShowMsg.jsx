@@ -2,7 +2,7 @@ import React from 'react'
 import { MdErrorOutline } from "react-icons/md"
 import { FiThumbsUp } from "react-icons/fi"
 
-export const ShowMsg = ({ text, error }) => {
+export const ShowMsg = ({ text='Text', error=true, style = new Object() }) => {
     return (
         <div
             className='flex center'
@@ -10,7 +10,8 @@ export const ShowMsg = ({ text, error }) => {
                 color: error ? 'red' : 'green',
                 visibility: text ? 'visible' : 'hidden',
                 gap: '.4rem',
-                marginTop: '.5rem'
+                marginTop: '.5rem',
+                ...style
             }}
         >
             {error ? <MdErrorOutline /> : <FiThumbsUp />}

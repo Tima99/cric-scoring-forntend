@@ -1,2 +1,2 @@
 export { ProfileOutlet } from "./ProfileOutlet"
-export { CreateTeamOutlet } from "./CreateTeamOutlet"
+export { TeamOutlet } from "./TeamOutlet"

@@ -1,3 +1,10 @@
+export { TeamCard } from "./TeamCard"
+export { Stats } from "./Stats"
+export { Matches } from "./Matches"
+export { Leaderboard } from "./Leaderboard"
+export { Tab } from "./Tab"
+export { Backbutton } from "./Backbutton"
+
 export {LabelInput} from "./LabelInput"
 export {Loader} from "./Loader"
 export {ShowMsg} from "./ShowMsg"

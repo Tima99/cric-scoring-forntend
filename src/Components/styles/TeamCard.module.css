@@ -1,0 +1,62 @@
+.team-card-container {
+    width: 100%;
+    height: auto;
+    min-height: 5vmax;
+    background-color: #fff;
+    border-radius: var(--radius);
+    -webkit-border-radius: var(--radius);
+    -moz-border-radius: var(--radius);
+    -ms-border-radius: var(--radius);
+    -o-border-radius: var(--radius);
+    display: flex;
+    box-shadow: var(--shadow-light);
+    gap: 1rem;
+    padding: 0.45rem 1rem;
+}
+
+.team-logo {
+    overflow: hidden;
+    width: 12vmin;
+    height: 12vmin;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+.team-logo img {
+    width: 100%;
+}
+
+.team-card-container ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: .4rem;
+}
+
+.team-card-container ul li:first-child {
+    color: dodgerblue;
+}
+.team-card-container ul li:last-child {
+    font-size: 0.9rem;
+}
+.team-card-container ul li:last-child::before {
+    content: "c";
+    width: 20px;
+    padding: 3px 0;
+    display: inline-block;
+    text-align: center;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    background-color: rgba(51, 51, 51, 0.7);
+    color: #fff;
+    margin-right: 0.3rem;
+    font-size: .8rem;
+}
