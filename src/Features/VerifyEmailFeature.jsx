@@ -1,16 +1,17 @@
 import React, { useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
+import { VerifyOtp } from '../api/request'
 
 import { LabelInput, Button, ShowMsg } from '../Components'
 import { useSubmitForm, useStopWatch } from '../Hooks'
 import { ResendOtp } from '../Services'
 
 export const VerifyEmailFeature = () => {
-  const {email}                         = useParams()
-  const [otp, setOtp]                   = useState('')
-  const [isFormSubmit, SubmitForm, msg] = useSubmitForm()
-  const formRef                         = useRef()
-  const [timer, restart]                = useStopWatch()
+  const {email}                                 = useParams()
+  const [otp, setOtp]                           = useState('')
+  const [isFormSubmit, SubmitForm, msg, setMsg] = useSubmitForm(VerifyOtp, '/home', {replace : true})
+  const formRef                                 = useRef()
+  const [timer, restart]                        = useStopWatch()
 
   return (
     <div>
@@ -18,7 +19,7 @@ export const VerifyEmailFeature = () => {
         <h4> Enter OTP sent on &nbsp;<b><u>{ email }</u></b>&nbsp; email </h4>
       </div>
 
-      <ShowMsg text={msg} error={msg[0] === '$' ? false : true }/>
+      <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>
 
       <form className='flex-col center' ref={formRef}>
         <LabelInput 
@@ -34,11 +35,11 @@ export const VerifyEmailFeature = () => {
 
         <div className="resend-otp flex parent-full-width">
           <span className='margin-left-auto'>
-            <Link to='/' state={email} className='pd-1 active-link'>
+            <Link to='/' state={email} replace={true} className='pd-1 active-link'>
               Change Email
             </Link>
-            <Link onClick={e => ResendOtp(e, restart) } className={`${ timer > 0 ? 'disable-link' : 'active-link' }` } >
-              Resend Otp <span>{timer>0 ? `${timer}s` : ''}</span>
+            <Link onClick={e => ResendOtp(e, restart, email, setMsg) } className={`${ timer > 0 ? 'disable-link' : 'active-link' }` } >
+              <span>Resend Otp</span> <span>{timer>0 ? `${timer}s` : ''}</span>
             </Link>
           </span>
         </div>
@@ -48,7 +49,7 @@ export const VerifyEmailFeature = () => {
             text='Verify' 
             alignRight={true} 
             isFormSubmit={isFormSubmit} 
-            onClick={(e)=> SubmitForm(e, otp, formRef.current)}
+            onClick={(e)=> SubmitForm(e, {email, otp}, formRef.current)}
           />
         </div>
       </form>

@@ -1,11 +1,12 @@
 import React, { useState, useRef } from 'react'
+import { CreateTeamRequest } from '../api/request'
 import logo from "../assets/user-circle.jpg"
 import { LabelInput, Button, ShowMsg } from '../Components'
 import { useSubmitForm } from '../Hooks'
 
 
 export const CreateTeam = () => {
-    const [isFormSubmit, SubmitForm, message] = useSubmitForm()
+    const [isFormSubmit, SubmitForm, message] = useSubmitForm(CreateTeamRequest, '/home/teams/:_id', {replace: true})
     const formRef = useRef()
     const [inputData, setInputData] = useState({})
     
@@ -14,7 +15,7 @@ export const CreateTeam = () => {
             <ShowMsg text={message} error={message[0]==='$'? false: true}/>
 
             <div className={"add-logo"}>
-                <input type="file" name='profile' id='profile-logo' accept='image/*' required />
+                <input type="file" name='profile' id='profile-logo' accept='image/*' />
                 <label htmlFor="profile-logo">
                     <img src={logo} alt="" />
                 </label>

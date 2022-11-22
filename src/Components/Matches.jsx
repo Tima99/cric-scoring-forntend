@@ -1,12 +1,7 @@
 import React, { useEffect } from 'react'
 
-export function Matches() {
-    
-    useEffect(()=>{
-        fetch("https://api.datamuse.com/words?ml=ringing+in+the+ears")
-        .then( res => console.log(res) )
-        .catch(err => console.log(err) )
-    }, [])
+export function Matches({matches, id}) {
+    console.log(matches, id);
     
   return (
     <div>Matches</div>

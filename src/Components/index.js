@@ -4,6 +4,7 @@ export { Matches } from "./Matches"
 export { Leaderboard } from "./Leaderboard"
 export { Tab } from "./Tab"
 export { Backbutton } from "./Backbutton"
+export { TopNav } from "./TopNav"
 
 export {LabelInput} from "./LabelInput"
 export {Loader} from "./Loader"

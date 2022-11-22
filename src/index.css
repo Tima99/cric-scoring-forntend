@@ -7,18 +7,19 @@
     --bg: #eeeeee;
     --shadow: 0 0 14px 1px #666;
     --shadow-light: 0 0 8px 1px #c9c9c6;
-    --shadow-light2: 0 0 8px 1px #b3b3b0;
+    --shadow-light2: 0 0 8px 1px #b3b3b0d0;
     --radius: 0.4rem;
     --light: #999;
     --primary: rgb(233, 127, 215);
     --primary-dark: rgb(209, 83, 188);
-    --secondary: yellow;
+    --secondary: rgb(240, 240, 6);
     --loader-thickness: 0.5rem;
     --nav-height: 50px;
     --tab-size: 90px;
 }
 * {
     scrollbar-width: 0;
+    user-select: none;
 }
 *::-webkit-scrollbar {
     display: none;

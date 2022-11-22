@@ -1,15 +1,17 @@
 import React, { useRef, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 
 import { LabelInput, Button, ShowMsg } from '../Components'
 import { useSubmitForm } from '../Hooks/useSubmitForm'
 
+import { ChangeEmail, Register } from '../api/request'
+
 export const RegisterFeature = () => {
-  const {state: changeEmail}                  = useLocation()  
+  const {state: changeEmail}            = useLocation()  
   // state has string i.e, email . this email is pass from verifyemail when user wants to change email
 
-  const [inputData, setInputData]       = useState({ email : changeEmail })
-  const [isFormSubmit, SubmitForm, msg] = useSubmitForm(()=>{return "Verify your Email."}, `/verify/${inputData.email}`)
+  const [inputData, setInputData]       = useState({ email : changeEmail , changeEmail })
+  const [isFormSubmit, SubmitForm, msg] = useSubmitForm(changeEmail ? ChangeEmail : Register, `/${inputData.email}/verify`, changeEmail ? {} : {replace: true} )  
   const formRef                         = useRef()
   
   return (
@@ -19,7 +21,7 @@ export const RegisterFeature = () => {
         <Link to='/login'><h5>Login</h5></Link>
       </title>
       
-      <ShowMsg text={msg} error={msg[0] === '$' ? false : true }/>
+      <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>
 
       <form ref={formRef}>
         <LabelInput type='email' name='email' id='type-email' value={inputData?.email || ''} placeholder='xxxxxx@gmail.com' label='Email' required onChange={setInputData} />

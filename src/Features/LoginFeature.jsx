@@ -1,13 +1,14 @@
 import React , { useRef , useState} from 'react'
 import { Link } from 'react-router-dom'
+import { Login } from '../api/request'
 
 import { LabelInput, Button, ShowMsg } from '../Components'
 import { useSubmitForm } from '../Hooks/useSubmitForm'
 
 export const LoginFeature = () => {
   const formRef = useRef()
-  const [isFormSubmit, SubmitForm, msg] = useSubmitForm()
   const [userInputData, setUserInputData] = useState({email: '', password: ''})
+  const [isFormSubmit, SubmitForm, msg] = useSubmitForm(Login, [`/${userInputData.email}/verify`, '/home'], {replace: true} )
 
   return (
     <>
@@ -16,7 +17,7 @@ export const LoginFeature = () => {
         <Link to='/'><h5>Create Account</h5></Link>
       </title>
 
-      <ShowMsg text={msg} error={msg[0] === '$' ? false : true }/>
+      <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>
       
       <form ref={formRef}>
         <LabelInput type='email' name='email' id='type-email' placeholder='xxxxxx@gmail.com' label='Email' onChange={setUserInputData} required />

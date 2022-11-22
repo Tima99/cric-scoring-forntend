@@ -9,10 +9,11 @@ import logo from "../assets/user-circle.jpg"
 import styles from "./styles/ProfileOutlet.module.css"
 import { useSubmitForm } from "../Hooks"
 import { LabelInput, ShowMsg, Button } from "../Components"
+import { CreatePlayer } from '../api/request'
 
 export const ProfileOutlet = () => {
-  const [isFormSubmit, SubmitForm, message] = useSubmitForm()
-  const [inputData, setInputData]           = useState({})
+  const [isFormSubmit, SubmitForm, message] = useSubmitForm(CreatePlayer)
+  const [inputData, setInputData]           = useState({role:"all rounder", gender: "not to say"})
   const formRef                             = useRef()
   const { setActiveTab }                    = useOutletContext()
   
@@ -24,7 +25,7 @@ export const ProfileOutlet = () => {
     <form className={styles['profile-container']} ref={formRef}>
       <ShowMsg text={message} error={message[0]==='$' ? false : true } style={{gridColumn: '1/3'}}/>
       <div className={"add-logo"}>
-        <input type="file" name='profile' id='profile-logo' accept='image/*' required/>
+        <input type="file" name='profile' id='profile-logo' accept='image/*' />
         <label htmlFor="profile-logo">
           <img src={logo} alt="" />
         </label>

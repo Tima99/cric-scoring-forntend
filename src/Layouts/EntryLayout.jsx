@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
+import { UserAuthentic } from '../api/request'
 import { Loader } from "../Components"
 
 export const EntryLayout = () => {
@@ -12,10 +13,10 @@ export const EntryLayout = () => {
   const [userAuthentic, setUserAuthentic] = useState(null)
 
   useLayoutEffect(()=>{
-    // lets assume user is authentic
-    setTimeout(setUserAuthentic, 3000, {})
+    UserAuthentic()
     // authentic user comes navigate it to their home 
-    // navigate
+    .then( data => setUserAuthentic(data) )
+    .catch(err => setUserAuthentic(false) )
   }, [])
   
   return (

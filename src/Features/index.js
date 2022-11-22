@@ -3,3 +3,4 @@ export { RegisterFeature } from "./RegisterFeature";
 export { VerifyEmailFeature } from './VerifyEmailFeature'
 
 export { CreateTeam } from "./CreateTeam"
+export { AddNewPlayerFeature} from "./AddNewPlayerFeature"

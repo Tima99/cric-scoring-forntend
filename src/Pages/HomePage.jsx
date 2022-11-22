@@ -1,13 +1,13 @@
 import React, {useState} from 'react'
-import { useLocation, useNavigate, Outlet } from 'react-router-dom'
+import { useLocation, Outlet } from 'react-router-dom'
+import { useStore } from '../Hooks/useStore'
 import { NavLayout } from '../Layouts'
 
-export const HomePage = ({navigate}) => {
-  const {state} = useLocation()
-  // const navigate = useNavigate()
-  console.log(state)
-
+export const HomePage = () => {
+  const {state}                   = useLocation()
+  const user                      = useStore(state)
   const [activeTab, setActiveTab] = useState(1)
+  console.log(user);
   
   return (
     <div className='full-display relative'>

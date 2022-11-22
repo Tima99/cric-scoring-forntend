@@ -1,7 +1,8 @@
+import { AxiosError } from 'axios'
 import React, {useEffect, useState} from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export const useSubmitForm = (api=new Function(), to= new String(), options= new Object()) => {
+export const useSubmitForm = (api=new Function(), to= new String() || new Array() || new Number(), options= new Object()) => {
   const [isFormSubmit, setIsFormSubmit] = useState(false)
   const navigate = useNavigate()
   // message start with $ symbol means submission success otherwise not sucess
@@ -19,30 +20,51 @@ export const useSubmitForm = (api=new Function(), to= new String(), options= new
     setIsFormSubmit(true)
     if(isFormSubmit) return setMessage("Loading...")
     
-    console.log(data);
+    // console.log(data);
     
     try{
       const isEntriesValid = form.checkValidity()
       if(!isEntriesValid) throw Error("Please Provide Valid data.")
 
       // send data to api
-      const res = api && await api()
-      
+      const res = api && await api(data)
+      // console.log(res)
+
       // if sucess append sucess msg
-      setMessage(`$${res || 'Done'}`)
+      setMessage(`$${'Done'}`)
 
       // after sucess you have to navigate anywhere
-      to && navigate(to, {...options, replace: true} )
+      if(Array.isArray(to)){
+        const to1 = to[0]
+        const to2 = to[1]
+        const data = res.data
+        if(data instanceof String && data.toLowerCase().includes("verify"))
+          to1 && navigate(to1, {...options, replace: true} )
+        else
+          to2 && navigate(to2, {...options, state: data, replace: true} )
+
+        return
+      }
+
+      // checking to has : 
+      to = (isNaN(to) && to.includes(':') && (to.split(":")[0] + res[to.split(":")[1]])) || to 
+      // console.log(res, to)
+      to && navigate(to, {...options, state : res.data} )
     }
     catch(error){
+      // console.log(error)
       // if any error sent it back
       if(error instanceof Error)
         setMessage(error.message) 
+      if(error instanceof AxiosError){
+        // /console.log(error)
+        setMessage(error?.response?.data)
+      }
     }
     finally{
       setIsFormSubmit(false)
     }
   }
   
-  return [isFormSubmit, submitForm, message]
+  return [isFormSubmit, submitForm, message, setMessage]
 }

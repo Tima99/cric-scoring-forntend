@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { FaRegShareSquare } from "react-icons/fa"
 import { FiFilter } from "react-icons/fi"
@@ -6,6 +6,7 @@ import { FiFilter } from "react-icons/fi"
 import logo from "../assets/user-circle.jpg"
 import './TeamPage.css';
 import { TeamCard, Backbutton } from '../Components'
+import req from '../api/request'
 
 const dummyData = [
     {
@@ -74,10 +75,31 @@ const dummyData = [
 export const TeamPage = () => {
     const { id } = useParams()
     let currentActiveTab = useRef()
+    let [team, setTeam] = useState({})
 
-    const teamMembers = dummyData.map((member, i) => {
-        return <TeamCard obj={member} key={i} />
-    })
+    useLayoutEffect(() => {
+        console.log(id);
+        (
+            async () => {
+                try {
+                    const res = await req.get(`/getTeam/${id}`)
+                    console.log(res);
+                    setTeam(res.data)
+                } catch (error) {
+                    console.log(error);
+                    setTeam(null)
+                }
+            }
+        )()
+    }, [])
+
+    const teamMembers = useMemo(() => {
+        console.log("Memo runs");
+        console.log(team.players);
+        return team.players && team.players.map((member, i) => {
+            return <TeamCard obj={member} key={i} />
+        })
+    }, [team])
 
     const ScrollMySelect = (e) => {
         e.preventDefault()
@@ -101,24 +123,25 @@ export const TeamPage = () => {
         const scrollLeft = e.target.scrollLeft
         const containerSectionOrders = ["Members", "Stats", "Matches", "Leaderboard"]
         if (scrollLeft % sectionWidth === 0) {
-            const sectionIndex               = scrollLeft / sectionWidth
-            const sectionName                = containerSectionOrders[sectionIndex]
-            const { [sectionName] : module } = await import('../Components')
+            const sectionIndex = scrollLeft / sectionWidth
+            const sectionName = containerSectionOrders[sectionIndex]
+            const { [sectionName]: module } = await import('../Components')
 
             // applying active tab border
-            const activeTab = document.querySelector(`.nav-layout .wraper li:nth-child(${sectionIndex+1})`)
+            const activeTab = document.querySelector(`.nav-layout .wraper li:nth-child(${sectionIndex + 1})`)
             currentActiveTab.current.classList.remove('active')
             currentActiveTab.current = activeTab
             currentActiveTab.current.classList.add("active")
+            currentActiveTab.current.scrollIntoView()
 
             // see component already added or not 
             // this avoid reenders
-            let currentComponents = {...Components}
-            for( let [key, value] of Object.entries(currentComponents) )
-                if(key === sectionName && value !== null) return
+            let currentComponents = { ...Components }
+            for (let [key, value] of Object.entries(currentComponents))
+                if (key === sectionName && value !== null) return
 
             // set dynamic loaded components
-            module  && setComponents(p => { return { ...p, [containerSectionOrders[sectionIndex]]: module } })
+            module && setComponents(p => { return { ...p, [containerSectionOrders[sectionIndex]]: module } })
         }
     }
 
@@ -186,7 +209,7 @@ export const TeamPage = () => {
                 </section>
 
                 <section className='container stats' id='stats'>
-                    {Components.Stats && <Components.Stats id={id}/>}
+                    {Components.Stats && <Components.Stats matches={team && team.matches} id={id} />}
                 </section>
 
                 <section className='container' id='matches'>
@@ -198,7 +221,7 @@ export const TeamPage = () => {
                 </section>
 
                 <section className='container' id='leaderboard'>
-                    { Components.Leaderboard
+                    {Components.Leaderboard
                         ? <Components.Leaderboard />
                         : "Loading"
 

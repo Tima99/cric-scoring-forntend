@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useLayoutEffect, useState } from 'react'
 import { Loader } from './Loader';
 import { Tab } from './Tab'
 
-export const Stats = ({ id }) => {
-    console.log(id);
+export const Stats = ({ id , matches}) => {
+    console.log(matches);
     const [stats, setStats] = useState(null)
 
-    useEffect(() => {
-        fetch("https://api.datamuse.com/words?ml=ringing+in+the+ears")
-            .then(res => setTimeout(setStats, 1000, res) )
-            .catch(err => console.log(err))
+    useLayoutEffect(() => {
+        setStats(matches)
     }, [])
 
     return (
