@@ -10,7 +10,7 @@ export const AddPlayerPage = () => {
         <div className='tap-hightlight-none'>
             <TopNav title='Add Player' menu={false} />
             <div className="pd-1 pd-block-1 flex-col gap-1 relative">
-                <Link to={`/addPlayer/${teamId}/search`}>
+                <Link to={`/addPlayer/${teamId}/search`} state={{placeholder: "Search for player", searchFor: "players", addBtn: true}}>
                     <ul className='media-object'>
                         <li><img src={defaultLogo} alt="" /></li>
                         <li>Search player</li>

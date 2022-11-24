@@ -86,6 +86,7 @@ export const NavLayout = ({ activeTab }) => {
         </Link>
         
         <Link className={ activeTab===3 ? styles['active'] : '' }
+          to={'/home/teams/matches'}
           replace={true}
         >
           <TbCricket size={24} />

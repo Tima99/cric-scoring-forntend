@@ -62,3 +62,20 @@
     margin-right: 0.3rem;
     font-size: .6rem;
 }
+
+/* Select Team Card Styling */
+/* *********************** */
+input[name='select-team'], 
+input[name="select-multiple"]{
+    display: none;
+}
+input[name='select-team']:checked + label > .selected-icon-tick,
+input[name="select-multiple"]:checked + label > .selected-icon-tick
+{
+    display: block;
+}
+input[name='select-team']:not(:checked) + label > .selected-icon-tick,
+input[name="select-multiple"]:not(:checked) + label > .selected-icon-tick
+{
+    display: none;
+}

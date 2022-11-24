@@ -12,7 +12,7 @@ export const HomePage = () => {
   return (
     <div className='full-display relative'>
       <NavLayout activeTab={activeTab} />
-      <div className="outlet-container">
+      <div className="outlet-container relative">
         <Outlet context={{setActiveTab}} />
       </div>
     </div>

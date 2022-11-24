@@ -1,0 +1,27 @@
+.scoreboard-container{
+    flex: .6;
+    background-color: rgba(0, 0, 0, .5);
+}
+.score-keyboard-container{
+    flex: .4;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.keyboard-wraper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.3fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    list-style: none;
+    height: 100%;
+    gap: .1rem;
+}
+.keyboard-wraper > li{
+    background-color: #fff;   
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+}

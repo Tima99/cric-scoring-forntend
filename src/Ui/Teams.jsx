@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react'
-import { Link, useLocation, useParams } from 'react-router-dom'
+import { Link, useLocation, useOutletContext, useParams } from 'react-router-dom'
 
-import { TeamCard } from '../Components'
+import { SelectTeamCard, TeamCard } from '../Components'
 
 import logo from "../assets/user-circle.jpg"
 import req from '../api/request'
@@ -70,13 +70,16 @@ const dummyData = [
   }
 ]
 
-export const Teams = () => {
+export const Teams = (props) => {
   const { id } = useParams()
   // id is my for myteams and opponents for opponentsTeam
-  const { state } = useLocation()
   const [teams, setTeams] = useState([])
-  // console.log(id, state);
 
+  const { state } = useLocation()
+  const { title, isSelectionTeam} = state || { title: null, isSelectionTeam: null}
+  const context = useOutletContext()
+  const {setMyTeam} = context || {setMyTeam: null}
+  
   useLayoutEffect(() => {
     (async () => {
       try {
@@ -103,13 +106,21 @@ export const Teams = () => {
       </Link>
     )
   })
-
+  const selectTeamCards = teams.map((team, i) => {
+    return(
+        <SelectTeamCard obj={team} key={team._id} setSelected={setMyTeam}/>
+    )
+  })
 
   return (
-    <div className='container'>
-      <h2 style={{ textTransform: 'capitalize' }}>Teams: </h2>
+    <div className='container abs top-0 parent-full-width pd-1 bg-body pd-block-06 left-0'>
+      <h2 style={{ textTransform: 'capitalize' }}>{title || props.title || "Teams"}</h2>
       <div></div>
-      {teamCards}
+      {
+        isSelectionTeam
+        ? selectTeamCards
+        : teamCards
+      }
     </div>
   )
 }

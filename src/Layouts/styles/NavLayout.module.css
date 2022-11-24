@@ -274,6 +274,7 @@ ul.wraper a.teams label span:nth-child(2) {
         height: 100%;
         position: absolute;
         display: none;
+        z-index: 9;
     }
     input[id="toggle-menu"]:checked ~ .hide-menu-full{
         display: block;
