@@ -13,12 +13,17 @@ export const StartMatchPage = () => {
         selectedCaptain: null,
         wicketkeeper: null,
     });
+
+    const [details, setDetails] = useState();
+    // match form data in details like overs, toss, venue...
+
+
     // contain opponent = {} of opponent team
 
     // onclick select squad button navigation used
     const navigate = useNavigate();
 
-    const confirmRef = createRef()
+    const confirmRef = createRef();
 
     const [msg, setMsg] = useState("");
 
@@ -52,8 +57,9 @@ export const StartMatchPage = () => {
     function StartMatch(e) {
         e.preventDefault();
         try {
-            navigate('/startMatch/toss', {replace: true})
-            if(!myTeam._id || !opponent._id) throw new Error("Please Select both team for match.")
+            navigate("/startMatch/toss", { replace: true });
+            if (!myTeam._id || !opponent._id)
+                throw new Error("Please Select both team for match.");
             if (myTeam._id === opponent._id)
                 throw new Error("Both Teams cannot be same.");
             if (!myteam11 || !opponent11)
@@ -75,9 +81,12 @@ export const StartMatchPage = () => {
 
     return (
         <div className="flex-col full-display">
-            <TopNav title="Start a Match" backConfirm={true} confirmRef ={confirmRef} >
-            </TopNav>
-                {/* <Confirm text="You match will be cancel. Are you sure?" ref={confirmRef} /> */}
+            <TopNav
+                title="Start a Match"
+                backConfirm={false}
+                // confirmRef={confirmRef}
+            ></TopNav>
+            {/* <Confirm text="You match will be cancel. Are you sure?" ref={confirmRef} /> */}
 
             <main className="pd-block-06 relative tap-hightlight-none flex-1">
                 <ShowMsg
@@ -154,30 +163,86 @@ export const StartMatchPage = () => {
                                 id="type-overs"
                                 className="bottom-bar-input"
                                 required
+                                onChange={(e) =>
+                                    setDetails((p) => ({
+                                        ...p,
+                                        overs: e.target.value,
+                                    }))
+                                }
                             />
                         </li>
 
                         <li className="flex-col gap-06 pd-block-06">
                             <div>Ball Type</div>
-                            
+
                             <div className="flex around">
-                                <span><input
-                                    type="radio"
-                                    name="ball-type"
-                                    id="ball-type-tennis"
-                                    required
-                                />&nbsp;
-                                <label htmlFor="ball-type-tennis">Tennis</label></span>
-                                <span><input
-                                    type="radio"
-                                    name="ball-type"
-                                    id="ball-type-leather"
-                                    required
-                                />&nbsp;
-                                <label htmlFor="ball-type-leather">
-                                    Leather
-                                </label></span>
+                                <span>
+                                    <input
+                                        type="radio"
+                                        name="ball-type"
+                                        id="ball-type-tennis"
+                                        data="Tennis"
+                                        required
+                                        onChange={(e) =>
+                                            setDetails((p) => ({
+                                                ...p,
+                                                ballType:
+                                                    e.target.getAttribute(
+                                                        "data"
+                                                    ),
+                                            }))
+                                        }
+                                    />
+                                    &nbsp;
+                                    <label htmlFor="ball-type-tennis">
+                                        Tennis
+                                    </label>
+                                </span>
+                                <span>
+                                    <input
+                                        type="radio"
+                                        name="ball-type"
+                                        id="ball-type-leather"
+                                        data="Leather"
+                                        required
+                                        onChange={(e) =>
+                                            setDetails((p) => ({
+                                                ...p,
+                                                ballType:
+                                                    e.target.getAttribute(
+                                                        "data"
+                                                    ),
+                                            }))
+                                        }
+                                    />
+                                    &nbsp;
+                                    <label htmlFor="ball-type-leather">
+                                        Leather
+                                    </label>
+                                </span>
                             </div>
+                        </li>
+
+                        <li className="flex-col c-v-center gap-06">
+                            <label
+                                htmlFor="enter-venue"
+                                className="parent-full-width"
+                            >
+                                Ground Name
+                            </label>
+                            <input
+                                className="bottom-bar-input"
+                                type="text"
+                                name="venue"
+                                id="enter-venue"
+                                onChange={(e) =>
+                                    setDetails(
+                                        (p) =>
+                                            1 && { ...p, venue: e.target.value }
+                                    )
+                                }
+                                required
+                            />
                         </li>
                     </ul>
                     <div className="flex around parent-full-width">
@@ -197,6 +262,7 @@ export const StartMatchPage = () => {
                         setOpponent,
                         myTeam,
                         opponent,
+                        details,
                         isSelection: true,
                     }}
                 />

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext , Outlet} from "react-router-dom";
 import logo from "../assets/user-circle.jpg";
 import { MdSportsCricket, MdSports } from "react-icons/md";
 import { RiTeamFill } from "react-icons/ri";
@@ -9,21 +9,22 @@ export const Toss = () => {
         myTeam,
         opponent: opponentTeam,
     } = useOutletContext();
+    const [toss, setToss] = useState({won: null, select: null})
 
     const navigate = useNavigate()
 
     function Start(e){
-        navigate('/scoring', {replace: true})
+        navigate('/startMatch/selectOpen', {state: toss, replace: true})
     }
     
-    const [toss, setToss] = useState({won: null, select: null})
+    
     const submitAll = useMemo(()=>{
         if(!toss.select || !toss.won) return null
 
         return (
             <button className="btn-squid btn margin-left-auto"
             onClick={Start}
-            >Start Now</button>
+            >Next</button>
         )
     }, [toss])
 
@@ -103,6 +104,8 @@ export const Toss = () => {
             <div className="flex pd-1">
                 {submitAll}
             </div>
+
+            <Outlet context={{myTeam, opponentTeam, toss}} />
         </div>
     );
 };

@@ -4,13 +4,16 @@ import { useNavigate } from 'react-router-dom'
 import { MdArrowBack } from "react-icons/md"
 import { Confirm } from './Confirm'
 
-export const Backbutton = ({size : sizeIcon, replace, backTimes=1, backConfirm=false, confirmRef}) => {
+export const Backbutton = ({size : sizeIcon, replace, backTimes=1, backConfirm=false, confirmRef, setStateEmpty} ) => {
     const navigate = useNavigate()
-
+    
     function back(e){
-        (!backConfirm && navigate(-backTimes, {replace}))
-        console.log(confirmRef);
-        confirmRef.current && (confirmRef.current.style.display = "block")
+        
+        ( !setStateEmpty && !backConfirm && navigate(-backTimes, {replace}))
+        if(setStateEmpty) return (typeof setStateEmpty === 'function') && setStateEmpty('')
+
+        // // console.log(confirmRef);
+        // confirmRef?.current && (confirmRef.current.style.display = "block")
     }
     
     return (

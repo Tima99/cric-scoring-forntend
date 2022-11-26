@@ -3,17 +3,17 @@ import { TeamCard } from "./TeamCard";
 import styles from "./styles/TeamCard.module.css";
 import { MdDone } from "react-icons/md";
 
-export const SelectTeamCard = ({ obj, setSelected, assign }) => {
+export const SelectTeamCard = ({ obj, setSelected, assign, howtoAssign }) => {
     return (
         <div>
             <input
                 type="radio"
                 name="select-team"
-                id={obj._id}
+                id={obj._id+assign}
                 onChange={() => {
                     assign
                         ? setSelected((prev) => {
-                              return { ...prev, [assign]: obj._id };
+                              return { ...prev, [assign]: Array.isArray(howtoAssign) ? {_id: obj._id, name: obj.name} : obj._id };
                           })
                         : setSelected((prev) => {
                               return { ...prev, ...obj };
@@ -21,7 +21,7 @@ export const SelectTeamCard = ({ obj, setSelected, assign }) => {
                 }}
                 defaultChecked={obj[assign]}
             />
-            <label htmlFor={obj._id} className="relative flex r-v-center">
+            <label htmlFor={obj._id+assign} className="relative flex r-v-center">
                 <TeamCard obj={obj} disableLink={true} />
                 <div
                     className={`${styles["selected-icon-tick"]} abs right-0 translate-right-1 dis-none`}

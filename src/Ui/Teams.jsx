@@ -113,7 +113,7 @@ export const Teams = (props) => {
   })
 
   return (
-    <div className='container abs top-0 parent-full-width pd-1 bg-body pd-block-06 left-0'>
+    <div className='container abs top-0 parent-full-width pd-1 bg-body pd-block-06 left-0 parent-size'>
       <h2 style={{ textTransform: 'capitalize' }}>{title || props.title || "Teams"}</h2>
       <div></div>
       {

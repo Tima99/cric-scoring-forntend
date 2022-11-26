@@ -30,8 +30,8 @@ import {
     TeamMembersOutlet,
 } from "./Outlets";
 // Ui
-import { Teams, Toss } from "./Ui";
-import { NavHorizontal } from "./Components";
+import { SelectFielders, SelectStriker, Teams, Toss } from "./Ui";
+import { NavHorizontal, Radios } from "./Components";
 
 function App() {
     return (
@@ -98,15 +98,28 @@ function App() {
                     />
                 </Route>
                 <Route path="/startMatch/toss" element={<Toss />}></Route>
+
+                <Route
+                    path="/startMatch/selectOpen"
+                    element={<SelectStriker />}
+                >
+                    <Route
+                        path="/startMatch/selectOpen/striker"
+                        element={<TeamMembersOutlet />}
+                    />
+                </Route>
             </Route>
 
             {/* Scoring Page */}
-            <Route path="/scoring">
-                <Route 
-                    index element={<ScoringPage />}
-                />
+            <Route path="/scoring" element={<ScoringPage />}>
+                {/* <Route index  /> */}
+                <Route path="/scoring/selectFielders" element={<SelectFielders />} >
+                    <Route
+                            path="/scoring/selectFielders/fielders"
+                            element={<TeamMembersOutlet />}
+                    />
+                </Route>
             </Route>
-            
         </Routes>
     );
 }
