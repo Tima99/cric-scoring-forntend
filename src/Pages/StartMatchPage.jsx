@@ -13,10 +13,10 @@ export const StartMatchPage = () => {
         selectedCaptain: null,
         wicketkeeper: null,
     });
-
+    
     const [details, setDetails] = useState();
+    const [scorer, setScorer] = useState()
     // match form data in details like overs, toss, venue...
-
 
     // contain opponent = {} of opponent team
 
@@ -56,14 +56,17 @@ export const StartMatchPage = () => {
 
     function StartMatch(e) {
         e.preventDefault();
+
         try {
-            navigate("/startMatch/toss", { replace: true });
             if (!myTeam._id || !opponent._id)
                 throw new Error("Please Select both team for match.");
             if (myTeam._id === opponent._id)
                 throw new Error("Both Teams cannot be same.");
             if (!myteam11 || !opponent11)
                 throw new Error("Please Select Squad for both teams.");
+            if (myteam11 < 2 || opponent11 < 2)
+                throw new Error("Players must be greater or equal to 2");
+
             if (!document.querySelector(".match-details").checkValidity())
                 throw new Error("Fill all fields are required.");
 
@@ -73,6 +76,7 @@ export const StartMatchPage = () => {
                 );
                 if (!res) throw new Error("");
             }
+            navigate("/startMatch/toss", { replace: true });
         } catch (error) {
             // console.log(error);
             setMsg(error.message);
@@ -158,7 +162,7 @@ export const StartMatchPage = () => {
                                 Overs
                             </label>
                             <input
-                                type="number"
+                                type="tel"
                                 name="overs"
                                 id="type-overs"
                                 className="bottom-bar-input"
@@ -167,8 +171,37 @@ export const StartMatchPage = () => {
                                     setDetails((p) => ({
                                         ...p,
                                         overs: e.target.value,
+                                        oversPerBowler:
+                                            e.target.value < 10
+                                                ? Math.ceil(
+                                                      e.target.value /
+                                                          (e.target.value / 2)
+                                                  )
+                                                : Math.ceil(e.target.value / 5),
                                     }))
                                 }
+                            />
+                        </li>
+                        <li className="flex-col c-v-center gap-06">
+                            <label
+                                htmlFor="type-max-overs"
+                                className="parent-full-width"
+                            >
+                                Overs Per Bowler
+                            </label>
+                            <input
+                                type="number"
+                                name="oversPerBowler"
+                                id="type-max-overs"
+                                className="bottom-bar-input"
+                                required
+                                onChange={(e) =>
+                                    setDetails((p) => ({
+                                        ...p,
+                                        oversPerBowler: e.target.value,
+                                    }))
+                                }
+                                value={details?.oversPerBowler || ""}
                             />
                         </li>
 
@@ -244,6 +277,21 @@ export const StartMatchPage = () => {
                                 required
                             />
                         </li>
+
+                        <li className="flex between parent-full-width">
+                            <Link
+                                className="select-team team2"
+                                to="/startMatch/searchOpponent"
+                                state={{
+                                    placeholder: "Search player",
+                                    searchFor: "players",
+                                    isSelection: true,
+                                }}
+                            >
+                                <span>{scorer?.name ? "Change" : "Add"} Scorer</span>
+                            </Link>
+                            <span className="capital">{scorer?.name || ''}</span>
+                        </li>
                     </ul>
                     <div className="flex around parent-full-width">
                         <button className="btn-squid btn grey">
@@ -262,6 +310,8 @@ export const StartMatchPage = () => {
                         setOpponent,
                         myTeam,
                         opponent,
+                        setScorer,
+                        scorer,
                         details,
                         isSelection: true,
                     }}

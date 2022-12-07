@@ -1,65 +1,129 @@
-import React, { useLayoutEffect, useState } from "react";
-import { useLocation, useNavigate, useParams, Outlet } from "react-router-dom";
+import React, {
+    useLayoutEffect,
+    useState,
+    useEffect,
+    useRef,
+    useMemo,
+    useCallback,
+} from "react";
+import {
+    useLocation,
+    useNavigate,
+    useParams,
+    Outlet,
+    Link,
+    NavLink,
+} from "react-router-dom";
 import req from "../api/request";
 import { Backbutton, Radios } from "../Components";
 import styles from "./ScoringPage.module.css";
+import socketIOClient from "socket.io-client";
+import { DetailMatch } from "../Services";
+
+const ENDPOINT = "http://localhost:7000";
 
 export const ScoringPage = () => {
     const { state } = useLocation();
-    const navigate  = useNavigate()
     // console.log(state);
-    const matchId = useLocation().search?.split("=")[1];
-
+    const matchId = useLocation().search?.split("=")[1] || state?._id;
+    const navigate = useNavigate();
     const [matchDetails, setMatchDetails] = useState(state);
     const [renderComponent, setRenderComponent] = useState("");
+    const [isOverCompleted, setIsOverCompleted] = useState(false);
+    const [nextBowler, setNextBowler] = useState(false);
+    const [nextInning, setNextInning] = useState(false);
+    const [spellEle, setSpellEle] = useState()
 
-    useLayoutEffect(() => {
+    const socket = useRef();
+    // console.log(matchDetails);
+    // console.log("Scoring Page Render..");
+    useEffect(() => {
+        console.log("effect runs");
         (async () => {
+            // console.log("effect async runs");
+            // console.log(socket.current);
+            socket.current = socketIOClient(ENDPOINT, {
+                transports: ['websocket'],
+                upgrade: false
+            });
+
             if (matchId) {
                 try {
-                    const res = await req.get(`/getMatch/${matchId}`);
-                    // console.log(res.data);
+                    const res = await req.get(`/scoring/getMatch/${matchId}`);
                     setMatchDetails(res.data);
                 } catch (error) {
                     console.log(error.response.data);
                 }
             }
+            socket.current.on("updated-document", (data) => {
+                setMatchDetails(data);
+            });
         })();
+        return () => {
+            socket.current.on("disconnect", () => {
+                socket.current.removeAllListeners()
+            });
+        };
     }, []);
 
-    if (!matchDetails) return <div>Loading...</div>;
+    // console.log(matchDetails)
+    const current =
+        matchDetails && matchDetails._id && DetailMatch(matchDetails);
+
+    useEffect(() => {
+        
+        if (!isOverCompleted) return;
+        if(current.isMatchOver || current.isNextInningStart) return
+        // const func = () => socket.current.emit("next-bowler", nextBowler)
+        navigate("/scoring/selectNextPlayer", {
+            state: {
+                label: "myteam",
+                assign: `nextBowler`,
+                select: "nextBowler",
+                title: "Next Bowler",
+                state,
+                ignore: current.strikeBowler?._id,
+                selfBackBtn: true,
+            },
+        });
+    }, [isOverCompleted]);
+
+    useEffect(() => {
+        if (!current) return;
+        // console.log(isNextInning);
+        if( !current.isMatchOver && current.isNextInningStart){
+            navigate("/scoring/nextInningConfirm");
+        }
+        if(current.isMatchOver){
+            navigate("/scoring/matchOver", {
+                state: current
+            })
+        }
+        const arr = [...current.overSpell]
+        // console.log(arr, current.overSpell);
+        const spellJsxs = arr.map((ballRun, indx) => {
+            if(ballRun?.toString().includes("lb") || ballRun?.toString().includes("bye") || ballRun?.toString().includes("nb+"))
+                ballRun = <span style={{fontSize: '.7rem'}}>{ballRun}</span>
+            return (
+                <li key={indx}>{ballRun}</li>
+            )
+        });
+        if (current.bowlerOversBowlCompleted) {
+            setIsOverCompleted(true);
+        } else {
+            setIsOverCompleted(false);
+        }
+        
+        setSpellEle(spellJsxs)
+
+    }, [matchDetails])
+
+    if (!matchDetails && !current) return <div>Loading...</div>;
     // return <div>Loaded</div>
+    // console.log(current.fieldTeam);
 
-    const totalInn = matchDetails.stats.length;
-    const current = {
-        inn: matchDetails.stats[totalInn - 1][`inning${totalInn}`],
-        get bat() {
-            return this.inn.bat;
-        },
-        get batTeam(){
-            const team = (matchDetails.teamA._id === this.bat._id && matchDetails.teamA) || (matchDetails.teamB._id === this.bat._id && matchDetails.teamB)
-            return team
-        },
-        get bowl() {
-            return this.inn.bowl;
-        },
-        get fieldTeam(){
-            const team = (matchDetails.teamA._id === this.bowl._id && matchDetails.teamA) || (matchDetails.teamB._id === this.bowl._id && matchDetails.teamB)
-            return team
-        },
-        get batters() {
-            return this.bat.batters;
-        },
-        get bowlers() {
-            return this.bowl.bowlers;
-        },
-        get score() {
-            return this.inn.bat.score;
-        },
-    };
-
-    const onCreaseBats = current.batters.filter(
-        (bats) => bats.strike !== "undefined"
+    const onCreaseBats = current?.batters.filter(
+        (bats) => bats && bats.strike !== "undefined" && !bats.out
     );
     const [strikerBats, nonStrikerBats] = [
         onCreaseBats.filter((b) => b.strike === true)[0],
@@ -70,31 +134,39 @@ export const ScoringPage = () => {
         (bowler) => bowler.strike === true
     );
     // console.log(strikeBowler);
-    const batsTeam = { name: current.bat.name, _id: current.bat._id };
-    const bowlTeam = { name: current.bowl.name, _id: current.bowl._id };
-    // console.log(bowlTeam);
-    const wicketsDown = current.bat.batters.filter((bats) => bats.out).length;
-    // console.log(wicketsDown, current.score);
 
-    const action = ({outType, many, wideShow, noBallShow}) => {
-        setRenderComponent('')
-        navigate('/scoring/selectFielders', {state: {outType, many, wideShow, noBallShow}})
-    }
+    const action = ({ outType, many, wideShow, noBallShow, outBatsman }) => {
+        setRenderComponent("");
+        navigate("/scoring/selectFielders", {
+            state: { outType, many, wideShow, noBallShow, outBatsman },
+        });
+    };
 
     function SelectType(e) {
         const label = e.target.innerText.toLowerCase();
+        // if( arr.includes("nb") ) return
+
         if (label === "out") {
             const titles = [
-                // [typeOfOut, how many template(fielders) shown, wideShow, noBallShow]
-                "Bowled",
-                ["Caught behind", 1],
-                ["run out", 2, 1, 1],
-                "LBW",
-                ["Caught out", 1],
-                "hit wicket",
-                "mankanding",
+                // [typeOfOut, selectOutPlayerTemplatedNeeded than null, how many template(fielders) shown, wideShow, noBallShow]
+                // if not needed (selectOutPlayerTemplatedNeeded) gives info of out player
+                ["Bowled", strikerBats],
+                ["Caught behind", strikerBats , 1],
+                ["Stump", strikerBats, 1],
+                ["run out", null, 2, 1, 1],
+                ["LBW", strikerBats],
+                ["Caught out", strikerBats, 1],
+                ["hit wicket", strikerBats],
+                ["mankanding", strikerBats],
             ];
-            setRenderComponent(<Radios titles={titles} pageTitle="Out Type" btnClick={action}/>);
+
+            setRenderComponent(
+                <Radios
+                    titles={titles}
+                    pageTitle="Out Type"
+                    btnClick={action}
+                />
+            );
         }
     }
 
@@ -105,101 +177,236 @@ export const ScoringPage = () => {
                 <Backbutton
                     size={25}
                     replace={true}
-                    backTimes={2}
-                    setStateEmpty={setRenderComponent}
+                    backTimes={1}
+                    setStateEmpty={renderComponent && setRenderComponent}
                 />
             </section>
 
             <section
                 className={`${styles["scoreboard-container"]} flex-col center relative`}
             >
-                <div className="score flex center gap-1">
-                    <span className="title bold">{batsTeam.name}:</span>
+                <div className="score flex center gap-1 parent-full-width pd-1">
+                    <span className="title bold text-eclipse">{current.batTeamName}</span> <span className="title bold">:</span>
                     <div className="title-small">
-                        <span>{current.score}</span>/<span>{wicketsDown}</span>
+                        <span>{current.score}</span>/
+                        <span>{current.wicketsDown}</span>
+                        &nbsp;&nbsp;
+                        <span>{`(${current.overs})`}</span>
                     </div>
                 </div>
 
                 <div
                     className={`${styles["run-rate"]} parent-full-width pd-block-06 flex around`}
                 >
-                    <div>CRR: 0.0</div>
-                    {totalInn > 1 && <div>RRR: 0.0</div>}
+                    {current.totalInn > 1 && <div>RRR: {current.requiredRunRate}</div>}
+                    <div>CRR: {current.runRate}</div>
                 </div>
+                <b>{current.chaseTarget}</b>
 
-                <div className={styles["bottom-score-contain"]}>
+                <div className={`${styles["bottom-score-contain"]} capital`}>
                     <div
                         className={`${styles["batsman-score"]} flex parent-full-width`}
                     >
-                        <div className={styles["strike"]}>
+                        <NavLink
+                            to="/scoring/changeStrike"
+                            state={{
+                                titleText: "Change Strike",
+                                text: "Do you want to change strike.",
+                                cancelNavigateTo: -1,
+                                okText: "Yes",
+                                cancelText: "No",
+                                okNavigateTo: -1,
+                                okAction: ["ChangeStrike", "Services"],
+                            }}
+                            style={{ color: "white" }}
+                            className={
+                                strikerBats?._id == onCreaseBats[0]?._id
+                                    ? `${styles["strike"]} tap-hightlight-none`
+                                    : "tap-hightlight-none"
+                            }
+                        >
                             <span className="bats-name">
-                                *{strikerBats.name} &nbsp;
+                                <span>
+                                    {strikerBats?._id == onCreaseBats[0]?._id &&
+                                        "*"}
+                                </span>
+                                {onCreaseBats[0]?.name || "undefined"} &nbsp;
                             </span>
                             <span>
-                                {strikerBats.runs}({strikerBats.balls || 0})
+                                {onCreaseBats[0]?.runs || 0}(
+                                {onCreaseBats[0]?.balls || 0})
                             </span>
-                        </div>
-                        <div>
-                            {nonStrikerBats.name}&nbsp;{" "}
-                            <span>
-                                {strikerBats.runs}({strikerBats.balls || 0})
-                            </span>
-                        </div>
+                        </NavLink>
+                        <NavLink
+                            to="/scoring/changeStrike"
+                            state={{
+                                titleText: "Change Strike",
+                                text: "Do you want to change strike.",
+                                cancelNavigateTo: -1,
+                                okText: "Yes",
+                                cancelText: "No",
+                                okNavigateTo: -1,
+                                okAction: ["ChangeStrike", "Services"],
+                            }}
+                            style={{ color: "white" }}
+                            className={
+                                strikerBats?._id == onCreaseBats[1]?._id
+                                    ? `${styles["strike"]} tap-hightlight-none`
+                                    : "tap-hightlight-none"
+                            }
+                        >
+                            {onCreaseBats[1] && (
+                                <>
+                                    <span>
+                                        {" "}
+                                        <span>
+                                            {strikerBats._id ==
+                                                onCreaseBats[1]?._id && "*"}
+                                        </span>{" "}
+                                        {onCreaseBats[1]?.name || "not define"}
+                                        &nbsp;{" "}
+                                    </span>
+                                    <span>
+                                        {onCreaseBats[1]?.runs || "0"}(
+                                        {onCreaseBats[1]?.balls || 0})
+                                    </span>
+                                </>
+                            )}{" "}
+                        </NavLink>
                     </div>
 
-                    <div className={styles["spell-runs"]}>
-                        <ul>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                            <li>0</li>
-                        </ul>
+                    <div className={`${styles["spell-runs"]} relative`}>
+                        <div className="strike-bowler capital font-xxsmall abs top-0 right-0 translate-right-1 pd-top-03">
+                            <span>{current.strikeBowler.name}</span>&nbsp;
+                            <span>{current.strikeBowler.wickets || 0}</span>-
+                            <span>{current.strikeBowler.runs || 0}</span> &nbsp;
+                            <span>{`(${current.bowlerOversBowl})`}</span>
+                        </div>
+                        <ul>{spellEle}</ul>
                     </div>
                 </div>
             </section>
 
             <section className={styles["score-keyboard-container"]}>
                 <ul className={styles["keyboard-wraper"]}>
-                    <li className="flex-col">
+                    <li
+                        className="flex-col"
+                        onClick={() =>
+                            socket.current.emit("add-unrunning-runs", 0)
+                        }
+                    >
                         <span>0</span>
                         <div className="caption">Dot</div>
                     </li>
-                    <li>1</li>
-                    <li>2</li>
-                    <li className="flex-col">
-                        <span>Wd</span>
-                        <span className="caption">Wide</span>
+                    <li
+                        onClick={() =>
+                            socket.current.emit("add-runs-ball", { runs: 1 })
+                        }
+                    >
+                        1
                     </li>
-                    <li>3</li>
-                    <li className="flex-col">
+                    <li
+                        onClick={() =>
+                            socket.current.emit("add-runs-ball", { runs: 2 })
+                        }
+                    >
+                        2
+                    </li>
+                    <li
+                        onClick={() =>
+                            socket.current.emit("add-runs-ball", { runs: 3 })
+                        }
+                    >
+                        3
+                    </li>
+                    <li
+                        className="flex-col"
+                        onClick={() =>
+                            socket.current.emit("add-unrunning-runs", 4)
+                        }
+                    >
                         <span className="blue">4</span>
                         <div className="caption">Four</div>
                     </li>
-                    <li className="flex-col">
+                    <li
+                        className="flex-col"
+                        onClick={() =>
+                            socket.current.emit("add-unrunning-runs", 6)
+                        }
+                    >
                         <span className="green">6</span>
                         <div className="caption">Six</div>
                     </li>
-                    <li className="flex-col">
+                    <li className="flex-col" onClick={() => socket.current.emit("wide")}>
+                        <span>Wd</span>
+                        <span className="caption">Wide</span>
+                    </li>
+
+                    <li onClick={() => {
+                        const runs = prompt("Enter runs: " , 0)
+                        if(runs === null) return
+                        socket.current.emit("legBye", runs)
+                    }}>Lb</li>
+                    <li
+                        onClick={() => {
+                            const runs = prompt("Enter runs: ", 0)
+
+                            if(runs == 0 || runs === null) return
+                            socket.current.emit("add-runs-ball", {runs : new Number(runs) })
+                        }}
+                    >5,7...</li>
+                    {
+                        spellEle && spellEle[spellEle.length - 1]?.props.children.toString().includes("nb")
+                        ? <li>Out</li>
+                        : <li className="red" onClick={  (e) => {
+                            SelectType(e)    
+                        } }>
+                            Out
+                        </li>
+                    }
+                    <li
+                        className="flex-col"
+                        onClick={() => {
+                            const runs = prompt("Enter runs: ", 0)
+                            if(runs === null) return
+                            socket.current.emit("noBall", runs)
+                        }}
+                    >
                         <span>Nb</span>
                         <span className="caption">No-ball</span>
                     </li>
-                    <li>Lb</li>
-                    <li>5,7...</li>
-                    <li className="red" onClick={SelectType}>
-                        Out
-                    </li>
-                    <li>Bye</li>
+                    <li
+                        onClick={() => {
+                            const runs = prompt("Enter runs: ", 0)
+                            
+                            if(runs == 0 || runs === null) return
+                            socket.current.emit("bye", runs)
+                        }}
+                    >Bye</li>
                 </ul>
             </section>
 
-            <Outlet context={{onCreaseBats, batTeam: current.batTeam ,fieldTeam: current.fieldTeam}} />
+            <Outlet
+                context={{
+                    onCreaseBats,
+                    batTeam: current.batTeam,
+                    fieldTeam: current.fieldTeam,
+                    myTeam: current.fieldTeam,
+                    isSelection: true,
+                    setOpening: setNextBowler,
+                    opening: nextBowler,
+                    backBtnFun: () =>
+                        socket.current.emit("next-bowler", {
+                            nextBowler: nextBowler.nextBowler,
+                            currentBowler: current.strikeBowler,
+                        }),
+                    socket: socket,
+                    strikeBowler: current.strikeBowler,
+                    battersPlayers: current.batTeamPlayers,
+                    current,
+                    setNextInning
+                }}
+            />
         </div>
     );
 };

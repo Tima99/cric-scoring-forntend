@@ -14,7 +14,7 @@ export const Toss = () => {
     const navigate = useNavigate()
 
     function Start(e){
-        navigate('/startMatch/selectOpen', {state: toss, replace: true})
+        navigate('/startMatch/selectOpen', {state: {toss, homeRouteName: "startMatch", btnText: "Start Match"}})
     }
     
     

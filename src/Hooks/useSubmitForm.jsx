@@ -52,13 +52,20 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
       to && navigate(to, {...options, state : res.data} )
     }
     catch(error){
-      // console.log(error)
+      console.log(error)
       // if any error sent it back
       if(error instanceof Error)
         setMessage(error.message) 
       if(error instanceof AxiosError){
         // /console.log(error)
-        setMessage(error?.response?.data)
+        // if axios timeout exceed we show timeout time in second 
+        // because axios gives message in ms as "timeout of 25000ms exceeded"
+        let timeoutError = error.message || ''
+        const timeMs = timeoutError.length > 1 && timeoutError.split(' ').filter(str => str.includes('ms')).reduce((a, v)=> a+v, '')       
+        const timeSec = timeMs.replace('ms', '').replaceAll('0', '') + 'sec'
+        timeoutError = timeoutError.split(' ').map(str => (str.includes('ms') && timeSec) || str).reduce((a, v)=> a+' '+v, '')
+        
+        setMessage(error?.response?.data || `Error: ${timeoutError}`)
       }
     }
     finally{

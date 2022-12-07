@@ -7,7 +7,7 @@ export const HomePage = () => {
   const {state}                   = useLocation()
   const user                      = useStore(state)
   const [activeTab, setActiveTab] = useState(1)
-  console.log(user);
+  // console.log(user);
   
   return (
     <div className='full-display relative'>

@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 // Layouts
-import { EntryLayout } from "./Layouts";
+import { EntryLayout, ViewMatchLayout } from "./Layouts";
 // Features
 import {
     LoginFeature,
@@ -19,6 +19,7 @@ import {
     ScoringPage,
     StartMatchPage,
     TeamPage,
+    ViewMatchPage,
 } from "./Pages";
 import {
     PlayerRoleOutlet,
@@ -28,10 +29,12 @@ import {
     MatchOutlet,
     TeamMembersMultiSelectOutlet,
     TeamMembersOutlet,
+    StartNextInning,
 } from "./Outlets";
 // Ui
-import { SelectFielders, SelectStriker, Teams, Toss } from "./Ui";
-import { NavHorizontal, Radios } from "./Components";
+import { MatchOver, SelectFielders, SelectStriker, Teams, Toss } from "./Ui";
+import { Confirm, NavHorizontal, Radios } from "./Components";
+import { PlayingSquadOutlet } from "./Outlets/PlayingSquadOutlet";
 
 function App() {
     return (
@@ -76,7 +79,7 @@ function App() {
                 />
             </Route>
 
-            {/* Matches */}
+            {/* Start Match*/}
             <Route path="/startMatch" element={<StartMatchPage />}>
                 <Route
                     path="/startMatch/selectMyTeam/:id"
@@ -119,7 +122,28 @@ function App() {
                             element={<TeamMembersOutlet />}
                     />
                 </Route>
+                <Route path="/scoring/changeStrike" element={<Confirm />}></Route>
+                <Route path="/scoring/selectNextPlayer" element={<TeamMembersOutlet />}></Route>
+                <Route path="/scoring/nextInningConfirm" element={<StartNextInning />} />
+                <Route
+                    path="/scoring/selectOpen"
+                    element={<SelectStriker />}
+                >
+                    <Route
+                        path="/scoring/selectOpen/striker"
+                        element={<TeamMembersOutlet />}
+                    />
+                </Route>
+                <Route path="/scoring/matchOver" element={<MatchOver />}></Route>
             </Route>
+
+            {/* Match View Page */}
+            <Route path="/viewMatch" element={<ViewMatchLayout />}>
+                <Route index element={<ViewMatchPage />} />
+                <Route path="/viewMatch/summary" element={<ViewMatchPage />} />
+                <Route path="/viewMatch/squad" element={<PlayingSquadOutlet />} ></Route>
+            </Route>
+
         </Routes>
     );
 }

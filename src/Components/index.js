@@ -10,6 +10,7 @@ export { MultiSelectedCard } from "./MultiSelectedCard"
 export { NavHorizontal } from "./NavHorizontal"
 export { Confirm } from "./Confirm"
 export { Radios } from "./Radios"
+export { MatchCard } from "./MatchCard"
 
 export {LabelInput} from "./LabelInput"
 export {Loader} from "./Loader"

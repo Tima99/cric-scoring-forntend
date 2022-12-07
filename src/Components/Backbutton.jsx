@@ -8,8 +8,7 @@ export const Backbutton = ({size : sizeIcon, replace, backTimes=1, backConfirm=f
     const navigate = useNavigate()
     
     function back(e){
-        
-        ( !setStateEmpty && !backConfirm && navigate(-backTimes, {replace}))
+        ( !(typeof setStateEmpty === 'function') && !backConfirm && navigate(-backTimes, {replace}))
         if(setStateEmpty) return (typeof setStateEmpty === 'function') && setStateEmpty('')
 
         // // console.log(confirmRef);

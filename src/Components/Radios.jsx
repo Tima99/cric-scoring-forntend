@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from "react";
 
-const RadioButton = ({ title, many, wideShow=false, noBallShow=false, setData }) => {
+const RadioButton = ({ title, outBatsman, many, wideShow=false, noBallShow=false, setData }) => {
     return (
         <div style={{ color: "black" }} className="grid-media-layout">
-            <input type="radio" name="radio-out" id={title} onChange={e => setData({outType: title,many, wideShow, noBallShow})}/>
+            <input type="radio" name="radio-out" id={title} onChange={e => setData({outType: title,many, wideShow, noBallShow, outBatsman})}/>
             <label
                 htmlFor={title}
                 style={{ textTransform: "capitalize" }}
@@ -21,15 +21,16 @@ export const Radios = ({ titles, pageTitle, btnClick }) => {
     const radios = useMemo(()=>{
         return titles.map((title) => {
             const isArray = Array.isArray(title);
-            const many = isArray && title[1] || 0
-            const wideShow = isArray && title[2]
-            const noBallShow = isArray && title[3]
+            const outBatsman = isArray && title[1]
+            const many = isArray && title[2] || 0
+            const wideShow = isArray && title[3]
+            const noBallShow = isArray && title[4]
             
             title = isArray ? title[0] : title;
 
             return (
                 <React.Fragment key={title}>
-                    <RadioButton title={title} many={many} wideShow={wideShow} noBallShow={noBallShow} setData={setData} />
+                    <RadioButton title={title} outBatsman={outBatsman} many={many} wideShow={wideShow} noBallShow={noBallShow} setData={setData} />
                 </React.Fragment>
             );
         });

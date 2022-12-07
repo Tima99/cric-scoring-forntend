@@ -106,11 +106,11 @@ export const Teams = (props) => {
       </Link>
     )
   })
-  const selectTeamCards = teams.map((team, i) => {
+  const selectTeamCards = teams.length ? teams.map((team, i) => {
     return(
         <SelectTeamCard obj={team} key={team._id} setSelected={setMyTeam}/>
     )
-  })
+  }) : null
 
   return (
     <div className='container abs top-0 parent-full-width pd-1 bg-body pd-block-06 left-0 parent-size'>
@@ -118,7 +118,7 @@ export const Teams = (props) => {
       <div></div>
       {
         isSelectionTeam
-        ? selectTeamCards
+        ? selectTeamCards === null ? <div>No Teams Found. First Create One.</div> : (selectTeamCards.length ? selectTeamCards : "Loading...")
         : teamCards
       }
     </div>

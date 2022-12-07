@@ -1,5 +1,12 @@
 import React, { useLayoutEffect, useMemo, useState } from "react";
-import { useLocation, Link, useOutletContext, Outlet, Navigate, useNavigate } from "react-router-dom";
+import {
+    useLocation,
+    Link,
+    useOutletContext,
+    Outlet,
+    Navigate,
+    useNavigate,
+} from "react-router-dom";
 import { Backbutton } from "../Components";
 import { BiUserPlus, BiUserCheck } from "react-icons/bi";
 import { TbCricket } from "react-icons/tb";
@@ -46,7 +53,9 @@ const SelectBatsman = ({ name, id, setOutBatsman }) => {
                 name="select-out-batsman"
                 id={id}
                 className="dis-none"
-                onChange={e => e.target.checked && setOutBatsman({_id:id, name: name})}
+                onChange={(e) =>
+                    e.target.checked && setOutBatsman({ _id: id, name: name })
+                }
             />
             <label className="card-img-large" htmlFor={id}>
                 <TbCricket size={"20vmin"} color="#333" />
@@ -58,12 +67,12 @@ const SelectBatsman = ({ name, id, setOutBatsman }) => {
     );
 };
 
-const ExtraData = ({ wide, noBall, setScore, score , runs}) => {
+const ExtraData = ({ wide, noBall, setScore, score, runs }) => {
     return (
         <div className="flex pd-1 gap-1 flex-wrap">
             <input
                 type="checkbox"
-                name="checkbox"
+                name="checkbox-score"
                 id="wide"
                 className="dis-none"
                 onChange={(e) =>
@@ -84,9 +93,9 @@ const ExtraData = ({ wide, noBall, setScore, score , runs}) => {
             >
                 Wide
             </label>
-            <input
+            {/* <input
                 type="checkbox"
-                name="checkbox"
+                name="checkbox-score"
                 id="noBall"
                 className="dis-none"
                 defaultChecked={score.noBall}
@@ -106,8 +115,8 @@ const ExtraData = ({ wide, noBall, setScore, score , runs}) => {
                 style={{ display: noBall && "block" }}
             >
                 No-ball
-            </label>
-            <div className={runs ? "parent-full-width": 'dis-none'}>
+            </label> */}
+            <div className={runs ? "parent-full-width" : "dis-none"}>
                 <div className="flex evenly">
                     <label htmlFor="runs-score">Runs</label>
                     <input
@@ -127,16 +136,29 @@ const ExtraData = ({ wide, noBall, setScore, score , runs}) => {
 
 export const SelectFielders = () => {
     const { state } = useLocation();
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     const { outType } = state;
     // const [fieldersTemplate, setFieldersTemplate] = useState(null);
     const [batsman, setBatsman] = useState(null);
 
     const context = useOutletContext();
-    const { onCreaseBats, fieldTeam,  batTeam } = context;
-    // console.log(myTeam);
+    const {
+        onCreaseBats,
+        fieldTeam,
+        batTeam,
+        socket,
+        strikeBowler,
+        battersPlayers,
+        current,
+        setNextInning
+    } = context;
+    const battersIgnore = current.batters.filter(
+        (ply) => onCreaseBats._id != ply._id || ply.outType
+    );
+    // console.log(battersIgnore, battersPlayers);
 
-    const [outBatsman, setOutBatsman] = useState();
+    const [outBatsman, setOutBatsman] = useState(state.outBatsman);
+    
     const [fielder, setFielder] = useState();
     // fielder is an object contains {fielder1:{}, fielder2: {}, nextBatsman: {}}
     const [score, setScore] = useState({
@@ -146,10 +168,16 @@ export const SelectFielders = () => {
     });
 
     useLayoutEffect(() => {
+        if(state.outBatsman) return
         // batsman on crease templates
         const bats = onCreaseBats.map((bats) => {
             return (
-                <SelectBatsman name={bats.name} key={bats._id} id={bats._id} setOutBatsman={setOutBatsman}/>
+                <SelectBatsman
+                    name={bats.name}
+                    key={bats._id}
+                    id={bats._id}
+                    setOutBatsman={setOutBatsman}
+                />
             );
         });
         setBatsman(bats);
@@ -185,46 +213,100 @@ export const SelectFielders = () => {
             </section>
 
             <section className="flex-1 relative tap-hightlight-none">
-                <span className="title pd-top-1 block pd-1">
+                {batsman && <span className="title pd-top-1 block pd-1">
                     Select <b className="red">Out</b> Batsman
-                </span>
+                </span>}
                 <section className="pd-block-06 pd-1 flex between margin-left-auto">
                     {batsman}
                 </section>
 
-                {state.many ? <div className="title pd-top-1 pd-1">Select Fielders</div> : undefined}
+                {state.many ? (
+                    <div className="title pd-top-1 pd-1">Select Fielders</div>
+                ) : undefined}
                 <section className="pd-block-06 pd-1 flex between margin-left-auto">
                     {fieldersTemplate}
                 </section>
 
-                <div className="parent-full-width flex pd-1 pd-block-1 btn-out"
-                    onClick={ e => {
-                        if(!outBatsman) return ""
-                        if(state.many > 0 && !fielder) return ""
-                        navigate('/scoring/selectFielders/fielders', {state: {
-                            label: "batteam",
-                            assign: `nextBatsman`,
-                            select: "nextBatsman",
-                            title: "Next Batsman",
-                            state,
-                            ignore: outBatsman?._id
-                        }})
-                    }}
-                >
-                    <button
-                        className="btn-squid btn margin-left-auto"
-                        data="out"
-                    >
-                        Out
-                    </button>
-                </div>
+                <section className="next-batsman-out pd-1 flex-col gap-06 pd-block-1">
+                    {battersIgnore.length !== battersPlayers.length && <div className="title">Next Batsman</div>}
+                    <div className="flex r-v-center between">
+                        {battersIgnore.length !== battersPlayers.length && (
+                            <div
+                                className="card-img-large"
+                                onClick={() => {
+                                    navigate(
+                                        "/scoring/selectFielders/fielders",
+                                        {
+                                            state: {
+                                                label: "batteam",
+                                                assign: `nextBatsman`,
+                                                select: "nextBatsman",
+                                                title: "Next Batsman",
+                                                state,
+                                                ignore: [...battersIgnore],
+                                            },
+                                        }
+                                    );
+                                }}
+                            >
+                                <TbCricket size={"20vmin"} color="#333" />
+                                <span
+                                    className="title-small "
+                                    style={{
+                                        color: "#333",
+                                        background:
+                                            fielder?.nextBatsman?.name &&
+                                            "#1dc91d",
+                                    }}
+                                >
+                                    {fielder?.nextBatsman?.name ||
+                                        "Select Batsman"}
+                                </span>
+                            </div>
+                        )}
+                        <div
+                            className="flex pd-1 pd-block-1 btn-out"
+                            onClick={(e) => {
+                                if (!outBatsman) return "";
+                                if (state.many > 0 && !fielder) return "";
+                                if ( battersIgnore.length !== battersPlayers.length && !fielder?.nextBatsman) return "";
+                                const data = {
+                                    outBatsman: {_id: outBatsman._id, name: outBatsman.name},
+                                    fielders: [
+                                        fielder?.fielder1,
+                                        fielder?.fielder2,
+                                    ],
+                                    nextBatsman: fielder?.nextBatsman || null,
+                                    bowler: {_id: strikeBowler._id, name: strikeBowler.name},
+                                    score,
+                                    outType,
+                                };
+                                // console.log(data);
+                                socket.current.emit("batsman-out", data)
+
+                                if(battersIgnore.length == battersPlayers.length){
+                                    setNextInning(true)
+                                }
+                                
+                                navigate(-1, { replace: true });
+                            }}
+                        >
+                            <button
+                                className="btn-squid btn margin-left-auto"
+                                data="out"
+                            >
+                                Out
+                            </button>
+                        </div>
+                    </div>
+                </section>
 
                 <ExtraData
                     wide={state.wideShow}
                     noBall={state.noBallShow}
                     setScore={setScore}
                     score={score}
-                    runs={state.many ? true: false}
+                    runs={state.many ? true : false}
                 />
 
                 <Outlet

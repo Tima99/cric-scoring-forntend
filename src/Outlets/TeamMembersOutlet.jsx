@@ -1,36 +1,38 @@
 import React, { useMemo } from "react";
 import { Link, useOutletContext, useLocation } from "react-router-dom";
-import { SelectTeamCard, TeamCard } from "../Components";
+import { Backbutton, SelectTeamCard, TeamCard } from "../Components";
 
 export const TeamMembersOutlet = () => {
     const { state } = useLocation();
-    const { label, select, assign , title, ignore} = state;
-    const { context } = useOutletContext();
+    const { label, select, assign, title, ignore, selfBackBtn } = state;
+    let context = useOutletContext();
+    // console.log(context);
+
+    context = context?.context ? context.context : context;
 
     const {
         setMyTeam,
         setOpponent,
         setOpening,
-        opening,
         myTeam,
         opponent: opponentTeam,
         isSelection,
+        backBtnFun,
+        batTeam
     } = context || {};
-        // console.log({context});
-
-    const team = (!label && {}) || (label === "myteam" ? myTeam : opponentTeam);
-
+    let {opening} = context 
+    const team = (!label && {}) || (label === "myteam" ? myTeam : opponentTeam || batTeam);
     const {
         players,
         wicketkeeper,
         selectedCaptain,
         captain: defaultCaptain,
     } = team || {};
-
-    // console.log(players);
+    opening = !players?.length ? true : opening
 
     const playersJsxWithLinkRole = useMemo(() => {
-        const players = state.players;
+        if (isSelection) return;
+        const players = state.players || state.team.players;
         return (
             Array.isArray(players) &&
             players.map((player, idx) => {
@@ -47,8 +49,13 @@ export const TeamMembersOutlet = () => {
 
     const selectPlayersJsx = useMemo(() => {
         if (!Array.isArray(players)) return;
-        const selectedSquad = players.filter(
-            (player) => ignore ? (ignore !== player._id) && player.isSelected : player.isSelected
+        const selectedSquad = players.filter((player) =>
+            Array.isArray(ignore)
+                ? ignore.every((ignPly) => ignPly._id !== player._id) &&
+                  player.isSelected
+                : ignore
+                ? ignore !== player._id && player.isSelected
+                : player.isSelected
         );
         // if captain or wicketkeeper not in squad remove captain if already has
         const isCaptainNotinSquad = selectedSquad.every(
@@ -64,21 +71,21 @@ export const TeamMembersOutlet = () => {
         return selectedSquad.map((player, idx) => {
             // checking player already selected or not
             // if selectedCaptain is null than team captain is select default (if true)
-            let isSelected =
-                assign ? (opening && opening[assign]?._id === player._id) :
-                (select === "captain"
-                    ? selectedCaptain
-                        ? selectedCaptain === player._id
-                        : defaultCaptain &&
-                          defaultCaptain === player._id &&
-                          (team.selectedCaptain = defaultCaptain)
-                    : wicketkeeper && wicketkeeper === player._id);
+            let isSelected = assign
+                ? opening && opening[assign]?._id === player._id
+                : select === "captain"
+                ? selectedCaptain
+                    ? selectedCaptain === player._id
+                    : defaultCaptain &&
+                      defaultCaptain === player._id &&
+                      (team.selectedCaptain = defaultCaptain)
+                : wicketkeeper && wicketkeeper === player._id;
 
             select === "captain"
                 ? (player.selectedCaptain = isSelected)
                 : (player.wicketkeeper = isSelected);
 
-            assign && (player[assign] = isSelected)
+            assign && (player[assign] = isSelected);
 
             return (
                 <React.Fragment key={idx + select}>
@@ -94,7 +101,7 @@ export const TeamMembersOutlet = () => {
                                 ? "selectedCaptain"
                                 : "wicketkeeper")
                         }
-                        howtoAssign = {assign ? ['_id', 'name'] : '_id'}
+                        howtoAssign={assign ? ["_id", "name"] : "_id"}
                     />
                 </React.Fragment>
             );
@@ -102,8 +109,21 @@ export const TeamMembersOutlet = () => {
     }, [select]);
 
     return (
-        <div className="full-display abs top-0 left-0 pd-1 pd-block-1 flex-col gap-1">
-            {title && <span className="title z9999">{title}</span>}
+        <div className="full-display abs top-0 left-0 pd-1 pd-block-1 flex-col gap-1 z99999">
+            <section className="nav pd-1 flex gap-1 r-v-center z9999">
+                {selfBackBtn && opening && (
+                    <div
+                        onClick={
+                            (typeof backBtnFun === "function" && backBtnFun) ||
+                            new Function()
+                        }
+                    >
+                        <Backbutton size={25} replace={true} backTimes={1} />
+                    </div>
+                )}
+                {title && <span className="title z9999">{title}</span>}
+            </section>
+
             {isSelection ? selectPlayersJsx : playersJsxWithLinkRole}
         </div>
     );
