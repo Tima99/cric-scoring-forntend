@@ -1,7 +1,10 @@
 import React, {useState} from 'react'
-import { useLocation, Outlet } from 'react-router-dom'
+import { createContext } from 'react'
+import { useLocation, Outlet} from 'react-router-dom'
 import { useStore } from '../Hooks/useStore'
 import { NavLayout } from '../Layouts'
+
+export const UserContext = createContext()
 
 export const HomePage = () => {
   const {state}                   = useLocation()
@@ -9,11 +12,13 @@ export const HomePage = () => {
   const [activeTab, setActiveTab] = useState(1)
   
   return (
-    <div className='full-display relative'>
-      <NavLayout activeTab={activeTab} />
-      <div className="outlet-container relative">
-        <Outlet context={{setActiveTab, user}} />
+    <UserContext.Provider value={{authUser: user}}>
+      <div className='full-display relative'>
+        <NavLayout activeTab={activeTab} />
+        <div className="outlet-container relative">
+          <Outlet context={{setActiveTab, user}} />
+        </div>
       </div>
-    </div>
+    </UserContext.Provider>
   )
 }

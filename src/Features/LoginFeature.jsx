@@ -25,7 +25,7 @@ export const LoginFeature = () => {
 
         
         <div className='flex parent-full-width'>
-          <Link className='forgot-password'>forgot password ?</Link>
+          <Link to={"/forgotPassword"} className='forgot-password font-xxsmall capital'>forgot password ?</Link>
         </div>
         
         <div className='flex parent-full-width'>

@@ -5,10 +5,9 @@ import { ViewMatch2, ViewMatch3 } from "../Ui";
 
 export const ViewMatchLayout = () => {
     const { state } = useLocation();
-    console.log(state);
     return (
         <div className="relative flex-col full-display">
-            <TopNav title="Match" menu={false} replace={true}/>
+            <TopNav title="Match" menu={false} replace={true} />
             <section className="scroll-container">
                 <div className="scroll-content-container">
                     <Outlet context={state} />

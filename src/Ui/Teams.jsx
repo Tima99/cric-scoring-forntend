@@ -41,7 +41,7 @@ export const Teams = (props) => {
     return(
       <Link 
         to={id==='my' ? '/teamPreview' : `/team/${team._id}`} 
-        key={team._id} 
+        key={team._id+ i} 
         state={team}
       >
         <TeamCard obj={team} />

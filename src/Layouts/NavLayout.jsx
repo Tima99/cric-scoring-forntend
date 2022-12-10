@@ -1,4 +1,4 @@
-import React, { useReducer, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from "./styles/NavLayout.module.css"
 import {TbGridDots, TbCricket} from "react-icons/tb"
@@ -8,6 +8,8 @@ import {IoIosArrowDown, IoIosArrowUp} from "react-icons/io"
 import {BiAddToQueue} from "react-icons/bi"
 import {RiBoxingLine} from "react-icons/ri"
 import {BsTrophy, BsSearch} from "react-icons/bs"
+import { BiLogOut } from 'react-icons/bi'
+import req from "../api/request"
 
 export const NavLayout = ({ activeTab }) => {
   const toggleTeamsRef = useRef()
@@ -93,6 +95,22 @@ export const NavLayout = ({ activeTab }) => {
           <li>
             Matches
           </li>
+        </Link>
+
+        <Link
+          onClick={async(e) => {
+            e.preventDefault()
+            try {
+              const res = await req.get('/logout')
+              if(res.data.toLowerCase().includes("logout"))
+                navigate('/')
+            } catch (error) {
+              alert("We are not able to logout.\nSomething went wrong 😟")
+            }
+          }}
+        >
+            <BiLogOut size={22}/>
+            <li>Logout</li>
         </Link>
 
       </ul>

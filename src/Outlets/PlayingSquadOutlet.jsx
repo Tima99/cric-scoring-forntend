@@ -52,12 +52,12 @@ export const PlayingSquadOutlet = () => {
         <div className="flex-col pd-1 gap-1 pd-block-1">
             <h2>{state.title}</h2>
             <div className="flex-col gap-1">{players[0]}</div>
-            {players[1].length && (
+            {players[1].length ? (
                 <>
                     <h2>Rest</h2>
                     <div className="flex-col gap-1">{players[1]}</div>
                 </>
-            )}
+            ): ''}
         </div>
     );
 };

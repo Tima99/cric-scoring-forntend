@@ -10,6 +10,8 @@ import {
     VerifyEmailFeature,
     CreateTeam,
     AddNewPlayerFeature,
+    ForgotPasswordFeature,
+    UpdatePasswordFeature,
 } from "./Features";
 // Pages
 import {
@@ -42,6 +44,8 @@ function App() {
             <Route path="/" element={<EntryLayout />}>
                 <Route index element={<RegisterFeature />} />
                 <Route path="/login" element={<LoginFeature />} />
+                <Route path="/forgotPassword" element={<ForgotPasswordFeature />} />
+                <Route path="/:email/updatePassword" element={<UpdatePasswordFeature />} /> 
                 <Route path="/:email/verify" element={<VerifyEmailFeature />} />
             </Route>
 

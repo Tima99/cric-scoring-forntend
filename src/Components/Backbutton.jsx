@@ -2,7 +2,6 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { MdArrowBack } from "react-icons/md"
-import { Confirm } from './Confirm'
 
 export const Backbutton = ({size : sizeIcon, replace, backTimes=1, backConfirm=false, confirmRef, setStateEmpty} ) => {
     const navigate = useNavigate()

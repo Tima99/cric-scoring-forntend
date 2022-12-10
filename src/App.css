@@ -158,9 +158,13 @@
     border: 1px solid gray !important;
     cursor: no-drop !important;
 }
-.disable-link{
+.disable-link, .disable-btn-contain{
     color: grey !important;
     pointer-events: none;
+}
+.disable-btn-contain button{
+    background-color: grey !important;
+    border: 1px solid gray !important;
 }
 .active-link{
     color: dodgerblue !important;

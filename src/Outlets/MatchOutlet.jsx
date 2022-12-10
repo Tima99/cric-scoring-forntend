@@ -1,19 +1,20 @@
-import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState, useContext } from "react";
 import { Link, NavLink, useOutletContext } from "react-router-dom";
 import req from "../api/request";
 import { MatchCard } from "../Components/MatchCard";
 import { CgClose } from "react-icons/cg";
 import { BiSad } from "react-icons/bi";
 import { Loader } from "../Components";
-import { MdNotStarted } from "react-icons/md";
-import { BiRightArrowCircle } from "react-icons/bi";
 import { MdPlayCircleFilled } from "react-icons/md";
+import { UserContext } from "../Pages/HomePage";
+
 export const MatchOutlet = () => {
+    const {authUser} = useContext(UserContext)
     const { setActiveTab } = useOutletContext();
     const [myMatches, setMyMatches] = useState(null);
     // console.log(myMatches);
     const [optionShow, setOptionShow] = useState(false);
-    const [user, setUser] = useState();
+    const [user, setUser] = useState(authUser);
     // user has email
 
     useEffect(() => {
@@ -66,12 +67,13 @@ export const MatchOutlet = () => {
         (async () => {
             try {
                 const res = await req.get("/myMatches");
-                const res2 = await req.get("/auth");
-                setUser(res2.data);
-                // console.log(res);
+                if(!authUser){
+                    const res2 = await req.get("/auth");
+                    setUser(res2.data);
+                }
                 setMyMatches(res.data);
             } catch (error) {
-                console.log(error);
+                // console.log(error);
                 setMyMatches([])
             }
         })();

@@ -34,6 +34,7 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
       // if sucess append sucess msg
       setMessage(`$${'Done'}`)
       setResponse(res)
+      if(to === null) return
 
       // after sucess you have to navigate anywhere
       if(Array.isArray(to)){
@@ -51,7 +52,7 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
       // checking to has : 
       to = (isNaN(to) && to.includes(':') && (to.split(":")[0] + res[to.split(":")[1]])) || to 
       // console.log(res, to)
-      to && navigate(to, {...options, state : res.data} )
+      to && navigate(to, {state : res.data, ...options} )
     }
     catch(error){
       // console.log(error)
