@@ -4,10 +4,13 @@ import req from "../api/request";
 import { MatchCard } from "../Components/MatchCard";
 import { CgClose } from "react-icons/cg";
 import { BiSad } from "react-icons/bi";
-
+import { Loader } from "../Components";
+import { MdNotStarted } from "react-icons/md";
+import { BiRightArrowCircle } from "react-icons/bi";
+import { MdPlayCircleFilled } from "react-icons/md";
 export const MatchOutlet = () => {
     const { setActiveTab } = useOutletContext();
-    const [myMatches, setMyMatches] = useState();
+    const [myMatches, setMyMatches] = useState(null);
     // console.log(myMatches);
     const [optionShow, setOptionShow] = useState(false);
     const [user, setUser] = useState();
@@ -69,12 +72,14 @@ export const MatchOutlet = () => {
                 setMyMatches(res.data);
             } catch (error) {
                 console.log(error);
+                setMyMatches([])
             }
         })();
     }, []);
 
     const MyMatches = useMemo(() => {
-        if (!Array.isArray(myMatches)) return [];
+        if (!Array.isArray(myMatches)) return null;
+
         return myMatches.map((match) => {
             return match.scoringBy === user && match.winTeam === null ? (
                 <div
@@ -104,16 +109,26 @@ export const MatchOutlet = () => {
             {optionShow && (
                 <MatchCardOptions />
             )}
-            <Link to={"/startMatch"}>Start a Match</Link>
+            <Link to={"/startMatch"} className="bold flex r-v-center gap-06"> <MdPlayCircleFilled  /> Start a Match</Link>
 
-            <main className="flex-col-rev gap-1 pd-block-1">{
-            MyMatches.length
-            ? MyMatches
-            : <div className="flex-col center gap-06">
-                <BiSad size={64} color={'grey'} />
-                <span className="title-small font-xxsmall">No Matches Found</span>
-            </div>
-            }</main>
+            <main className="flex-col-rev gap-1 pd-block-1">
+                {
+                    MyMatches === null
+                    ? <Loader style={{
+                        paddingTop: "1.4rem",
+                        alignItems: "flex-start",
+                        marginTop: "3rem"
+                      }}/>
+                    :(
+                        MyMatches.length
+                        ?   MyMatches
+                        :   <div className="flex-col center gap-06">
+                                <BiSad size={64} color={'grey'} />
+                                <span className="title-small font-xxsmall">No Matches Found</span>
+                            </div>
+                    ) 
+                }
+            </main>
         </div>
     );
 };

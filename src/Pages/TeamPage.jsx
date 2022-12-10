@@ -1,152 +1,125 @@
-import React, { useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { FaRegShareSquare } from "react-icons/fa"
-import { FiFilter } from "react-icons/fi"
+import React, {
+    createContext,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
+import { useParams } from "react-router-dom";
+import { FaCopyright, FaRegShareSquare } from "react-icons/fa";
+import { FiFilter } from "react-icons/fi";
 
-import logo from "../assets/user-circle.jpg"
-import './TeamPage.css';
-import { TeamCard, Backbutton } from '../Components'
-import req from '../api/request'
+import logo from "../assets/user-circle.jpg";
+import "./TeamPage.css";
+import { TeamCard, Backbutton, Loader } from "../Components";
+import req from "../api/request";
 
-const dummyData = [
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    }
-    ,
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    },
-    {
-        name: "Dragons",
-        logo,
-        captain: "Amit"
-    }
-]
+export const MatchesContext = createContext();
 
 export const TeamPage = () => {
-    const { id } = useParams()
-    let currentActiveTab = useRef()
-    let [team, setTeam] = useState({})
+    const { id } = useParams();
+    let currentActiveTab = useRef();
+    let [team, setTeam] = useState({});
+    let [matches, setMatches] = useState(null);
 
+    // console.log(team);
     useLayoutEffect(() => {
-        console.log(id);
-        (
-            async () => {
-                try {
-                    const res = await req.get(`/getTeam/${id}`)
-                    console.log(res);
-                    setTeam(res.data)
-                } catch (error) {
-                    console.log(error);
-                    setTeam(null)
-                }
+        (async () => {
+            try {
+                const res = await req.get(`/getTeam/${id}`);
+                // console.log(res.data);
+                setTeam(res.data);
+            } catch (error) {
+                console.log(error);
+                setTeam(null);
             }
-        )()
-    }, [])
+        })();
+    }, []);
 
     const teamMembers = useMemo(() => {
-        console.log("Memo runs");
-        console.log(team.players);
-        return team.players && team.players.map((member, i) => {
-            return <TeamCard obj={member} key={i} />
-        })
-    }, [team])
+        const captain = team.captain;
+        const wk = team.wicketkeeper;
+        return (
+            team.players &&
+            team.players.map((member, i) => {
+                return (
+                    <div
+                        className="relative flex r-v-center"
+                        key={i + "PlayerMember"}
+                    >
+                        <TeamCard obj={member} />
+                        <span className="flex center gap-06 abs right-0 pd-1">
+                            {member._id === captain && (
+                                <span className="">
+                                    <FaCopyright color="green" size={20} />
+                                </span>
+                            )}
+                            {member._id === wk && <span className="">wk</span>}
+                        </span>
+                    </div>
+                );
+            })
+        );
+    }, [team]);
 
     const ScrollMySelect = (e) => {
-        e.preventDefault()
-        e.stopPropagation()
+        e.preventDefault();
+        e.stopPropagation();
 
-        currentActiveTab.current.classList.remove('active')
-        currentActiveTab.current = e.target.parentElement
-        currentActiveTab.current.classList.add('active')
+        currentActiveTab.current.classList.remove("active");
+        currentActiveTab.current = e.target.parentElement;
+        currentActiveTab.current.classList.add("active");
 
-        const id = e.target.href.split('#')[1]
-        const view = document.getElementById(id)
-        view.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
-        e.target.scrollIntoView()
+        const id = e.target.href.split("#")[1];
+        const view = document.getElementById(id);
+        view.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        e.target.scrollIntoView();
+    };
 
-    }
-
-    const [Components, setComponents] = useState({})
+    const [Components, setComponents] = useState({});
 
     const handleScroll = async (e) => {
-        const sectionWidth = window.innerWidth
-        const scrollLeft = e.target.scrollLeft
-        const containerSectionOrders = ["Members", "Stats", "Matches", "Leaderboard"]
+        const sectionWidth = window.innerWidth;
+        const scrollLeft = e.target.scrollLeft;
+        const containerSectionOrders = [
+            "Members",
+            "Stats",
+            "Matches",
+            "Leaderboard",
+        ];
         if (scrollLeft % sectionWidth === 0) {
-            const sectionIndex = scrollLeft / sectionWidth
-            const sectionName = containerSectionOrders[sectionIndex]
-            const { [sectionName]: module } = await import('../Components')
+            const sectionIndex = scrollLeft / sectionWidth;
+            const sectionName = containerSectionOrders[sectionIndex];
+            const { [sectionName]: module } = await import("../Components");
 
             // applying active tab border
-            const activeTab = document.querySelector(`.nav-layout .wraper li:nth-child(${sectionIndex + 1})`)
-            currentActiveTab.current.classList.remove('active')
-            currentActiveTab.current = activeTab
-            currentActiveTab.current.classList.add("active")
-            currentActiveTab.current.scrollIntoView()
+            const activeTab = document.querySelector(
+                `.nav-layout .wraper li:nth-child(${sectionIndex + 1})`
+            );
+            currentActiveTab.current.classList.remove("active");
+            currentActiveTab.current = activeTab;
+            currentActiveTab.current.classList.add("active");
+            currentActiveTab.current.scrollIntoView();
 
-            // see component already added or not 
+            // see component already added or not
             // this avoid reenders
-            let currentComponents = { ...Components }
+            let currentComponents = { ...Components };
             for (let [key, value] of Object.entries(currentComponents))
-                if (key === sectionName && value !== null) return
+                if (key === sectionName && value !== null) return;
 
             // set dynamic loaded components
-            module && setComponents(p => { return { ...p, [containerSectionOrders[sectionIndex]]: module } })
+            module &&
+                setComponents((p) => {
+                    return {
+                        ...p,
+                        [containerSectionOrders[sectionIndex]]: module,
+                    };
+                });
         }
-    }
+    };
 
     return (
-        <div className='team-page-container'>
+        <div className="team-page-container">
             <section className="top-bar">
                 <Backbutton />
                 <div className="left-side">
@@ -158,89 +131,103 @@ export const TeamPage = () => {
                 <div className="bg-img"></div>
                 <div className="team">
                     <div className="image-logo">
-                        <img src={logo} alt={'TeamName'} loading="lazy" />
+                        <img src={logo} alt={"TeamName"} loading="lazy" />
                     </div>
 
-                    <ul>
-                        <li>TeamName</li>
-                        <li>
-                            <span>Location</span>
-                            <span>Since 00 Jan 2021</span>
+                    <ul className="flex-col" style={{ gap: ".1rem" }}>
+                        <li>{team.name || "..."}</li>
+                        <li className="flex" style={{ flexWrap: "wrap" }}>
+                            <span>{team.location || ""}</span>
+                            <span>{`Since ${new Date(team.createdAt)
+                                .toDateString()
+                                .slice(4)}`}</span>
                         </li>
-                        <li>
-                            Challenge this team
-                        </li>
+                        <li>Challenge this team</li>
                     </ul>
-
                 </div>
             </section>
 
             <section className="nav-layout">
-                <ul className='wraper'>
-                    <li className='active' ref={currentActiveTab}>
-                        <a href="#members" onClick={ScrollMySelect}>Members</a>
+                <ul className="wraper">
+                    <li className="active" ref={currentActiveTab}>
+                        <a href="#members" onClick={ScrollMySelect}>
+                            Members
+                        </a>
                     </li>
-                    <li className='stats'>
-                        <a href="#stats" onClick={ScrollMySelect}>Stats</a>
-                    </li>
-                    <li>
-                        <a href="#matches" onClick={ScrollMySelect}>Matches</a>
-
-                    </li>
-                    <li>
-                        <a href="#leaderboard" onClick={ScrollMySelect}>LeaderBoard</a>
-
+                    <li className="stats">
+                        <a href="#stats" onClick={ScrollMySelect}>
+                            Stats
+                        </a>
                     </li>
                     <li>
-                        <a href="#awards" onClick={ScrollMySelect}>Awards</a>
+                        <a href="#matches" onClick={ScrollMySelect}>
+                            Matches
+                        </a>
                     </li>
                     <li>
-                        <a href="#photos" onClick={ScrollMySelect}>Photos</a>
-                    </li>
-                    <li>
-                        <a href="#profile" onClick={ScrollMySelect}>Profile</a>
+                        <a href="#leaderboard" onClick={ScrollMySelect}>
+                            LeaderBoard
+                        </a>
                     </li>
                 </ul>
             </section>
 
-            <section className="selected-tab-outlet" onScroll={handleScroll}>
-                <section className='container' id='members'>
-                    {teamMembers}
+            <MatchesContext.Provider value={{matches, setMatches, matchesIdArr : team.matches}}>
+                <section
+                    className="selected-tab-outlet"
+                    onScroll={handleScroll}
+                >
+                    <section
+                        className="container height-max-content"
+                        id="members"
+                    >
+                        {teamMembers}
+                    </section>
+
+                    <section className="container stats relative" id="stats">
+                        {Components.Stats ? (
+                            <Components.Stats
+                                matches={team && team.matches.length}
+                                stats={team && team.stats}
+                                id={id}
+                            />
+                        ) : (
+                            <Loader
+                                style={{
+                                    paddingTop: "1.4rem",
+                                    alignItems: "flex-start",
+                                }}
+                            />
+                        )}
+                    </section>
+
+                    <section className="container relative" id="matches">
+                        {Components.Matches ? (
+                            <Components.Matches />
+                        ) : (
+                            <Loader
+                                style={{
+                                    paddingTop: "1.4rem",
+                                    alignItems: "flex-start",
+                                }}
+                            />
+                        )}
+                    </section>
+
+                    <section className="relative" id="leaderboard">
+                        {Components.Leaderboard ? (
+                            <Components.Leaderboard teamId={team._id} />
+                        ) : (
+                            <Loader
+                                style={{
+                                    paddingTop: "1.4rem",
+                                    alignItems: "flex-start",
+                                }}
+                            />
+                        )}
+                    </section>
                 </section>
-
-                <section className='container stats' id='stats'>
-                    {Components.Stats && <Components.Stats matches={team && team.matches} id={id} />}
-                </section>
-
-                <section className='container' id='matches'>
-                    {Components.Matches
-                        ? <Components.Matches />
-                        : "Loading"
-
-                    }
-                </section>
-
-                <section className='container' id='leaderboard'>
-                    {Components.Leaderboard
-                        ? <Components.Leaderboard />
-                        : "Loading"
-
-                    }
-                </section>
-
-                <section className='container' id='awards'>
-                    awards
-                </section>
-
-                <section className='container' id='photos'>
-                    Photos
-                </section>
-
-                <section className='container' id='profile'>
-                    Profile
-                </section>
-            </section>
-
+            </MatchesContext.Provider>
         </div>
-    )
-}
+    );
+};

@@ -19,7 +19,6 @@ import {
     ScoringPage,
     StartMatchPage,
     TeamPage,
-    ViewMatchPage,
 } from "./Pages";
 import {
     PlayerRoleOutlet,
@@ -32,7 +31,7 @@ import {
     StartNextInning,
 } from "./Outlets";
 // Ui
-import { MatchOver, SelectFielders, SelectStriker, Teams, Toss } from "./Ui";
+import { MatchOver, SelectFielders, SelectStriker, Teams, Toss, ViewMatch1 } from "./Ui";
 import { Confirm, NavHorizontal, Radios } from "./Components";
 import { PlayingSquadOutlet } from "./Outlets/PlayingSquadOutlet";
 
@@ -139,8 +138,8 @@ function App() {
 
             {/* Match View Page */}
             <Route path="/viewMatch" element={<ViewMatchLayout />}>
-                <Route index element={<ViewMatchPage />} />
-                <Route path="/viewMatch/summary" element={<ViewMatchPage />} />
+                <Route index element={<ViewMatch1 />} />
+                {/* <Route path="/viewMatch/summary" element={<ViewMatchPage />} /> */}
                 <Route path="/viewMatch/squad" element={<PlayingSquadOutlet />} ></Route>
             </Route>
 

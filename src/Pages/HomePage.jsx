@@ -7,13 +7,12 @@ export const HomePage = () => {
   const {state}                   = useLocation()
   const user                      = useStore(state)
   const [activeTab, setActiveTab] = useState(1)
-  // console.log(user);
   
   return (
     <div className='full-display relative'>
       <NavLayout activeTab={activeTab} />
       <div className="outlet-container relative">
-        <Outlet context={{setActiveTab}} />
+        <Outlet context={{setActiveTab, user}} />
       </div>
     </div>
   )

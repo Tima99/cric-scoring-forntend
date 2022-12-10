@@ -148,6 +148,34 @@ export function DetailMatch(match){
             const overs = `${completedOvers || 0}.${ongoingOverBalls || 0}`
             return overs
         },
+        get teamAInn(){
+            const teamA = match.stats.filter(stat => stat.bat._id === match.teamA._id)
+            if( !teamA.length) return null
+            return teamA
+        },
+        get teamBInn(){
+            const teamB = match.stats.filter(stat => stat.bat._id === match.teamB._id)
+            if( !teamB.length) return null
+            return teamB
+        },
+        get teamAOvers(){
+            const teamAInn = this.teamAInn
+            if(teamAInn === null ) return '0.0'
+            const totalBallsBowl    = teamAInn[0].totalBalls
+            const completedOvers    = Math.floor(totalBallsBowl / 6)
+            const ongoingOverBalls  = totalBallsBowl % 6
+            const overs = `${completedOvers || 0}.${ongoingOverBalls || 0}`
+            return overs
+        },
+        get teamBOvers(){
+            const teamBInn = this.teamBInn
+            if(teamBInn === null ) return '0.0'
+            const totalBallsBowl    = teamBInn[0].totalBalls
+            const completedOvers    = Math.floor(totalBallsBowl / 6)
+            const ongoingOverBalls  = totalBallsBowl % 6
+            const overs = `${completedOvers || 0}.${ongoingOverBalls || 0}`
+            return overs
+        },
         get isNextInningStart(){
             const totalBatsman = this.batters.length
             const outBatsman = this.batters.filter(
@@ -177,8 +205,11 @@ export function DetailMatch(match){
             return overs 
         },
         get runRate(){
-            let rr = (this.score / (this.oversBowl || 1))
+            if(this.inn.totalBalls < 6) return this.inn.bat.score.toFixed(1)
+
+            let rr = (this.score / (this.inn.totalBalls || 1))
             if(!isNaN(rr)){
+                rr = (rr * 6)
                 rr = rr.toFixed(1)
             }else rr= '0.0'
             return rr

@@ -11,6 +11,7 @@ import { ShowMsg, TeamCard, SelectTeamCard } from "../Components";
 import SearchPlayer from "../Services/SearchPlayer";
 import SearchTeam from "../Services/SearchTeam";
 import { BiSad } from "react-icons/bi";
+import { useEffect } from "react";
 
 export const SearchOutlet = () => {
     const { teamId } = useParams();
@@ -25,15 +26,20 @@ export const SearchOutlet = () => {
     const { setOpponent, setScorer } = context || {};
     // console.log(isSelection, setOpponent);
 
+    useEffect(() => {
+        let timeoutId = setTimeout(setMsg, 2000, '')
+        return () => clearTimeout(timeoutId)
+    }, [msg])
+
     async function addPlayer(e, playerId) {
         try {
             // console.log(playerId);
             // {teamId, playerId, role}
             const res = await req.post("/addPlayer", { teamId, playerId });
-
-            navigate(-2, { state: res.data });
+            setMsg(`$${'Player Added!'}`);
+            navigate(-2, {state: res.data});
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             setMsg(error.response.data);
         }
     }
@@ -101,7 +107,7 @@ export const SearchOutlet = () => {
                 <div className="pd-1 flex-col gap-1 pd-block-06">
                     <ShowMsg
                         text={msg}
-                        error={true}
+                        error={msg?.[0] === '$' ? false : true }
                         style={{ paddingTop: 0 }}
                     />
                     {Array.isArray(result) && result.length === 0 ? (

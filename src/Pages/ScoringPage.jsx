@@ -20,7 +20,7 @@ import styles from "./ScoringPage.module.css";
 import socketIOClient from "socket.io-client";
 import { DetailMatch } from "../Services";
 
-const ENDPOINT = "http://localhost:7000";
+const ENDPOINT = import.meta.env.VITE_API_SOCKET_END_POINT;
 
 export const ScoringPage = () => {
     const { state } = useLocation();
@@ -35,13 +35,8 @@ export const ScoringPage = () => {
     const [spellEle, setSpellEle] = useState()
 
     const socket = useRef();
-    // console.log(matchDetails);
-    // console.log("Scoring Page Render..");
     useEffect(() => {
-        console.log("effect runs");
         (async () => {
-            // console.log("effect async runs");
-            // console.log(socket.current);
             socket.current = socketIOClient(ENDPOINT, {
                 transports: ['websocket'],
                 upgrade: false

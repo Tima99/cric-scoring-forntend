@@ -10,6 +10,7 @@ import { RiTeamFill } from "react-icons/ri";
 import logo from "../assets/user-circle.jpg";
 import { MdSportsCricket, MdSports } from "react-icons/md";
 import req from "../api/request";
+import { useRef } from "react";
 
 export const SelectStriker = () => {
     const { pathname, state } = useLocation();
@@ -29,6 +30,7 @@ export const SelectStriker = () => {
     let bowlFirstTeam = labels[toss.select === "bowl" ? indx : 1 - indx];
     // console.log(batFirstTeam, bowlFirstTeam, toss.select === 'bat');
     let [nextEle, setNextEle] = useState("");
+    const ref = useRef()
     useEffect(() => {
         let keys = opening && Object.keys(opening);
         setNextEle("");
@@ -37,6 +39,7 @@ export const SelectStriker = () => {
                 <button
                     className="btn btn-squid margin-left-auto"
                     onClick={pathname.includes("scoring") ? NextInning : Start}
+                    ref={ref}
                 >
                     {btnText || "Start"}
                 </button>
@@ -63,7 +66,7 @@ export const SelectStriker = () => {
     async function Start() {
         const { myTeam: teamA, opponent: teamB, details, scorer } = context;
         try {
-
+            ref.current.style.display = "none"
             const res = await req.post("/createMatch", {
                 teamA,
                 teamB,

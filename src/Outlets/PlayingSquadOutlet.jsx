@@ -5,7 +5,6 @@ import { FaCopyright } from "react-icons/fa";
 
 export const PlayingSquadOutlet = () => {
     const { state } = useLocation();
-    // console.log(state);
 
     const players = useMemo(() => {
         const players = state.team.players;
@@ -42,8 +41,8 @@ export const PlayingSquadOutlet = () => {
             );
         });
 
-        const restSquadCards = restSquad.map((player) => {
-            return <SelectTeamCard obj={player} />;
+        const restSquadCards = restSquad.map((player, i) => {
+            return <SelectTeamCard obj={player} key={i}/>;
         });
 
         return [playingSquadCards, restSquadCards];

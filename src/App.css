@@ -106,6 +106,9 @@
 .bg-shadow{
     background-color: rgba(167, 166, 166, 0.637);
 }
+.bg-green{
+    background-color: rgba(12, 151, 12, 0.685);
+}
 .margin-left-auto{
     margin-left: auto !important;
 }
@@ -113,7 +116,17 @@
     margin: auto;
 }
 .width-max-content{
-    width: max-content;
+    width: max-content !important;
+}
+.height-max-content{
+    height: max-content !important;
+}
+.j-flex-end{
+    justify-content: flex-end;
+}
+.height-remain{
+    height: calc(100vh - var(--nav-height) - 70px);
+    overflow: scroll;
 }
 .parent-full-width{
     width: 100%;
@@ -157,7 +170,7 @@
     position: fixed;
 }
 .dis-none{
-    display: none;
+    display: none !important;
 }
 .btn-link, .btn-squid{
     background-color: transparent;
@@ -215,7 +228,7 @@
     text-transform: capitalize;
 }
 .bold{
-    font-weight: bold;
+    font-weight: bold!important;
 }
 .caption{
     font-size: .85rem;
@@ -227,7 +240,13 @@
     color: rgb(243, 38, 38);
 }
 .green{
-    color: green;
+    color: rgb(19, 163, 19);
+}
+.yellow{
+    color: rgb(214, 186, 27);
+}
+.opacity-08{
+    opacity: .85;
 }
 .blue{
     color: rgb(21, 111, 146);
@@ -326,6 +345,9 @@ input[name="checkbox-score"]:checked + label{
     -ms-transition: all .4s;
     -o-transition: all .4s;
 }
+.button-reset{
+    width: min-content;
+}
 button[data="out"]{
     background-color: rgb(248, 50, 50);
     border: 1px solid red;
@@ -418,7 +440,7 @@ input[name="search"]{
     text-indent: .6rem;
     outline: none;
 }
-.media-object{
+.media-object, .media-object-list{
     display: flex;
     align-items: center;
     min-height: 50px;
@@ -443,6 +465,17 @@ input[name="search"]{
 }
 .media-object > li:first-child img{
     width: 100%;
+}
+.media-object-list{
+    background-color: transparent;
+    box-shadow: none;
+    border-bottom: 1px solid #333;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+    max-width: 100%;
 }
 .bottom-bar-input{
     border: none;
@@ -620,7 +653,194 @@ input[name="search"]{
 }
 .scroll-content-container{
     flex-shrink: 0;
-    min-width: 100%;
+    flex-grow: 0;
+    width: 100%;
     height: 100%;
     scroll-snap-align: center;
+}
+
+.grid-score{
+    display: grid;
+    grid-template-columns: 2fr repeat(4, 1fr);
+    place-items: center;
+    grid-template-rows: auto;
+}
+
+.grid-score span{
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    text-align: center;
+}
+
+.grid-score span:first-child{
+    justify-self: flex-start;
+    text-align: left;
+}
+
+input[name="ViewMatch--toggle-scoreboard"]:checked ~ section{
+    display: block;
+}
+input[name="ViewMatch--toggle-scoreboard"]:not(:checked) ~ section{
+    display: none;
+}
+.viewMatch--arrow-up, .viewMatch--arrow-down{
+    display: none;
+    translate: .3rem .2rem;
+}
+input[name="ViewMatch--toggle-scoreboard"]:checked ~ label .viewMatch--arrow-down{
+    display: inline-block;
+}
+input[name="ViewMatch--toggle-scoreboard"]:not(:checked) ~ label .viewMatch--arrow-up{
+    display: inline-block;
+}
+
+/* spell */
+
+
+.spell-runs{
+    /* min-height: 60px; */
+    width: 100%;
+    margin-top: 1rem;
+    display: flex;
+    justify-content: center;
+    font-size: 1.13rem;
+}
+.spell-runs > ul{
+    list-style: none;
+    display: flex;
+    align-items: flex-end;
+    gap: .7rem;
+    overflow-x: scroll;
+    padding: .2rem 1rem;
+}
+
+.spell-runs > ul > li{
+    flex-shrink: 0;
+    display: block;
+    width : 32px;
+    height: 32px;
+    background-color: whitesmoke;
+    color: #333;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow:  1px 0 2px #222;
+}
+
+/* logo */
+.logo-container{
+    overflow: hidden;
+    width: 12vmin;
+    height: 12vmin;
+    max-width: 50px;
+    max-height: 50px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+.logo-container img {
+    width: 100%;
+}
+.list-style-none{
+    list-style-type: none;
+}
+.list-style{
+    color: #222;
+    list-style-position: inside;
+}
+
+.leaderboard{
+    width: 100%;
+    overflow-x: scroll;
+    overscroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    max-width: 100%;
+}
+.leaderboard > div{
+    flex-shrink: 0;
+    width: 100%;
+    scroll-snap-align: center;
+}
+.leaderboard ul li{
+    font-size: .88rem;
+    display: flex;
+    align-items: center;
+}
+
+.leaderboard ul li::before{
+    content: '';
+    width: 5px;
+    height: 5px;
+    display: inline-block;
+    background-color: #666;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    margin-right: 0.4rem;
+}
+.leaderboard .media-object-list#topper{
+    background-color: yellow;
+}
+
+.leaderboard ul li.selected{
+    color: rgb(10, 177, 10);
+    font-weight: bold;
+    font-size: .92rem;
+}
+
+.leaderboard select{
+    display: block;
+    width: 100%;
+    padding: .4rem 1rem;
+    margin-bottom: .8rem;
+    font-size: 1rem;
+    background-color: rgba(255, 255, 255, 0.815);
+}
+
+.btn-groups{
+    border: 1px solid var(--primary-dark);
+    border-radius: .2rem;
+    overflow: hidden;
+    -webkit-border-radius: .2rem;
+    -moz-border-radius: .2rem;
+    -ms-border-radius: .2rem;
+    -o-border-radius: .2rem;
+    width: max-content;
+    display: block;
+    margin: auto;
+    margin-bottom: .7rem;
+}
+.btn-group{
+    background-color: transparent;
+    font-size: 1rem;
+    display: inline-block;
+    padding: .5rem .8rem;
+    border: none;
+    color: var(--primary-dark);
+    margin: 0;
+    line-height: 1rem;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    -o-border-radius: 0;
+}
+.btn-groups input[name="toggle-leaderboard"]:checked + label{
+    background-color: var(--primary-dark);
+    color: white;
+}
+
+.btn-group:hover{
+    color: var(--primary-dark);
 }

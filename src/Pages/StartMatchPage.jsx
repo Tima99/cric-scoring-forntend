@@ -88,7 +88,7 @@ export const StartMatchPage = () => {
             <TopNav
                 title="Start a Match"
                 backConfirm={false}
-                // confirmRef={confirmRef}
+                menu = {false}
             ></TopNav>
             {/* <Confirm text="You match will be cancel. Are you sure?" ref={confirmRef} /> */}
 
@@ -294,10 +294,7 @@ export const StartMatchPage = () => {
                         </li>
                     </ul>
                     <div className="flex around parent-full-width">
-                        <button className="btn-squid btn grey">
-                            Schedule Match
-                        </button>
-                        <button className="btn-squid btn" onClick={StartMatch}>
+                        <button className="btn-squid btn margin-left-auto" onClick={StartMatch}>
                             Start Match
                         </button>
                     </div>

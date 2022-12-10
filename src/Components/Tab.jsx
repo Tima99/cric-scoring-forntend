@@ -22,10 +22,10 @@ const styles = {
     }
 }
 
-export const Tab = ({text='', title=''}) => {
+export const Tab = ({text='', title='', order={row: null, column: null}, fontSize}) => {
   return (
-    <div style={styles['tab-contain']}>
-        <span style={{fontWeight: 'bold', fontSize: '1.35rem'}}>{text}</span>
+    <div style={{...styles['tab-contain'], gridRow: order.row, gridColumn: order.column}}>
+        <span style={{fontWeight: 'bold', fontSize: fontSize || '1.35rem'}}>{text}</span>
         <span style={styles['title']}>{title}</span>
     </div>
   )

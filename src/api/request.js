@@ -1,7 +1,6 @@
 import axios from "axios"
-
 const req = axios.create({
-    baseURL: 'http://localhost:7000/api/',
+    baseURL: import.meta.env.VITE_API_BASE_URL,
     timeout: 12000,
     withCredentials: true,
 });
@@ -76,6 +75,15 @@ export const CreatePlayer= async ( data ) => {
     }
 }
 
+export const EditPlayer= async ( data ) => {
+    try {
+        // { name, location, gender, role, logo:optional }
+        const res = await req.post('/editPlayer', data)
+        return res
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
 export const CreateTeamRequest = async ( data ) => {
     try {
         // { name, location, gender, role, logo:optional }

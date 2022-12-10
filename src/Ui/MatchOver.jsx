@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useLocation, useOutletContext } from "react-router-dom";
 
 export const MatchOver = () => {
-    const { current } = useOutletContext();
+    const { current, socket } = useOutletContext();
 
     return (
         <div className="abs top-0 left-0 full-display z9999 flex center overflow-hidden bg-shadow">
@@ -20,6 +20,7 @@ export const MatchOver = () => {
                         Go to Matches
                     </button>
                 </Link>
+                {/* <button onClick={() => socket.current.emit("win")}>Win</button> */}
             </div>
         </div>
     );

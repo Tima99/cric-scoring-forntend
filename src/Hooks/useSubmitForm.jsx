@@ -6,7 +6,8 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
   const [isFormSubmit, setIsFormSubmit] = useState(false)
   const navigate = useNavigate()
   // message start with $ symbol means submission success otherwise not sucess
-  const [message, setMessage] = useState('')
+  const [message, setMessage]   = useState('')
+  const [response, setResponse] = useState('')
 
   // set message to '' to hide error or sucess msg
   useEffect(()=>{
@@ -32,6 +33,7 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
 
       // if sucess append sucess msg
       setMessage(`$${'Done'}`)
+      setResponse(res)
 
       // after sucess you have to navigate anywhere
       if(Array.isArray(to)){
@@ -52,7 +54,7 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
       to && navigate(to, {...options, state : res.data} )
     }
     catch(error){
-      console.log(error)
+      // console.log(error)
       // if any error sent it back
       if(error instanceof Error)
         setMessage(error.message) 
@@ -73,5 +75,5 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
     }
   }
   
-  return [isFormSubmit, submitForm, message, setMessage]
+  return [isFormSubmit, submitForm, message, setMessage, response]
 }

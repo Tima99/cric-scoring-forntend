@@ -20,37 +20,52 @@ export const MatchCard = ({
         </div>
 
         <section className="teams pd-top-03">
-            <div className="teamA title-small flex between">
-                <span 
-                    className={ `match-teamName ${current.isBatTeamA && 'active-team-inn' || ''}`}
-                >{match.teamA.name}</span>
-                <span>
-                <span>
-                    {current.teamAScore || 0}
-                </span>
-                /
-                <span>{ current.teamAWickets || 0}</span>
-                </span>
-            </div>
+                {
+                    current.teamAInn !== null &&
+                    <div className={`teamA title-small flex between ${current.winTeam._id !== match.teamA._id && "opacity-08" || ''}`}>
+                        <span
+                            className={`match-teamName text-eclipse flex-1 
+                            ${( current.winTeam._id || current.isBatTeamA && "active-team-inn") || ""}
+                            ${(current.winTeam._id === match.teamA._id && "green bold") || "" }`}
+                        >
+                            {match.teamA.name}
+                        </span>
+                        <span>
+                            <span>{current.teamAScore || 0}</span>/
+                            <span>{current.teamAWickets || 0}</span>&nbsp;
+                            <span className='font-xsmall'>({current.teamAOvers})</span>
+                        </span>
+                    </div>
+                }
 
-            <div className="teamB title-small flex between pd-top-03">
-                <span className={ `match-teamName ${current.isBatTeamB && 'active-team-inn' || ''}`}>
-                    {match.teamB.name}
-                </span>
-                <span>
-                <span>
-                    {current.teamBScore || 0}
-                </span>
-                /
-                <span>{ current.teamBWickets || 0}</span>
-                </span>
-            </div>
+                {
+                    current.teamBInn !== null &&
+                    <div className={`teamB title-small flex between pd-top-03 ${current.winTeam._id !== match.teamB._id && "opacity-08" || ''}`  }>
+                        <span
+                            className={`match-teamName text-eclipse flex-1 
+                            ${(current.winTeam._id || current.isBatTeamB && "active-team-inn") || ""}
+                            ${(current.winTeam._id === match.teamB._id && "green bold") || "" }
+                            `}
+                        >
+                            {match.teamB.name}
+                        </span>
+                        <span>
+                            <span>{current.teamBScore || 0}</span>/
+                            <span>{current.teamBWickets || 0}</span>&nbsp;
+                            <span className='font-xsmall'>({current.teamBOvers})</span>
+                        </span>
+                    </div>
+                }
         </section>
 
         <section className="chase-detail font-xxsmall text-eclipse">
             {
                 current.isMatchOver 
-                ? current.winTeam.name ? `${current.winTeam.name} won the match` : current.winTeam.matchTie
+                ? <span className="bold" style={{color: "#333"}}>
+                    {
+                        current.winTeam.name ? `${current.winTeam.name} won the match` : current.winTeam.matchTie
+                    }
+                </span>
                 : current.targetRuns ? current.chaseTarget : `${current.tossWonTeamName} select ${current.tossWonSelect} first`
             }
         </section>

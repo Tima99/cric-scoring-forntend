@@ -17,7 +17,10 @@ export const TeamCard = ({obj, btn=false, btnTo}) => {
             </li>
             <li>
                 <span className={obj.captainName ? styles["captain-name"] : ''}>
-                    {obj.captainName}
+                    {obj.captainName }
+                </span>
+                <span className={obj.creatorName ? styles["admin-name"]: ''}>
+                    {obj.creatorName}
                 </span>
                 <span style={{display: obj.location ? 'inline-block' : 'none'}}>
                     <BiCurrentLocation size={19} className='icon' color='rgba(0,0,0,.7)' style={{margin: '0 .35rem'}}/>
