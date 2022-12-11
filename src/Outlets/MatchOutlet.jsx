@@ -8,6 +8,48 @@ import { Loader } from "../Components";
 import { MdPlayCircleFilled } from "react-icons/md";
 import { UserContext } from "../Pages/HomePage";
 
+const MatchCardOptions = ({onClick, optionShow}) => {
+    return (
+        <div className="abs top-0 left-0 full-display bg-shadow pd-1 overflow-hidden pos-fixed flex center z99999">
+            <div className="relative entry-container flex-col c-v-center pd-1 gap-1">
+                <div
+                    className="abs top-0 right-0 pd-1 pd-block-1"
+                    onClick={onClick}
+                >
+                    <CgClose size={20} color="gray" />
+                </div>
+                <h2>Select Option</h2>
+                <label htmlFor="view-match" className="title pd-1">
+                    <input
+                        type="radio"
+                        name="select-option"
+                        id="view-match"
+                    />
+                    <NavLink
+                        style={{ color: "inherit" }}
+                        to={"/viewMatch"}
+                        state={optionShow}
+                        className="pd-1"
+                    >
+                        View Match
+                    </NavLink>
+                </label>
+                <label htmlFor="scoring" className="title pd-1">
+                    <input type="radio" name="select-option" id="scoring" />
+                    <NavLink
+                        style={{ color: "inherit" }}
+                        to={`/scoring`}
+                        state={optionShow}
+                        className="pd-1"
+                    >
+                        Scoring
+                    </NavLink>
+                </label>
+            </div>
+        </div>
+    );
+};
+
 export const MatchOutlet = () => {
     const {authUser} = useContext(UserContext)
     const { setActiveTab } = useOutletContext();
@@ -20,48 +62,6 @@ export const MatchOutlet = () => {
     useEffect(() => {
         setActiveTab(3);
     }, []);
-
-    const MatchCardOptions = () => {
-        return (
-            <div className="abs top-0 left-0 full-display bg-shadow pd-1 overflow-hidden pos-fixed flex center">
-                <div className="relative entry-container flex-col c-v-center pd-1 gap-1">
-                    <div
-                        className="abs top-0 right-0 pd-1 pd-block-1"
-                        onClick={() => setOptionShow(false)}
-                    >
-                        <CgClose size={20} color="gray" />
-                    </div>
-                    <h2>Select Option</h2>
-                    <label htmlFor="view-match" className="title pd-1">
-                        <input
-                            type="radio"
-                            name="select-option"
-                            id="view-match"
-                        />
-                        <NavLink
-                            style={{ color: "inherit" }}
-                            to={"/viewMatch"}
-                            state={optionShow}
-                            className="pd-1"
-                        >
-                            View Match
-                        </NavLink>
-                    </label>
-                    <label htmlFor="scoring" className="title pd-1">
-                        <input type="radio" name="select-option" id="scoring" />
-                        <NavLink
-                            style={{ color: "inherit" }}
-                            to={`/scoring`}
-                            state={optionShow}
-                            className="pd-1"
-                        >
-                            Scoring
-                        </NavLink>
-                    </label>
-                </div>
-            </div>
-        );
-    };
 
     useLayoutEffect(() => {
         (async () => {
@@ -109,7 +109,7 @@ export const MatchOutlet = () => {
     return (
         <div className="flex-col pd-1 pd-block-1">
             {optionShow && (
-                <MatchCardOptions />
+                <MatchCardOptions onClick={() => setOptionShow(false)} optionShow = {optionShow}/>
             )}
             <Link to={"/startMatch"} className="bold flex r-v-center gap-06"> <MdPlayCircleFilled  /> Start a Match</Link>
 

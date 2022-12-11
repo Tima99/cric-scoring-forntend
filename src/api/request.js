@@ -33,10 +33,10 @@ export const VerifyOtp = async ( data ) => {
     }
 }
 
-export const ResendOtpRequest = async ( email ) => {
+export const ResendOtpRequest = async ( email , isResetPwd) => {
     try {
         // email
-        const res = await req.get(`/resend/otp/${email}`)
+        const res = await req.get(`/resend/otp/${email}/${isResetPwd}`)
         return res
     } catch (error) {
         return Promise.reject(error)

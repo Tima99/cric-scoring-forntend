@@ -34,7 +34,7 @@ export const SelectTeamCard = ({ obj, setSelected, assign, howtoAssign }) => {
                 <TeamCard obj={obj} disableLink={true} />
                 {setSelected && (
                     <div
-                        className={`${styles["selected-icon-tick"]} abs right-0 translate-right-1 dis-none`}
+                        className={`${styles["selected-icon-tick"]} abs right-0 translate-right-1`}
                     >
                         <MdDone size={35} color={"green"} />
                     </div>

@@ -41,7 +41,7 @@ export const useSubmitForm = (api=new Function(), to= new String() || new Array(
         const to1 = to[0]
         const to2 = to[1]
         const data = res.data
-        if(data instanceof String && data.toLowerCase().includes("verify"))
+        if(typeof data === "string" && data.toLowerCase().includes("verify"))
           to1 && navigate(to1, {...options, replace: true} )
         else
           to2 && navigate(to2, {...options, state: data, replace: true} )

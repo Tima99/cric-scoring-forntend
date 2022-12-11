@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom'
 
 export const TeamCard = ({obj, btn=false, btnTo}) => {
   return (
-    <div className={styles['team-card-container']}>
+    <section className={styles['team-card-container']} id={obj._id}>
         <div className={styles['team-logo']}>
             <img src={obj.logo || defaultLogo} alt={obj.name} />
         </div>
@@ -36,6 +36,6 @@ export const TeamCard = ({obj, btn=false, btnTo}) => {
             </div>
             : ''
         }
-    </div>
+    </section>
   )
 }

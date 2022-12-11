@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import styles from "./styles/NavLayout.module.css"
 import {TbGridDots, TbCricket} from "react-icons/tb"
 import {CgProfile} from "react-icons/cg"
@@ -10,10 +10,13 @@ import {RiBoxingLine} from "react-icons/ri"
 import {BsTrophy, BsSearch} from "react-icons/bs"
 import { BiLogOut } from 'react-icons/bi'
 import req from "../api/request"
+import brandLogo from "../assets/fox-sports-logo.png"
+import { Backbutton } from '../Components'
 
 export const NavLayout = ({ activeTab }) => {
   const toggleTeamsRef = useRef()
   const navigate = useNavigate()
+  const {state} = useLocation()
   
   return (
     <div className={styles['nav-layout-container']}>
@@ -21,24 +24,29 @@ export const NavLayout = ({ activeTab }) => {
       <label htmlFor="toggle-menu" className={styles['hide-menu-full']} ></label>
       
       <label htmlFor='toggle-menu' className={styles["nav-button"]}>
-          <TbGridDots />
+          {
+            state && typeof state._id === "string" && !state.email
+            ? <Backbutton size={26} replace={true} />
+            : <TbGridDots />
+          }       
+          
       </label>
 
-      <div className={styles["mobile-logo"]}>
-        <img src="https://i.postimg.cc/K842zBGP/465-4654947-fox-sports-live-fox-sports-logo-2009-hd-removebg-preview.png" alt="Logo" />
-      </div>
+      <Link to={'/'} className={styles["mobile-logo"]}>
+        <img src={brandLogo} alt="Logo" />
+      </Link>
       
       <ul className={styles["wraper"]}>
-        <Link  className={styles["logo"]}>
+        <Link  className={styles["logo"]} to={"/"}>
           <li>
-            <img src="https://i.postimg.cc/K842zBGP/465-4654947-fox-sports-live-fox-sports-logo-2009-hd-removebg-preview.png" alt="Logo" />
+            <img src={brandLogo} alt="Logo" />
           </li>
         </Link>
 
-        <li className={styles["search-bar-contain"]}>
-          <input type="text" name="search" id="search" placeholder='Search for teams, players and more' />
-          <button className={styles['search-button']}><BsSearch /></button>
-        </li>
+        <Link className={styles["search-bar-contain"]} to={'/search'} state={{placeholder: "Search for teams, players and more..."}}>
+            <input type="text" name="search" id="search" placeholder='Search for teams, players and more' />
+            <button className={styles['search-button']}><BsSearch /></button>
+        </Link>
 
         <Link className={ activeTab===1 ? styles['active'] : '' } 
           to={'/home'}

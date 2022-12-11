@@ -28,7 +28,7 @@ export const MultiSelectedCard = ({ obj, setSelected }) => {
             <label htmlFor={obj._id} className="relative flex-col c-v-center">
                 <TeamCard obj={obj} disableLink={true} />
                 <div
-                    className={`${styles["selected-icon-tick"]} abs right-0 translate-right-1 dis-none`}
+                    className={`${styles["selected-icon-tick"]} abs right-0 translate-right-1`}
                 >
                     <MdDone size={35} color={"green"} />
                 </div>

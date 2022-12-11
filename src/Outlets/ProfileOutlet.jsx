@@ -1,5 +1,5 @@
 import React, { useRef, useState, useLayoutEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { MdAddLocation, MdSportsCricket } from "react-icons/md";
 import { TbGenderFemale } from "react-icons/tb";
@@ -111,8 +111,9 @@ const Profile = ({ message, setInputData, inputData }) => {
 };
 
 export const ProfileOutlet = () => {
-    const [isFormSubmit, SubmitForm, message, setMessage, response] =
-        useSubmitForm(CreatePlayer);
+    const [isFormSubmit, SubmitForm, message, setMessage, response] = useSubmitForm(CreatePlayer);
+    const { state } = useLocation();
+    const { _id } = state || {};
     const [
         isFormSubmit_edit,
         SubmitEditForm,
@@ -134,6 +135,11 @@ export const ProfileOutlet = () => {
         (async () => {
             setActiveTab(1);
             try {
+                if (_id) {
+                    const res = await req.get(`/player/${_id}`);
+                    setPlayer(res.data);
+                    return;
+                }
                 const res = await req.get("/authPlayer");
                 // console.log(res.data);
                 setPlayer(res.data);
@@ -146,7 +152,7 @@ export const ProfileOutlet = () => {
 
     useEffect(() => {
         if (!editResponse) return;
-        const res = editResponse.data
+        const res = editResponse.data;
         setInputData((prev) => {
             return {
                 _id: res._id,
@@ -155,7 +161,7 @@ export const ProfileOutlet = () => {
                 location: res.location,
                 role: res.role,
                 gender: res.gender,
-            }
+            };
         });
     }, [editResponse]);
 
@@ -164,10 +170,14 @@ export const ProfileOutlet = () => {
         setPlayer(response.data);
     }, [response]);
 
-    let battingTabs = ["innings", "runs", "sixes", "fours"]
-    battingTabs = player?.stats && [...new Set([...battingTabs, ...Object.keys(player.stats.batting)])]
-    let bowlingTabs = ["innings", "runs", "wickets", "sixes", "fours"]
-    bowlingTabs = player?.stats && [...new Set([ ...bowlingTabs ,...Object.keys(player.stats.bowling)])]
+    let battingTabs = ["innings", "runs", "sixes", "fours"];
+    battingTabs = player?.stats && [
+        ...new Set([...battingTabs, ...Object.keys(player.stats.batting)]),
+    ];
+    let bowlingTabs = ["innings", "runs", "wickets", "sixes", "fours"];
+    bowlingTabs = player?.stats && [
+        ...new Set([...bowlingTabs, ...Object.keys(player.stats.bowling)]),
+    ];
 
     const battingStats = useMemo(() => {
         if (!player || !player.stats) return;
@@ -179,7 +189,16 @@ export const ProfileOutlet = () => {
                 const value = typeof stat === "object" ? stat : stat;
 
                 if (typeof value === "number")
-                    return <Tab title={tab} text={value} key={tab} order={tab.includes("inning") && {row : 1, column: 2}}/>;
+                    return (
+                        <Tab
+                            title={tab}
+                            text={value}
+                            key={tab}
+                            order={
+                                tab.includes("inning") && { row: 1, column: 2 }
+                            }
+                        />
+                    );
                 else
                     return (
                         <Tab
@@ -203,14 +222,22 @@ export const ProfileOutlet = () => {
         statsJsx.push(
             <Tab
                 title={"SR"}
-                text={bats.runs ? ((bats.runs / bats.balls.total) * 100).toFixed(1) : "0.0"}
+                text={
+                    bats.runs
+                        ? ((bats.runs / bats.balls.total) * 100).toFixed(1)
+                        : "0.0"
+                }
                 key={"strike-rate"}
             />
         );
         statsJsx.push(
             <Tab
                 title={"Avg."}
-                text={bats.runs  ? (bats.runs / (outInn ? outInn : 1)).toFixed(1) : "0.0"}
+                text={
+                    bats.runs
+                        ? (bats.runs / (outInn ? outInn : 1)).toFixed(1)
+                        : "0.0"
+                }
                 key={"average"}
             />
         );
@@ -227,7 +254,16 @@ export const ProfileOutlet = () => {
                 const value = typeof stat === "object" ? stat : stat;
 
                 if (typeof value === "number")
-                    return <Tab title={tab} text={value} key={tab} order={tab.includes("inning") && {row : 1, column: 2}} />;
+                    return (
+                        <Tab
+                            title={tab}
+                            text={value}
+                            key={tab}
+                            order={
+                                tab.includes("inning") && { row: 1, column: 2 }
+                            }
+                        />
+                    );
                 return <Tab title={tab} text={value.total} key={tab} />;
             });
         const bowl = player.stats.bowling;
@@ -329,12 +365,13 @@ export const ProfileOutlet = () => {
     return (
         <main>
             <div className="pd-block-1 flex between r-v-center">
-                <span className="title flex-1 flex-col">Player :
+                <span className="title flex-1 flex-col">
+                    Player :
                     <ul
                         className="title-small text-eclipse flex-1 flex-col pd-1"
                         style={{
                             maxWidth: "95%",
-                            listStyle: "none"
+                            listStyle: "none",
                         }}
                     >
                         <li>{player?.name}</li>
@@ -342,31 +379,39 @@ export const ProfileOutlet = () => {
                     </ul>
                 </span>
 
-                <span
-                    className="pd-1"
-                    onClick={() => {
-                        if (typeof player !== "object") return;
-                        setInputData({
-                            player: { ...player },
-                            _id: player._id,
-                            name: player.name,
-                            location: player.location,
-                            role: player.role,
-                            gender: player.gender,
-                        });
-                        setPlayer(true);
-                    }}
-                >
-                    {" "}
-                    <BiEdit size={20} className="icon" color={"#333"} />{" "}
-                </span>
+                {  !state || state.email ? (
+                    <span
+                        className="pd-1"
+                        onClick={() => {
+                            if (typeof player !== "object") return;
+                            setInputData({
+                                player: { ...player },
+                                _id: player._id,
+                                name: player.name,
+                                location: player.location,
+                                role: player.role,
+                                gender: player.gender,
+                            });
+                            setPlayer(true);
+                        }}
+                    >
+                        {" "}
+                        <BiEdit
+                            size={20}
+                            className="icon"
+                            color={"#333"}
+                        />{" "}
+                    </span>
+                ) : (
+                    ""
+                )}
             </div>
             <h1 className="title">Batting</h1>
             <div className="tab-container pd-block-1">
                 {battingStats?.length ? (
                     battingStats
                 ) : (
-                    <div style={{ gridColumn: '1 / 3' }}>
+                    <div style={{ gridColumn: "1 / 3" }}>
                         No Batting Stats Found!
                     </div>
                 )}
@@ -376,7 +421,7 @@ export const ProfileOutlet = () => {
                 {bowlingStats?.length ? (
                     bowlingStats
                 ) : (
-                    <div style={{ gridColumn: '1 / 3' }}>
+                    <div style={{ gridColumn: "1 / 3" }}>
                         No Bowling Stats Found!
                     </div>
                 )}

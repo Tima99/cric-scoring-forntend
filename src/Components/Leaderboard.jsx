@@ -98,7 +98,7 @@ export function Leaderboard({ teamId }) {
                                       (bowler.runs / bowler.ballsBowl) *
                                       6
                                   ).toFixed(1)
-                                : bowler.runs.toFixed(1) || "0.0",
+                                : bowler.runs?.toFixed(1) || "0.0",
                     });
                 }
 
@@ -114,7 +114,7 @@ export function Leaderboard({ teamId }) {
                 bowling[idx].eco =
                     bowler.ballsBowl > 6
                         ? ((bowler.runs / bowler.ballsBowl) * 6).toFixed(1)
-                        : bowler.runs.toFixed(1) || "0.0";
+                        : bowler.runs?.toFixed(1) || "0.0";
             });
         });
 
@@ -124,7 +124,7 @@ export function Leaderboard({ teamId }) {
 
     const battingLead = useMemo(() => {
         return batting.map((bats, i) => {
-            const num = new Number (bats[filterSelect]);
+            const num = Math.floor(bats[filterSelect]);
             return (
                 <div
                     className="media-object-list"
@@ -194,7 +194,7 @@ export function Leaderboard({ teamId }) {
 
     const bowlingLead = useMemo(() => {
         return bowling.map((bowl, i) => {
-            const num = new Number (bowl[filterSelectBowl]);
+            const num = Math.floor(bowl[filterSelectBowl]);
             return (
                 <div
                     key={i + "bowlingLeaderboard"}

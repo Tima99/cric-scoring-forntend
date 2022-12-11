@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 // Layouts
-import { EntryLayout, ViewMatchLayout } from "./Layouts";
+import { EntryLayout, SearchLayout, ViewMatchLayout } from "./Layouts";
 // Features
 import {
     LoginFeature,
@@ -61,8 +61,14 @@ function App() {
                 <Route path={"/home/teams/matches"} element={<MatchOutlet />} />
             </Route>
 
+            {/* Search Page */}
+            <Route path="/search" element={<SearchLayout />}>
+                <Route index element={<SearchOutlet />}/>
+            </Route>
+            {/* TeamPage */}
             <Route path="/team/:id" element={<TeamPage />} />
 
+            {/* Team Preview List */}
             <Route path="/teamPreview" element={<PreviewTeamPage />}>
                 <Route index element={<TeamMembersOutlet />} />
                 <Route

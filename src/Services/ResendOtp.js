@@ -1,6 +1,6 @@
 import { ResendOtpRequest } from "../api/request";
 
-export async function ResendOtp(e, restartTimer, to, setMsg) {
+export async function ResendOtp(e, restartTimer, to, setMsg, isResetPwd) {
     try {
         e.preventDefault()
         const textEle = e.target
@@ -8,7 +8,7 @@ export async function ResendOtp(e, restartTimer, to, setMsg) {
         textEle && textEle.parentElement.classList.add('disable-link')
         textEle && textEle.parentElement.classList.remove('active-link')
 
-        const res = await ResendOtpRequest(to)
+        const res = await ResendOtpRequest(to, isResetPwd)
         // console.log(res);
 
         setMsg('$'+res.data)

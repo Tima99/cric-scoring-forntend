@@ -4,7 +4,7 @@ export default async function SearchPlayer(e, setResult) {
     let query = e.target.value.trim().toLowerCase()
     // setQuery(query)
     // minimum 3 character require
-    if (query.length < 3)
+    if (query.length < 2)
       return
     try {
       const res = await req.get(`/search?query=${query}&searchFor=players`)
