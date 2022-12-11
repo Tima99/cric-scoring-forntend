@@ -31,6 +31,14 @@ export const RegisterFeature = () => {
           ? 
           <>
             <LabelInput type='password' name='password' id='type-password' label='Password' required onChange={setInputData} />
+            <ul style={{
+              listStylePosition: "inside",
+              alignSelf: "flex-start"
+            }}>
+              <h5>Password must be</h5>
+              <li>Minimum length 6</li>
+              <li>Atleast one - <br /> <span className='pd-1'>Alphabet, Digit and Symbol</span></li>
+            </ul>
             <LabelInput type='password' name='confirm-password' id='type-confirm-password' label='Confirm Password' required onChange={setInputData} />
           </>
           : null
