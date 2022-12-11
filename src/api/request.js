@@ -1,7 +1,7 @@
 import axios from "axios"
 const req = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
-    timeout: 12000,
+    timeout: 18000,
     withCredentials: true,
 });
 
