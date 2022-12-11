@@ -113,7 +113,7 @@ const Profile = ({ message, setInputData, inputData }) => {
 export const ProfileOutlet = () => {
     const [isFormSubmit, SubmitForm, message, setMessage, response] = useSubmitForm(CreatePlayer);
     const { state } = useLocation();
-    const { _id } = state || {};
+    const { _id, playerStat } = state || {};
     const [
         isFormSubmit_edit,
         SubmitEditForm,
@@ -135,7 +135,7 @@ export const ProfileOutlet = () => {
         (async () => {
             setActiveTab(1);
             try {
-                if (_id) {
+                if (_id && playerStat) {
                     const res = await req.get(`/player/${_id}`);
                     setPlayer(res.data);
                     return;

@@ -34,7 +34,7 @@ import {
 } from "./Outlets";
 // Ui
 import { MatchOver, SelectFielders, SelectStriker, Teams, Toss, ViewMatch1 } from "./Ui";
-import { Confirm, NavHorizontal, Radios } from "./Components";
+import { Confirm, NavHorizontal } from "./Components";
 import { PlayingSquadOutlet } from "./Outlets/PlayingSquadOutlet";
 
 function App() {

@@ -59,7 +59,7 @@ export const StartMatchPage = () => {
 
         try {
             if (!myTeam._id || !opponent._id)
-                throw new Error("Please Select both team for match.");
+                throw new Error("Please Select both teams for match.");
             if (myTeam._id === opponent._id)
                 throw new Error("Both Teams cannot be same.");
             if (!myteam11 || !opponent11)
@@ -99,19 +99,27 @@ export const StartMatchPage = () => {
                     style={{ paddingBottom: "1rem" }}
                 />
 
-                <section className="select-teams flex around">
+                <section className="select-teams flex evenly" style={{alignItems: "flex-start"}}>
                     <Link
                         className="select-team team1 flex-col center"
                         to="/startMatch/selectMyTeam/my"
                         state={{ title: "Select Team", isSelectionTeam: true }}
                     >
-                        <img
-                            src={logo}
-                            alt="Your Team"
-                            width={"50px"}
-                            style={{ marginBottom: ".4rem" }}
-                        />
-                        <span>{myTeam.name || "Your Team"}</span>
+                        <div style={{
+                            width: "50px",
+                            height: "50px",
+                            overflow: "hidden",
+                            borderRadius: "100%",
+                            marginBottom: ".5rem"
+                        }}>
+                            <img
+                                src={logo}
+                                alt="Your Team"
+                                width={"100%"}
+                                style={{ marginBottom: ".4rem" }}
+                            />
+                        </div>
+                        <span className="bold font-xxsmall">{myTeam.name || "Your Team"}</span>
                         <button
                             className="btn-squid"
                             style={{
@@ -122,6 +130,7 @@ export const StartMatchPage = () => {
                             Select Squad ({squadCount.myteam11 || 0})
                         </button>
                     </Link>
+                    <div className="title-small bold pd-block-1" style={{color: "#333"}}>Vs</div>
                     <Link
                         className="select-team team2 flex-col center"
                         to="/startMatch/searchOpponent"
@@ -131,13 +140,21 @@ export const StartMatchPage = () => {
                             isSelection: true,
                         }}
                     >
-                        <img
-                            src={logo}
-                            alt="Opponent Team"
-                            width={"50px"}
-                            style={{ marginBottom: ".4rem" }}
-                        />
-                        <span>{opponent.name || "Opponent Team"}</span>
+                        <div style={{
+                            width: "50px",
+                            height: "50px",
+                            overflow: "hidden",
+                            borderRadius: "100%",
+                            marginBottom: ".5rem"
+                        }}>
+                            <img
+                                src={logo}
+                                alt="Opponent Team"
+                                width={"100%"}
+                                style={{ marginBottom: ".4rem" }}
+                            />
+                        </div>
+                        <span className="bold font-xxsmall">{opponent.name || "Opponent Team"}</span>
                         <button
                             className="btn-squid"
                             style={{

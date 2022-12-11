@@ -76,7 +76,7 @@ export const Teams = (props) => {
               }}/>
             </div>
           : <div className='flex-col gap-1 height-remain' style={{paddingBottom: ".8rem"}}>
-              {teams.length ? selectTeamCards : <div>No Teams Found. First Create One.</div>}
+              {teams.length ? selectTeamCards : <div className='flex-col center'>No Teams Found. <Link to={'/home/teams'} className='pd-block-1 font-xsmall'>First Create One.</Link></div>}
             </div>)
 
         : (teamCards === null 

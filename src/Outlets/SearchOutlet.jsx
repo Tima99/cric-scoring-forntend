@@ -7,7 +7,7 @@ import {
     useParams,
 } from "react-router-dom";
 import req from "../api/request";
-import { ShowMsg, TeamCard, SelectTeamCard } from "../Components";
+import { ShowMsg, TeamCard, SelectTeamCard, Loader } from "../Components";
 import SearchPlayer from "../Services/SearchPlayer";
 import SearchTeam from "../Services/SearchTeam";
 import { BiSad } from "react-icons/bi";
@@ -27,6 +27,7 @@ export const SearchOutlet = () => {
     const context = useOutletContext();
     const { setOpponent, setScorer } = context || {};
     const resultContainer = useRef()
+    const [isSearching, setIsSearching] = useState(false)
     // console.log(isSelection, setOpponent);
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export const SearchOutlet = () => {
                             onClick={
                                 (e) => {
                                     if(key === "players")
-                                        navigate('/home', {state: {_id: r._id}})
+                                        navigate('/home', {state: {_id: r._id, playerStat: true}})
                                     else if(key === "teams")
                                         navigate(`/team/${r._id}`)
                                 }
@@ -111,13 +112,16 @@ export const SearchOutlet = () => {
     // search all
     async function Search(setResult) {
         let $query = query.trim().toLowerCase();
-        if ($query.length < 2) return;
+        if ($query.length < 2) return setIsSearching(false);
+            
         try {
             const res = await req.get(`/search?query=${$query}`);
             // console.log({ data: res.data, $query })
             setResult(res.data);
+            setIsSearching(false)
         } catch (error) {
             console.log(error);
+            setIsSearching(false)
         }
     }
 
@@ -133,15 +137,22 @@ export const SearchOutlet = () => {
                         value={query}
                         onChange={(e) => {
                             setQuery(e.target.value);
-                            if (searchFor) SearchPlayer(e, setResult);
+                            if (searchFor === "players") SearchPlayer(e, setResult, null, setIsSearching);
                             else if (searchFor === "teams")
-                                SearchTeam(e, setResult);
+                                SearchTeam(e, setResult, null, setIsSearching);
                         }}
                     />
                     <div
                         className="bg-white pd-1 flex center border-bottom"
                         onClick={(e) => {
-                            Search(setResult);
+                            if(isSearching) return
+                            setResult([])
+                            setIsSearching(true)
+                            if (searchFor === "players") SearchPlayer(e, setResult, query, setIsSearching);
+                            else if (searchFor === "teams")
+                                SearchTeam(e, setResult, query, setIsSearching);
+                            else
+                                Search(setResult);
                         }}
                     >
                         <BsSearch size={17} color="var(--primary-dark)" />
@@ -161,8 +172,20 @@ export const SearchOutlet = () => {
                             className="flex-col center"
                             style={{ textTransform: "capitalize" }}
                         >
-                            <BiSad size={80} color="gray" />
-                            {`No ${searchFor || "Result"} found`}
+                            {
+                                isSearching ?
+                                <Loader style={{
+                                    paddingTop: "1.4rem",
+                                    alignItems: "flex-start",
+                                    marginTop: "3rem"
+                                }}/>
+                                :
+                                <>
+                                    <BiSad size={80} color="gray" />
+                                    {`No ${searchFor || "Result"} found`}
+                                </>
+                            }
+                            
                         </div>
                     ) : isSelection ? (
                         selectedEle

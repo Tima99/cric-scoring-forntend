@@ -124,7 +124,7 @@ export const TeamMembersOutlet = () => {
                 {title && <span className="title z9999">{title}</span>}
             </section>
 
-            {isSelection ? selectPlayersJsx : playersJsxWithLinkRole}
+            {isSelection ? (selectPlayersJsx.length > 0 ? selectPlayersJsx : <div className="flex center">No player selected in squad</div>) : playersJsxWithLinkRole}
         </div>
     );
 };

@@ -17,10 +17,11 @@ export const NavLayout = ({ activeTab }) => {
   const toggleTeamsRef = useRef()
   const navigate = useNavigate()
   const {state} = useLocation()
+  const ref = useRef()
   
   return (
     <div className={styles['nav-layout-container']}>
-      <input type="checkbox" name="toggle-menu" id="toggle-menu" style={{display: 'none'}}/>
+      <input type="checkbox" name="toggle-menu" id="toggle-menu" ref={ref} style={{display: 'none'}}/>
       <label htmlFor="toggle-menu" className={styles['hide-menu-full']} ></label>
       
       <label htmlFor='toggle-menu' className={styles["nav-button"]}>
@@ -48,7 +49,12 @@ export const NavLayout = ({ activeTab }) => {
             <button className={styles['search-button']}><BsSearch /></button>
         </Link>
 
-        <Link className={ activeTab===1 ? styles['active'] : '' } 
+        <Link className={ activeTab===1 ? styles['active'] : '' }
+          onClick={(e)=>{
+            e.preventDefault()
+            ref.current.checked = false
+            navigate('/home', {replace: true})
+          }}
           to={'/home'}
           replace={true}
         >
@@ -62,6 +68,11 @@ export const NavLayout = ({ activeTab }) => {
         <Link className={ activeTab===2 ? `${styles['teams']} ${styles['active']}` : styles['teams'] } 
           to={'/home/teams'}
           replace={true}
+          onClick={(e)=>{
+            e.preventDefault()
+            ref.current.checked = false
+            navigate('/home/teams', {replace: true})
+          }}
         >
           <AiOutlineTeam size={24} />
           <input type="checkbox" name='toggle-teams-menu' id='toggle-teams-menu' ref={toggleTeamsRef} style={{display: 'none'}}/>
@@ -70,6 +81,7 @@ export const NavLayout = ({ activeTab }) => {
             Teams
             <label htmlFor='toggle-teams-menu' onClick={function(e){
               e.preventDefault()
+              e.stopPropagation()
               toggleTeamsRef.current.checked = !toggleTeamsRef.current.checked
             }}>
               <span><IoIosArrowUp /></span>
@@ -82,12 +94,16 @@ export const NavLayout = ({ activeTab }) => {
             
             <li onClick={e => {
               e.preventDefault()
+              e.stopPropagation()
+              ref.current.checked = false
               navigate('/home/teams/my', {replace: true}) 
             } }><BsTrophy size={18} /> My Teams</li>
             
             <li 
               onClick={e => {
                 e.preventDefault()
+                e.stopPropagation()
+                ref.current.checked = false
                 navigate('/home/teams/opponents', {replace: true}) 
               } }
             >
@@ -98,6 +114,11 @@ export const NavLayout = ({ activeTab }) => {
         <Link className={ activeTab===3 ? styles['active'] : '' }
           to={'/home/teams/matches'}
           replace={true}
+          onClick={(e)=>{
+            e.preventDefault()
+            ref.current.checked = false
+            navigate('/home/teams/matches', {replace: true})
+          }}
         >
           <TbCricket size={24} />
           <li>
