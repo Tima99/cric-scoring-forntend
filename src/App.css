@@ -494,8 +494,16 @@ input[name="search"]{
     font-size: 1.1rem;
 }
 
-/* Login, Register, EntryLayout */
 
+/* Login, Register, EntryLayout */
+.entry-layout-container .brand-logo--contain{
+    height: 15vmin;
+    position: absolute;
+    top: 1rem;
+}
+.entry-layout-container .brand-logo--contain img{
+    height: 100%;
+}
 .entry-container{
     width: 100%;
     max-width: 600px;
@@ -510,6 +518,25 @@ input[name="search"]{
     box-shadow: var(--shadow);
     padding-block: 1rem;
     position: relative;
+}
+.entry-layout-container .entry-container .bg-image::after{
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url(./assets/cric-logo.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: .07;
+}
+.entry-layout-container .entry-container form, title{
+    position: relative;
+    z-index: 999;
+}
+.entry-layout-container .entry-container form label{
+    font-weight: bold;
 }
 .forgot-password{
     font-size: .85rem;
@@ -583,8 +610,8 @@ input[name="search"]{
     form{
         align-items: center;
     }
-    .entry-container{
-        margin: 1rem;
+    .entry-layout-container{
+        padding: 1rem;
     }
     .resend-otp > span{
         flex: 1;

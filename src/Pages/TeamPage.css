@@ -16,7 +16,7 @@
 }
 /* nav */
 .top-bar {
-    position: sticky;
+    position: fixed;
     top: 0;
     display: flex;
     width: 100%;
@@ -28,7 +28,9 @@
     color: #fff;
     font-weight: bold;
     background-color: var(--primary);
-    z-index: 999;
+    background-color: transparent;
+    color: black;
+    z-index: 9999999;
 }
 .top-bar .left-side {
     display: flex;
@@ -39,36 +41,43 @@
 .team-hero-banner {
     position: relative;
     width: 100%;
-    height: 35vh;
+    height: 40vh;
     color: #fff;
+    /* color: var(--primary-dark); */
+    text-shadow: 1px 1px 2px black;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
-.team-hero-banner .bg-img {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -2;
-    background-image: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgrFCfnJG8Lnt_QJokuCt9L-5ygasLLTGOWA&usqp=CAU);
+.team-hero-banner li:first-child{
+    font-size: 1.4rem;
+    font-weight: bolder;
 }
-
-.team-hero-banner::before {
-    content: "";
+.team-hero-banner .bg-img {
     position: absolute;
     top: 0;
     z-index: -1;
     display: block;
     background-image: linear-gradient(
-        rgba(255, 255, 255, 0.3),
-        rgba(33, 33, 33, 0.2),
-        rgba(33, 33, 33, 0.6),
-        rgba(33, 33, 33, 0.7),
-        rgba(33, 33, 33, 0.8)
+        rgba(211, 211, 211, 0.5),
+        rgba(33, 33, 33, .7),
+        rgba(33, 33, 33, 1)
     );
     width: 100%;
     height: 100%;
+}
+
+.team-hero-banner .bg-img::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99;
+    background-image: url(../assets/cric-logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: .15;
 }
 
 .team-hero-banner .team {
@@ -78,10 +87,13 @@
     gap: 1rem;
     padding-left: 6vmin;
 }
-
+.team{
+    width: 100vw;
+}
 .team .image-logo {
     width: 70px;
     height: 70px;
+    flex-shrink: 0;
     overflow: hidden;
     border-radius: 100%;
     -webkit-border-radius: 100%;
@@ -96,9 +108,10 @@
 .image-logo img {
     width: 100%;
 }
-
 .team ul {
     list-style: none;
+    flex-grow: 0;
+    width: calc(100% - 90px);
 }
 
 .team ul li:first-child {
@@ -106,7 +119,8 @@
     font-weight: bold;
     text-transform: uppercase;
     font-family: sans-serif;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    width: 100%;
 }
 
 .team ul li:nth-child(2) > span:first-child {
@@ -114,14 +128,16 @@
 }
 
 .team ul li:last-child {
-    padding-top: 0.2rem;
+    padding-top: 0.3rem;
     font-size: 1rem;
-    color: var(--secondary);
+    color: yellow;
     font-weight: bolder;
     font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
         sans-serif;
     text-transform: uppercase;
     text-shadow: 0 0 1px #888;
+    word-spacing: .4rem;
+    text-shadow: 1px 1px 2px black;
 }
 
 /* nav-layout */
@@ -165,7 +181,7 @@
     height: 100%;
     display: inline-block;
     box-sizing: border-box;
-    border-bottom: 0.3rem solid var(--primary-dark);
+    border-bottom: 0.3rem solid var(--primary);
 }
 
 /* selected-tab-outlet */

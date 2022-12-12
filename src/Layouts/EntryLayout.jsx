@@ -2,6 +2,7 @@ import React, { useLayoutEffect, useState } from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
 import { UserAuthentic } from '../api/request'
 import { Loader } from "../Components"
+import logo from "../assets/fox-sports-logo.png"
 
 export const EntryLayout = () => {
   // if user is authentic than value is true(object) otherwise false
@@ -20,8 +21,12 @@ export const EntryLayout = () => {
   }, [])
   
   return (
-    <div className='full-display flex center'>
+    <div className='full-display flex-col center entry-layout-container'>
+      <div className="brand-logo--contain">
+        <img src={logo} alt="FoxSports" />
+      </div>
       <div className="entry-container">
+        <div className='bg-image'></div>
         <Outlet />
       </div>
       {

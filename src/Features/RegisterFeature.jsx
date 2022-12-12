@@ -33,7 +33,8 @@ export const RegisterFeature = () => {
             <LabelInput type='password' name='password' id='type-password' label='Password' required onChange={setInputData} />
             <ul style={{
               listStylePosition: "inside",
-              alignSelf: "flex-start"
+              alignSelf: "flex-start",
+              opacity: '.85'
             }}>
               <h5>Password must be</h5>
               <li>Minimum length 6</li>

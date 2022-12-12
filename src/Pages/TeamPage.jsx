@@ -13,17 +13,20 @@ import logo from "../assets/user-circle.jpg";
 import "./TeamPage.css";
 import { TeamCard, Backbutton, Loader } from "../Components";
 import req from "../api/request";
+import { useEffect } from "react";
+import { BiTimeFive } from "react-icons/bi"
 
 export const MatchesContext = createContext();
 
 export const TeamPage = () => {
     const { id } = useParams();
     let currentActiveTab = useRef();
+    let navLayout = useRef();
     let [team, setTeam] = useState({});
     let [matches, setMatches] = useState(null);
 
     // console.log(team);
-    useLayoutEffect(() => {
+    useLayoutEffect(() => {        
         (async () => {
             try {
                 const res = await req.get(`/getTeam/${id}`);
@@ -35,6 +38,28 @@ export const TeamPage = () => {
             }
         })();
     }, []);
+
+    function ScrollHandler(){
+        const navBar = document.querySelector(".top-bar")
+        const top = navBar.getBoundingClientRect().height
+        const {top: scrollTop} = navLayout.current.getBoundingClientRect()
+        const offSet = 2
+        const teamName = navBar.querySelector(".team--name .name-text")
+        if(scrollTop <= top+offSet){
+            navBar.style.background="var(--primary)"
+            teamName && (teamName.innerText = team.name || '')
+            return
+        }
+            navBar.style.background="transparent"
+            teamName && (teamName.innerText = '')
+    }
+
+    useEffect(() => {
+        window.addEventListener("scroll", ScrollHandler)
+        return ()=>{
+            window.removeEventListener("scroll", ScrollHandler)
+        }
+    }, [])
 
     const teamMembers = useMemo(() => {
         const captain = team.captain;
@@ -118,26 +143,32 @@ export const TeamPage = () => {
         }
     };
 
+
     return (
         <div className="team-page-container">
-            <section className="top-bar">
-                <Backbutton />
+            
+            <section className="team-hero-banner">
+                <div className="bg-img"></div>
+                <section className="top-bar">
+                <div className="team--name flex gap-06">
+                    <Backbutton />
+                    <span className="name-text" style={{color: "white"}}></span>
+                </div>
                 <div className="left-side">
                     <FaRegShareSquare />
                     <FiFilter />
                 </div>
             </section>
-            <section className="team-hero-banner">
-                <div className="bg-img"></div>
                 <div className="team">
                     <div className="image-logo">
                         <img src={logo} alt={"TeamName"} loading="lazy" />
                     </div>
 
                     <ul className="flex-col" style={{ gap: ".1rem" }}>
-                        <li>{team.name || "..."}</li>
+                        <li className="text-eclipse">{team.name || "..."}</li>
                         <li className="flex" style={{ flexWrap: "wrap" }}>
                             <span>{team.location || ""}</span>
+                            <span><BiTimeFive size={18} style={{padding: '.1rem .1rem 0 0'}} color="white" /></span>
                             <span>{`Since ${new Date(team.createdAt)
                                 .toDateString()
                                 .slice(4)}`}</span>
@@ -147,7 +178,7 @@ export const TeamPage = () => {
                 </div>
             </section>
 
-            <section className="nav-layout">
+            <section className="nav-layout" ref={navLayout}>
                 <ul className="wraper">
                     <li className="active" ref={currentActiveTab}>
                         <a href="#members" onClick={ScrollMySelect}>

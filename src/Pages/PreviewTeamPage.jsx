@@ -47,7 +47,7 @@ export const PreviewTeamPage = () => {
 
     return (
         <div className='relative full-display tap-hightlight-none'>
-            <TopNav title={state.name} toggleMenu={menu} />
+            <TopNav title={state.name && (state.name.slice(0,1)?.toUpperCase() + state.name.slice(1))} toggleMenu={menu} />
             <div className="relative pd-1 pd-block-1 flex-col gap-06">
                 {<Outlet context={state} />}
             </div>
