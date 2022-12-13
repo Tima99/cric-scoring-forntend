@@ -34,11 +34,12 @@ export const RegisterFeature = () => {
             <ul style={{
               listStylePosition: "inside",
               alignSelf: "flex-start",
-              opacity: '.85'
+              opacity: '.85',
+              fontSize: ".75rem"
             }}>
               <h5>Password must be</h5>
               <li>Minimum length 6</li>
-              <li>Atleast one - <br /> <span className='pd-1'>Alphabet, Digit and Symbol</span></li>
+              <li>Atleast one - <span className='pd-1'>Alphabet, Digit and Symbol</span></li>
             </ul>
             <LabelInput type='password' name='confirm-password' id='type-confirm-password' label='Confirm Password' required onChange={setInputData} />
           </>

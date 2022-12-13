@@ -496,10 +496,15 @@ input[name="search"]{
 
 
 /* Login, Register, EntryLayout */
+.entry-layout-container{
+    height: 130vh;
+}
 .entry-layout-container .brand-logo--contain{
-    height: 15vmin;
-    position: absolute;
-    top: 1rem;
+    height: 12vmin;
+    /* position: absolute; */
+    text-align: center;
+    margin-top: .5rem;
+    margin-bottom: .8rem;
 }
 .entry-layout-container .brand-logo--contain img{
     height: 100%;
@@ -515,9 +520,10 @@ input[name="search"]{
     -moz-border-radius: .2rem;
     -ms-border-radius: .2rem;
     -o-border-radius: .2rem;
-    box-shadow: var(--shadow);
+    box-shadow: var(--shadow-light);
     padding-block: 1rem;
     position: relative;
+    padding: 2rem 0;
 }
 .entry-layout-container .entry-container .bg-image::after{
     content: '';
@@ -540,7 +546,7 @@ input[name="search"]{
 }
 .forgot-password{
     font-size: .85rem;
-    font-family: cursive;
+    font-family: sans-serif;
 }
 /* // show loader or not in button  */
 .submit{
@@ -611,7 +617,7 @@ input[name="search"]{
         align-items: center;
     }
     .entry-layout-container{
-        padding: 1rem;
+        padding: 0 1rem;
     }
     .resend-otp > span{
         flex: 1;

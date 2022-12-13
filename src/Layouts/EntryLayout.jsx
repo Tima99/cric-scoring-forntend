@@ -21,7 +21,7 @@ export const EntryLayout = () => {
   }, [])
   
   return (
-    <div className='full-display flex-col center entry-layout-container'>
+    <div className='full-display flex-col entry-layout-container'>
       <div className="brand-logo--contain">
         <img src={logo} alt="FoxSports" />
       </div>
@@ -31,9 +31,9 @@ export const EntryLayout = () => {
       </div>
       {
         userAuthentic === null  // if Loading shows Loader component 
-        ? <Loader size={'20vmin'} bg="#333" speed='0.75' />
+        ? <Loader size={'20vmin'} bg="#444" speed='0.75' style={{zIndex: "9999999"}}/>
         : userAuthentic  // if user authentic navigate to home , we keep loader visible as not to expose/show outlet
-          ? <><Loader size={'20vmin'} bg="#333" speed='0.75' /> <Navigate to='/home' replace="true" state={userAuthentic} /></> 
+          ? <><Loader size={'20vmin'} bg="#333" speed='0.75' style={{zIndex: "9999999"}} /> <Navigate to='/home' replace="true" state={userAuthentic} /></> 
           : ''  // else show signu or login form
       }
     </div>

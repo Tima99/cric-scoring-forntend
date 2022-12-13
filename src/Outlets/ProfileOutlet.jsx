@@ -23,7 +23,7 @@ const Profile = ({ message, setInputData, inputData }) => {
                 error={message[0] === "$" ? false : true}
                 style={{ gridColumn: "1/3" }}
             />
-            <div className={"add-logo"}>
+            {/* <div className={"add-logo"}>
                 <input
                     type="file"
                     name="profile"
@@ -33,7 +33,7 @@ const Profile = ({ message, setInputData, inputData }) => {
                 <label htmlFor="profile-logo">
                     <img src={logo} alt="" />
                 </label>
-            </div>
+            </div> */}
 
             <LabelInput
                 label={<FaUser className="icon" size={20} />}

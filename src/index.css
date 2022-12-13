@@ -5,7 +5,7 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
     --bg: #eeeeee;
-    --shadow: 0 0 14px 1px #666;
+    --shadow: 0 0 10px 0px rgba(102, 102, 102, 0.671);
     --shadow-light: 0 0 8px 1px #c9c9c6;
     --shadow-light2: 0 0 8px 1px #b3b3b0d0;
     --shadow-light3: 0 0 8px 1px #b3b3b0a2;
@@ -13,7 +13,7 @@
     --light: #999;
     --primary: rgb(233, 127, 215);
     --primary-dark: rgb(209, 83, 188);
-    --primary: rgb(21, 197, 21);
+    --primary: #1dac1d;
     --primary-dark: green;
     --secondary: dodgerblue;
     --loader-thickness: 0.5rem;

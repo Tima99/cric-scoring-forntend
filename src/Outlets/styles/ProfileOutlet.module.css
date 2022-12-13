@@ -50,7 +50,7 @@
         row-gap: 1rem;
         place-items: center;
         margin: auto;
-        width: max-content;
+        width: 100vw;
     }
     .add-logo, .submit-btn, form > *:first-child{
         grid-column: 1 !important;
