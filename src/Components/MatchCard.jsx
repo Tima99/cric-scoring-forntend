@@ -20,8 +20,13 @@ export const MatchCard = ({
         </div>
 
         <section className="teams pd-top-03">
+                <div 
+                    className={
+                        current.teamAInn ? "flex-col" : "flex-col-rev"
+                    }
+                >
                 {
-                    current.teamAInn !== null &&
+                    current.teamAInn !== null ?
                     <div className={`teamA title-small flex between ${current.winTeam._id !== match.teamA._id && "opacity-08" || ''}`}>
                         <span
                             className={`match-teamName text-eclipse flex-1 
@@ -36,10 +41,19 @@ export const MatchCard = ({
                             <span className='font-xsmall'>({current.teamAOvers})</span>
                         </span>
                     </div>
+                    : 
+                    <div className='flex title-small pd-top-03 between'>
+                        <span>
+                            {match.teamA.name}
+                        </span>
+                        <span style={{color: "grey", fontSize: ".9rem", fontWeight: "bold", opacity: ".7"}}>
+                            Yet To Bat
+                        </span>
+                    </div>
                 }
 
                 {
-                    current.teamBInn !== null &&
+                    current.teamBInn !== null ?
                     <div className={`teamB title-small flex between pd-top-03 ${current.winTeam._id !== match.teamB._id && "opacity-08" || ''}`  }>
                         <span
                             className={`match-teamName text-eclipse flex-1 
@@ -54,8 +68,18 @@ export const MatchCard = ({
                             <span>{current.teamBWickets || 0}</span>&nbsp;
                             <span className='font-xsmall'>({current.teamBOvers})</span>
                         </span>
+                    </div> 
+                    : 
+                    <div className='flex title-small pd-top-03 between'>
+                        <span>
+                            {match.teamB.name}
+                        </span>
+                        <span style={{color: "grey", fontSize: ".9rem", fontWeight: "bold", opacity: ".7"}}>
+                            Yet To Bat
+                        </span>
                     </div>
                 }
+                </div>
         </section>
 
         <section className="chase-detail font-xxsmall text-eclipse">

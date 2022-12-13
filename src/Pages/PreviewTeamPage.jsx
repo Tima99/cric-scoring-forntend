@@ -10,6 +10,7 @@ export const PreviewTeamPage = () => {
     const { state } = useLocation()
     const navigate = useNavigate()
     // console.log(state);
+    const [isDelete, setIsDelete] = useState(false)
 
     
     // state has array of team
@@ -29,13 +30,18 @@ export const PreviewTeamPage = () => {
                 {
                     state.matches.length <= 0 &&
                     <div onClick={async () => {
+                        if(isDelete) return
                         try {
+                            setIsDelete(true)
                             const res = await req.get(`/deleteTeam/${state._id}`)
                             // console.log(res.data);
                             if(res.data.includes("delete"))
                                 navigate('/home/teams/my', { replace: true})
                         } catch (error) {
-                            
+                            alert("Sorry, We are not able to delete.")
+                        }
+                        finally{
+                            setIsDelete(false)
                         }
                     }}>
                             <button  className='width-max-content' style={{color: 'rgba(214, 25, 25, .8)'}}>Delete Team</button>

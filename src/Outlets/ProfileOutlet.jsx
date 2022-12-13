@@ -12,7 +12,8 @@ import { LabelInput, ShowMsg, Button, Tab } from "../Components";
 import req, { CreatePlayer, EditPlayer } from "../api/request";
 import { useMemo } from "react";
 
-import { BiEdit } from "react-icons/bi";
+import { BiEdit, BiSad } from "react-icons/bi";
+import { BiError } from "react-icons/bi";
 import { useEffect } from "react";
 
 const Profile = ({ message, setInputData, inputData }) => {
@@ -145,7 +146,10 @@ export const ProfileOutlet = () => {
                 setPlayer(res.data);
             } catch (error) {
                 // console.log(error);
-                setPlayer(true);
+                if(typeof error?.response?.data === "string")
+                    setPlayer(error.response.data)
+                else
+                    setPlayer(true);
             }
         })();
     }, []);
@@ -361,6 +365,13 @@ export const ProfileOutlet = () => {
                 </form>
             </>
         );
+
+    if(typeof player === "string"){
+        return <div className="flex-col center gap-06 pd-block-1">
+        <BiError size={64} style={{color: "rgba(255,0,0,.65)"}} />
+        <span className="title-small font-xxsmall bold red">{player}</span>
+    </div>
+    }
 
     return (
         <main>

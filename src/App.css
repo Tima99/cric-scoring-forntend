@@ -498,6 +498,7 @@ input[name="search"]{
 /* Login, Register, EntryLayout */
 .entry-layout-container{
     height: 130vh;
+    align-items: center;
 }
 .entry-layout-container .brand-logo--contain{
     height: 12vmin;
@@ -561,7 +562,7 @@ input[name="search"]{
 
 /* resend-otp */
 .resend-otp a{
-    font-family: cursive;
+    font-family: sans-serif;
     font-size: .75rem;
     text-decoration: none;
     color: black;

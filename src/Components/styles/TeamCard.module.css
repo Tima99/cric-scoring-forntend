@@ -67,6 +67,7 @@
     font-size: .6rem;
     font-weight: bold;
     /* position: absolute; */
+    margin-left: .5rem;
 }
 
 .team-card-container ul li:last-child .admin-name::before {

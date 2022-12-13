@@ -18,7 +18,7 @@ const MatchCardOptions = ({onClick, optionShow}) => {
                 >
                     <CgClose size={20} color="gray" />
                 </div>
-                <h2>Select Option</h2>
+                <h2 className="pd-1">Select Option</h2>
                 <label htmlFor="view-match" className="title pd-1">
                     <input
                         type="radio"

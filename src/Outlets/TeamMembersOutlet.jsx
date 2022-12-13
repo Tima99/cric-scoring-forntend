@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { BiSad } from "react-icons/bi";
 import { Link, useOutletContext, useLocation } from "react-router-dom";
 import { Backbutton, SelectTeamCard, TeamCard } from "../Components";
 
@@ -107,7 +108,7 @@ export const TeamMembersOutlet = () => {
             );
         });
     }, [select]);
-
+    
     return (
         <div className="full-display abs top-0 left-0 pd-1 pd-block-1 flex-col gap-1 z99999">
             <section className="nav pd-1 flex gap-1 r-v-center z9999">
@@ -124,7 +125,12 @@ export const TeamMembersOutlet = () => {
                 {title && <span className="title z9999">{title}</span>}
             </section>
 
-            {isSelection ? (selectPlayersJsx.length > 0 ? selectPlayersJsx : <div className="flex center">No player selected in squad</div>) : playersJsxWithLinkRole}
+            {isSelection ? (selectPlayersJsx.length > 0 ? selectPlayersJsx : <div className="flex center">No player selected in squad</div>) 
+                : (Array.isArray(playersJsxWithLinkRole) && playersJsxWithLinkRole.length > 0 ? playersJsxWithLinkRole 
+                : <div className="flex-col center gap-06">
+                    <BiSad size={64} color={'grey'} />
+                    <span className="font-xxsmall">No Players in this team</span>
+                </div>)}
         </div>
     );
 };

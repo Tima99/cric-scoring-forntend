@@ -43,6 +43,7 @@ export const Teams = (props) => {
         to={id==='my' ? '/teamPreview' : `/team/${team._id}`} 
         key={team._id+ i} 
         state={team}
+        style={{color: "#333"}}
       >
         <TeamCard obj={team} />
       </Link>

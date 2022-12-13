@@ -3,11 +3,12 @@ import { useState, useContext, useLayoutEffect, useMemo } from "react";
 import { MatchesContext } from "../Pages/TeamPage";
 import { getTeamMatches } from "../Services";
 import defaultLogo from "../assets/user-circle.jpg";
+import { Loader } from "./Loader";
 
 export function Leaderboard({ teamId }) {
     const { matches, setMatches, matchesIdArr } = useContext(MatchesContext);
-    const [batting, setBatting] = useState([]);
-    const [bowling, setBowling] = useState([]);
+    const [batting, setBatting] = useState(null);
+    const [bowling, setBowling] = useState(null);
     const [filterSelect, setFilterSelect] = useState("runs");
     const [filterSelectBowl, setFilterSelectBowl] = useState("wickets");
     const [selectTab, setSelectTab] = useState(0) //0 : batting , 1: bowling
@@ -123,6 +124,7 @@ export function Leaderboard({ teamId }) {
     }, [matches]);
 
     const battingLead = useMemo(() => {
+        if(!batting) return ""
         return batting.map((bats, i) => {
             const num = Math.floor(bats[filterSelect]);
             return (
@@ -193,6 +195,7 @@ export function Leaderboard({ teamId }) {
     }, [filterSelect, batting]);
 
     const bowlingLead = useMemo(() => {
+        if(!batting) return ""
         return bowling.map((bowl, i) => {
             const num = Math.floor(bowl[filterSelectBowl]);
             return (
@@ -263,6 +266,7 @@ export function Leaderboard({ teamId }) {
                 </div>
             );
         });
+        
     }, [bowling, filterSelectBowl]);
 
     const filterHandler = (e) => {
@@ -272,6 +276,7 @@ export function Leaderboard({ teamId }) {
     const filterHandlerBowl = (e) => {
         setFilterSelectBowl(e.target.value);
     };
+    
     return (
         <>
             <div className="btn-groups">
@@ -300,8 +305,17 @@ export function Leaderboard({ teamId }) {
                         <option value="notOut">Most Not out</option>
                         <option value="sr">Highest Strike Rate</option>
                     </select>
-                    <div className="leaderboard-batting flex-col-rev center j-flex-end">
-                        {batting.length && battingLead}
+                    <div className="leaderboard-batting flex-col-rev center j-flex-end relative" style={{minHeight: "50vh"}}>
+                        {batting === null ?  
+                            <Loader
+                                style={{
+                                    paddingTop: "1.4rem",
+                                    alignItems: "flex-start",
+                                    position: "absolute",
+                                    top: "1rem"
+                                }}
+                            />
+                            : (batting.length ? battingLead : 'No records found.')}
                     </div>
                 </div>
 
@@ -324,11 +338,21 @@ export function Leaderboard({ teamId }) {
                         className={
                             filterSelectBowl === "wickets" ||
                             filterSelectBowl === "runs"
-                            ? "leaderboard-bowling flex-col-rev j-flex-end"
-                            : "leaderboard-bowling flex-col"
+                            ? "leaderboard-bowling flex-col-rev j-flex-end relative"
+                            : "leaderboard-bowling flex-col relative"
                         }
+                        style={{minHeight: "50vh"}}
                     >
-                        {bowling.length && bowlingLead}
+                        { bowling === null ?  
+                            <Loader
+                                style={{
+                                    paddingTop: "1.4rem",
+                                    alignItems: "flex-start",
+                                    position: "absolute",
+                                    top:'1rem'
+                                }}
+                            />
+                            : (bowling.length ? bowlingLead : 'No records found.')}
                     </div>
                 </div>
             </div>

@@ -324,7 +324,7 @@ export const ViewMatch3 = ({ state }) => {
                 const bat   = stat.bat
                 const bowl  = stat.bowl
                 const extras = (stat.bat.wide || 0) + (stat.bat.noBall || 0) + (stat.bye || 0) 
-                const completedOvers    = Math.floor(stat.totalBalls / 6)
+                const completedOvers    = Math.floor(stat.totalBalls / 6) || 0
                 const ongoingOverBalls  = (stat.totalBalls % 6) || 0
                 const overs = `${completedOvers}.${ongoingOverBalls}`
 

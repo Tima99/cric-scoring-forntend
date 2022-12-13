@@ -17,8 +17,8 @@ import {
 import req from "../api/request";
 import { Backbutton, Radios } from "../Components";
 import styles from "./ScoringPage.module.css";
-import socketIOClient from "socket.io-client";
 import { DetailMatch } from "../Services";
+import socketIOClient from "socket.io-client"
 
 const ENDPOINT = import.meta.env.VITE_API_SOCKET_END_POINT;
 
@@ -35,13 +35,11 @@ export const ScoringPage = () => {
     const [spellEle, setSpellEle] = useState()
 
     const socket = useRef();
+    // console.log(socket);
+
     useEffect(() => {
         (async () => {
-            socket.current = socketIOClient(ENDPOINT, {
-                transports: ['websocket'],
-                upgrade: false
-            });
-
+            socket.current = socketIOClient(ENDPOINT);
             if (matchId) {
                 try {
                     const res = await req.get(`/scoring/getMatch/${matchId}`);

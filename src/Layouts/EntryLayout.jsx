@@ -33,7 +33,7 @@ export const EntryLayout = () => {
         userAuthentic === null  // if Loading shows Loader component 
         ? <Loader size={'20vmin'} bg="#444" speed='0.75' style={{zIndex: "9999999"}}/>
         : userAuthentic  // if user authentic navigate to home , we keep loader visible as not to expose/show outlet
-          ? <><Loader size={'20vmin'} bg="#333" speed='0.75' style={{zIndex: "9999999"}} /> <Navigate to='/home' replace="true" state={userAuthentic} /></> 
+          ? <><Loader size={'20vmin'} bg="#333" speed='0.75' style={{zIndex: "9999999"}} /> <Navigate to='/home' replace="true" /></> 
           : ''  // else show signu or login form
       }
     </div>

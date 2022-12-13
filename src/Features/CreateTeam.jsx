@@ -6,7 +6,7 @@ import { LabelInput, Button, ShowMsg } from '../Components'
 import { useSubmitForm } from '../Hooks'
 import { RiTeamFill } from 'react-icons/ri'
 export const CreateTeam = () => {
-    const [isFormSubmit, SubmitForm, message] = useSubmitForm(CreateTeamRequest, '/home/teams/my', {replace: true})
+    const [isFormSubmit, SubmitForm, message] = useSubmitForm(CreateTeamRequest, '/home/teams/my', {replace: true, state: null})
     const formRef = useRef()
     const [inputData, setInputData] = useState({})
     
@@ -21,12 +21,12 @@ export const CreateTeam = () => {
         <form className='flex flex-container' ref={formRef}>
             <ShowMsg text={message} error={message[0]==='$'? false: true} style={{marginTop: '.3rem'}}/>
 
-            <div className={"add-logo"}>
+            {/* <div className={"add-logo"}>
                 <input type="file" name='profile' id='profile-logo' accept='image/*' />
                 <label htmlFor="profile-logo">
                     <img src={logo} alt="" />
                 </label>
-            </div>
+            </div> */}
 
             <LabelInput 
                 label="Team Name"
