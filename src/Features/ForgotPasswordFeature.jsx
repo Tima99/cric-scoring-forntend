@@ -23,7 +23,7 @@ export const ForgotPasswordFeature = () => {
     <>
         <title className='flex center between pd-1'>
             <h2 className='primary-color'>Forgot Password</h2>
-            <Link to='/login'><h5>Login</h5></Link>
+            <Link to='/login' replace={true}><h5>Login</h5></Link>
         </title>
 
         <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>

@@ -14,7 +14,7 @@ export const LoginFeature = () => {
     <>
       <title className='flex center between pd-1'>
         <h2 className='primary-color'>Login</h2>
-        <Link to='/'><h5>Create Account</h5></Link>
+        <Link to='/' replace={true}><h5>Create Account</h5></Link>
       </title>
 
       <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>
@@ -25,7 +25,7 @@ export const LoginFeature = () => {
 
         
         <div className='flex parent-full-width'>
-          <Link to={"/forgotPassword"} className='forgot-password font-xxsmall capital'>forgot password ?</Link>
+          <Link to={"/forgotPassword"} replace={true} className='forgot-password font-xxsmall capital'>forgot password ?</Link>
         </div>
         
         <div className='flex parent-full-width'>

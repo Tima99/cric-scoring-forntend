@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-import { LabelInput, Button, ShowMsg } from '../Components'
+import { LabelInput, Button, ShowMsg, Backbutton } from '../Components'
 import { useSubmitForm } from '../Hooks/useSubmitForm'
 
 import { ChangeEmail, Register } from '../api/request'
+import { MdArrowBack } from 'react-icons/md'
 
 export const RegisterFeature = () => {
   const {state: changeEmail}            = useLocation()  
@@ -13,12 +14,26 @@ export const RegisterFeature = () => {
   const [inputData, setInputData]       = useState({ email : changeEmail , changeEmail })
   const [isFormSubmit, SubmitForm, msg] = useSubmitForm(changeEmail ? ChangeEmail : Register, `/${inputData.email}/verify`, changeEmail ? {} : {replace: true} )  
   const formRef                         = useRef()
+  const navigate                        = useNavigate()
   
   return (
     <>
-      <title className='flex center between pd-1'>
-        <h2 className='primary-color'>Create Account</h2>
-        <Link to='/login'><h5>Login</h5></Link>
+      <title className={'flex center between pd-1'}>
+        <span className='flex gap-06'>
+          {changeEmail && 
+            <span
+              onClick={
+                () => navigate(-1, {replace: true})
+              }
+            >
+              <MdArrowBack size={24}/>
+            </span>
+          }
+          <h2 className='primary-color'>
+            Create Account
+          </h2>
+        </span>
+        <Link to='/login' replace={true}><h5>Login</h5></Link>
       </title>
       
       <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>

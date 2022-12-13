@@ -37,7 +37,7 @@ export const VerifyEmailFeature = () => {
 
         <div className="resend-otp flex parent-full-width">
           <span className='margin-left-auto'>
-            <Link to={isResetPwd ? '/forgotPassword' :'/'} state={email} replace={true} className='pd-1 active-link'>
+            <Link to={isResetPwd ? '/forgotPassword' :'/'} state={email} className='pd-1 active-link'>
               Change Email
             </Link>
             <Link onClick={e => ResendOtp(e, restart, email, setMsg, isResetPwd) } className={`${ timer > 0 ? 'disable-link' : 'active-link' }` } >
