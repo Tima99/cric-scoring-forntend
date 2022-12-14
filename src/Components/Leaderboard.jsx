@@ -352,7 +352,7 @@ export function Leaderboard({ teamId }) {
                                     top:'1rem'
                                 }}
                             />
-                            : (bowling.length ? bowlingLead : 'No records found.')}
+                            : (bowling.length ? bowlingLead : <div className="flex center">No records found.</div>)}
                     </div>
                 </div>
             </div>

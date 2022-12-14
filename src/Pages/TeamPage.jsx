@@ -89,15 +89,13 @@ export const TeamPage = () => {
 
     const ScrollMySelect = (e) => {
         e.preventDefault();
-        e.stopPropagation();
-
         currentActiveTab.current.classList.remove("active");
         currentActiveTab.current = e.target.parentElement;
         currentActiveTab.current.classList.add("active");
 
         const id = e.target.href.split("#")[1];
         const view = document.getElementById(id);
-        view.scrollIntoView({ block: "nearest", behavior: "smooth" });
+        view.scrollIntoView({ behavior: "smooth" });
         e.target.scrollIntoView();
     };
 
@@ -142,7 +140,6 @@ export const TeamPage = () => {
                 });
         }
     };
-
 
     return (
         <div className="team-page-container">

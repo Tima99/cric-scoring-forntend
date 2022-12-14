@@ -15,31 +15,29 @@ import {
     NavLink,
 } from "react-router-dom";
 import req from "../api/request";
-import { Backbutton, Radios } from "../Components";
+import { Backbutton, Loader, Radios } from "../Components";
 import styles from "./ScoringPage.module.css";
 import { DetailMatch } from "../Services";
-import socketIOClient from "socket.io-client"
+import {io} from "socket.io-client"
 
 const ENDPOINT = import.meta.env.VITE_API_SOCKET_END_POINT;
 
 export const ScoringPage = () => {
-    const { state } = useLocation();
-    // console.log(state);
-    const matchId = useLocation().search?.split("=")[1] || state?._id;
-    const navigate = useNavigate();
-    const [matchDetails, setMatchDetails] = useState(state);
-    const [renderComponent, setRenderComponent] = useState("");
-    const [isOverCompleted, setIsOverCompleted] = useState(false);
-    const [nextBowler, setNextBowler] = useState(false);
-    const [nextInning, setNextInning] = useState(false);
-    const [spellEle, setSpellEle] = useState()
+    const { state }                                 = useLocation();
+    const matchId                                   = useLocation().search?.split("=")[1] || state?._id;
+    const navigate                                  = useNavigate();
+    const [matchDetails, setMatchDetails]           = useState(state);
+    const [renderComponent, setRenderComponent]     = useState("");
+    const [isOverCompleted, setIsOverCompleted]     = useState(false);
+    const [nextBowler, setNextBowler]               = useState(false);
+    const [nextInning, setNextInning]               = useState(false);
+    const [spellEle, setSpellEle]                   = useState()
+    const socket                                    = useRef();
+    const [isSocketConnected, setIsSocketConnected] = useState(false)
 
-    const socket = useRef();
-    // console.log(socket);
-
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
-            socket.current = socketIOClient(ENDPOINT);
+            
             if (matchId) {
                 try {
                     const res = await req.get(`/scoring/getMatch/${matchId}`);
@@ -48,20 +46,49 @@ export const ScoringPage = () => {
                     console.log(error.response.data);
                 }
             }
-            socket.current.on("updated-document", (data) => {
-                setMatchDetails(data);
-            });
         })();
-        return () => {
-            socket.current.on("disconnect", () => {
-                socket.current.removeAllListeners()
-            });
-        };
     }, []);
 
-    // console.log(matchDetails)
-    const current =
-        matchDetails && matchDetails._id && DetailMatch(matchDetails);
+    useEffect(() => {
+        socket.current = io(ENDPOINT, {
+            autoConnect: false,
+            forceNew: true,
+            query: {
+                id: matchId
+            }
+        });
+
+        socket.current && socket.current.open()
+
+        socket.current.once("connect", ()=>{
+            if(socket.current.connected){
+                socket.current.emit("register", matchId)
+                return setIsSocketConnected(true)
+            }
+            setIsSocketConnected(false)
+        })
+        socket.current.io.once("error", (error)=>{
+            alert("Connection not established or disconnect !!");
+            socket.current.disconnect()
+        })
+        
+        socket.current.on("updated-document", (data) => {
+            setMatchDetails(data);
+        });
+
+        socket.current.once("updated_error", (error) => {
+            console.log(error);
+            alert("Something went wrong")
+            navigate(-1, {replace: true})
+        })
+
+        return () => {
+            socket.current && socket.current.removeListener("updated-document")
+            socket.current && socket.current.close()
+        };
+    }, [])
+
+    const current = matchDetails && matchDetails._id && DetailMatch(matchDetails);
 
     useEffect(() => {
         
@@ -165,6 +192,13 @@ export const ScoringPage = () => {
 
     return (
         <div className="full-display relative flex-col">
+            {
+                !isSocketConnected
+                ? <div className="full-display abs top-0 z99999" style={{background: "rgba(0,0,0,0.14)", backdropFilter: "blur(1px)"}}>
+                    <Loader />
+                  </div>
+                : ''
+            }
             {renderComponent}
             <section className="nav pd-1 pd-block-06 abs top-0 left-0 z9999">
                 <Backbutton

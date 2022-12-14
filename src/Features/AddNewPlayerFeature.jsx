@@ -35,14 +35,15 @@ const [isFormSubmit, SubmitForm, msg] = useSubmitForm(createPlayerApi, -2, {repl
   
   return (
     <div className='abs parent-size top-0 left-0 bg-body margin-auto'>
+      <h1 className='title pd-1 pd-top-03'>Add New Player:</h1>
       <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true} />
-      <form ref={formRef} className="margin-auto width-max-content flex-col gap-1">
-        <div className="add-logo flex center pd-block-06">
+      <form ref={formRef} className="margin-auto parent-size flex-col gap-1">
+        {/* <div className="add-logo flex center pd-block-06">
           <input type="file" name='profile' id='profile-logo' accept='image/*' />
           <label htmlFor="profile-logo">
             <img src={defaultLogo} alt="" />
           </label>
-        </div>
+        </div> */}
 
         <LabelInput
           label='Email'
