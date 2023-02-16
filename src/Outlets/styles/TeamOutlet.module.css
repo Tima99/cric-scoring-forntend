@@ -1,0 +1,12 @@
+.team-outlet-container{
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
+    margin: auto;
+    padding: 1rem;
+    padding-top: .1rem;
+}
+
+a{
+    text-decoration: none;
+}

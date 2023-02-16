@@ -1,0 +1,104 @@
+.team-card-container {
+    width: 100%;
+    height: auto;
+    min-height: 5vmax;
+    background-color: #fff;
+    border-radius: var(--radius);
+    -webkit-border-radius: var(--radius);
+    -moz-border-radius: var(--radius);
+    -ms-border-radius: var(--radius);
+    -o-border-radius: var(--radius);
+    display: flex;
+    box-shadow: var(--shadow-light);
+    gap: 1rem;
+    padding: 0.45rem 1rem;
+    align-items: center;
+}
+
+.team-logo {
+    overflow: hidden;
+    max-width: 40px;
+    max-height: 40px;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+}
+.team-logo img {
+    width: 100%;
+}
+
+.team-card-container ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: .2rem;
+}
+
+.team-card-container ul li:first-child {
+    color: dodgerblue;
+    font-size: 1.2rem;
+}
+.team-card-container ul li:last-child {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.team-card-container ul li:last-child .captain-name::before {
+    content: "c";
+    width: 17px;
+    padding: 3px 0;
+    display: inline-block;
+    text-align: center;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    background-color: rgba(19, 160, 14, 0.76);
+    color: #fff;
+    margin-right: 0.3rem;
+    font-size: .6rem;
+    font-weight: bold;
+    /* position: absolute; */
+    margin-left: .5rem;
+}
+
+.team-card-container ul li:last-child .admin-name::before {
+    content: "A";
+    width: 17px;
+    padding: 3px 0;
+    display: inline-block;
+    text-align: center;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    background-color: rgba(51, 51, 51, 0.7);
+    color: #fff;
+    margin-right: 0.3rem;
+    font-size: .6rem;
+    margin-left: .5rem;
+}
+
+/* Select Team Card Styling */
+/* *********************** */
+input[name='select-team'], 
+input[name="select-multiple"]{
+    display: none;
+}
+input[name='select-team']:checked + label > .selected-icon-tick,
+input[name="select-multiple"]:checked + label > .selected-icon-tick
+{
+    display: block;
+}
+input[name='select-team']:not(:checked) + label > .selected-icon-tick,
+input[name="select-multiple"]:not(:checked) + label > .selected-icon-tick
+{
+    display: none;
+}

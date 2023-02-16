@@ -1,0 +1,89 @@
+.scoreboard-container{
+    flex: .65;
+    /* background-color: rgba(0, 0, 0, .5); */
+}
+.score-keyboard-container{
+    flex: .35;
+    background-color: rgba(0, 0, 0, .3);
+}
+
+.keyboard-wraper{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1.3fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    list-style: none;
+    height: 100%;
+    gap: .1rem;
+}
+.keyboard-wraper > li{
+    background-color: #fff;   
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+.scoreboard-container{
+    /* background-color: rgb(230, 230, 230); */
+}
+.bottom-score-contain{
+    position: absolute;
+    bottom: 0;
+    background-color: rgb(58, 58, 58);
+    color: white;
+    width: 100%;
+}
+.batsman-score{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+}
+.batsman-score > *{
+    display: flex;
+    flex: 50%;
+    justify-content: center;
+    align-items: center;
+}
+.batsman-score > .strike span:first-child{
+    color: goldenrod;
+}
+
+.spell-runs{
+    min-height: 60px;
+    width: 100%;
+    background-color: #333;
+    border-top: 1px solid black;
+    display: flex;
+    justify-content: center;
+    font-size: 1.13rem;
+}
+.spell-runs > ul{
+    list-style: none;
+    display: flex;
+    align-items: flex-end;
+    gap: .7rem;
+    overflow-x: scroll;
+    padding: .2rem 1rem;
+}
+
+.spell-runs > ul > li{
+    flex-shrink: 0;
+    display: block;
+    width : 32px;
+    height: 32px;
+    background-color: whitesmoke;
+    color: #333;
+    border-radius: 100%;
+    -webkit-border-radius: 100%;
+    -moz-border-radius: 100%;
+    -ms-border-radius: 100%;
+    -o-border-radius: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-shadow:  1px 0 2px #222;
+}

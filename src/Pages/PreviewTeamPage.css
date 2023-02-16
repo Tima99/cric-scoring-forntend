@@ -1,0 +1,50 @@
+.teamPreview-outlet-container{
+    display: none;
+}
+input[name='toggle-player-role']:checked ~ .teamPreview-outlet-container{
+    display: flex;
+    z-index: 999;
+}
+input[name='toggle-player-role']:not(:checked) ~ .teamPreview-outlet-container{
+    display: none;
+}
+/* team-preview-footer */
+.preview-top-bar label{
+    position: relative;
+}
+.preview-top-bar label .buttons{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    min-width: 200px;
+    max-width: 500px;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    min-height: 100px;
+    background-color: #fff;
+    translate: 0 1.9rem;
+    border-radius: var(--radius);
+    -webkit-border-radius: var(--radius);
+    -moz-border-radius: var(--radius);
+    -ms-border-radius: var(--radius);
+    -o-border-radius: var(--radius);
+    justify-content: space-around;
+    display: none;
+    box-shadow: var(--shadow-light2);
+}
+
+.preview-top-bar label .buttons button{
+    background-color: transparent;
+    width: 100%;
+    border: none;
+    color: #333;
+}
+.preview-top-bar label .buttons button:hover{
+    background-color: transparent;
+}
+
+input[id="preview-pg-toggle-button"]:checked ~ label .buttons{
+    display: flex;
+}
