@@ -19,3 +19,5 @@ export {Button} from "./Button"
 export { Modal } from "./Modal"
 
 export { SpellBall } from "./SpellBall"
+
+export { ScrollToTop } from "./ScrollToTop";

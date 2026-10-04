@@ -37,11 +37,13 @@ import {
 } from "./Outlets";
 // Ui
 import { MatchOver, SelectFielders, SelectStriker, Teams, Toss, ViewMatch1 } from "./Ui";
-import { Confirm, NavHorizontal } from "./Components";
+import { Confirm, NavHorizontal, ScrollToTop } from "./Components";
 import { PlayingSquadOutlet } from "./Outlets/PlayingSquadOutlet";
 
 function App() {
     return (
+        <>
+        <ScrollToTop />
         <Routes>
             {/* Entry Routes */}
             <Route element={<EntryLayout />}>
@@ -168,6 +170,7 @@ function App() {
             </Route>
 
         </Routes>
+        </>
     );
 }
 
