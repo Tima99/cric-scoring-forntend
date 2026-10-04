@@ -107,85 +107,70 @@ export const ViewMatch1 = () => {
     );
 };
 
+// ---- shared scorecard rows (used by the Live tab and the Scorecard tab) ----
 const Bats = ({bats}) => {
-    if(!bats) return
-    const sr = ((bats.runs / bats.balls) * 100).toFixed(1) || 0;
+    if(!bats) return null
+    const sr = (bats.runs / bats.balls) * 100
     return(
-        <div className="flex grid-score">
-            {bats.strike ? (
-                <span className="green bold text-eclipse">
-                    *{bats.name}
+        <div className="sc-row sc-bat">
+            <span className="sc-name">
+                <span className={`sc-player capital text-eclipse ${bats.strike && !bats.out ? "sc-striker" : ""}`}>
+                    {bats.strike && !bats.out && <i className="sc-dot" />}{bats.name}
                 </span>
-            ) : (
-                <span className="text-eclipse">{bats.name}</span>
-            )}
-            <span>
-                {bats.runs || 0}({bats.balls || 0})
+                <span className="sc-sub">{bats.out ? bats.out : "not out"}</span>
             </span>
-            <span>{bats.fours || 0}</span>
-            <span>{bats.sixes || 0}</span>
-            <span>{isNaN(sr) ? "0.0" : sr}</span>
+            <span className="sc-num sc-strong">
+                {bats.runs || 0}<small>({bats.balls || 0})</small>
+            </span>
+            <span className="sc-num">{bats.fours || 0}</span>
+            <span className="sc-num">{bats.sixes || 0}</span>
+            <span className="sc-num sc-muted">{isNaN(sr) || !isFinite(sr) ? "0.0" : sr.toFixed(1)}</span>
         </div>
     )
 }
 
 const Bowler = ({bowler}) => {
-    const sr = bowler.ballsBowl / bowler.wickets;
-    const completedOvers    = Math.floor(bowler.ballsBowl / 6) || 0
-    const ongoingOverBalls  = (bowler.ballsBowl % 6) || 0
+    const balls = bowler.ballsBowl || 0
+    const completedOvers    = Math.floor(balls / 6)
+    const ongoingOverBalls  = balls % 6
     const overs = `${completedOvers}.${ongoingOverBalls}`
-    const eco = completedOvers > 0 ? bowler.runs / completedOvers : 0;
+    const eco = balls > 0 ? (bowler.runs || 0) / (balls / 6) : 0;
 
     return(
-        <div
-            className="flex grid-score"
-        >
-            {bowler.strike ? (
-                <span className="green bold">
-                    *{bowler.name}
+        <div className="sc-row sc-bowl">
+            <span className="sc-name">
+                <span className={`sc-player capital text-eclipse ${bowler.strike ? "sc-striker" : ""}`}>
+                    {bowler.strike && <i className="sc-dot" />}{bowler.name}
                 </span>
-            ) : (
-                <span>{bowler.name}</span>
-            )}
-
-            <span>{bowler.runs || 0}-{bowler.wickets || 0}</span>
-            <span>{bowler.wide || 0}/{bowler.noBall || 0}</span>
-            <span>{overs || 0}</span>
-            <span>
-                {isNaN(eco) ? "0.0" : eco.toFixed(1)}
             </span>
+            <span className="sc-num">{overs}</span>
+            <span className="sc-num sc-strong">{bowler.runs || 0}-{bowler.wickets || 0}</span>
+            <span className="sc-num sc-muted">{bowler.wide || 0}/{bowler.noBall || 0}</span>
+            <span className="sc-num sc-muted">{eco.toFixed(1)}</span>
         </div>
     )
 }
 
-const BatTemplate = ({style}) => {
-    return(
-        <div className="flex grid-score capital" style={{padding: ".6rem 0 .4rem"}}>
-            <span>
-                <b>name</b>
-            </span>
-            <span>runs</span>
-            <span>4's</span>
-            <span>6's</span>
-            <span>SR</span>
-        </div>
-    )
-}
+const BatTemplate = () => (
+    <div className="sc-row sc-head-row sc-bat">
+        <span className="sc-name">Batter</span>
+        <span className="sc-num">R(B)</span>
+        <span className="sc-num">4s</span>
+        <span className="sc-num">6s</span>
+        <span className="sc-num">SR</span>
+    </div>
+)
 
-const BowlTemplate = () => {
-    return (
-        <div className="flex grid-score font-xsmall">
-            <span>
-                <b>name</b>
-            </span>
+const BowlTemplate = () => (
+    <div className="sc-row sc-head-row sc-bowl">
+        <span className="sc-name">Bowler</span>
+        <span className="sc-num">O</span>
+        <span className="sc-num">R-W</span>
+        <span className="sc-num">Wd/Nb</span>
+        <span className="sc-num">Eco</span>
+    </div>
+)
 
-            <span>r-w</span>
-            <span>wd/nb</span>
-            <span>Overs</span>
-            <span>Eco.</span>
-        </div>
-    )
-}
 export const ViewMatch2 = ({ state }) => {
     const match = state.state || state
     const current = match && DetailMatch(match);
@@ -268,10 +253,8 @@ export const ViewMatch2 = ({ state }) => {
                     : `${current.tossWonTeamName} select ${current.tossWonSelect} first`}
             </section>
 
-            <section className="batsman">
-                <div className="title-small">Batting</div>
-                <hr />
-                <div className="capital flex-col gap-06">
+            <section className="sc-card">
+                <div className="sc-table">
                     <BatTemplate />
                     {onCreaseBats?.map((bats) => {
                         return (
@@ -283,15 +266,11 @@ export const ViewMatch2 = ({ state }) => {
                 </div>
             </section>
 
-            <section className="bowling pd-top-1 flex-col gap-06">
-                <div className="title-small">Bowling</div>
-                <hr />
-                <div className="capital flex-col gap-06">
+            <section className="sc-card" style={{marginTop: ".8rem"}}>
+                <div className="sc-table">
                     <BowlTemplate />
-
                     {strikeBowler &&
                         strikeBowler?.map((bowler) => {
-                            
                             return (
                                 <React.Fragment key={bowler._id+"View1Bowlers"}>
                                     <Bowler bowler={bowler} current={current} />
@@ -320,85 +299,76 @@ export const ViewMatch2 = ({ state }) => {
 
 export const ViewMatch3 = ({ state }) => {
     const match = state.state || state
-    // const current = match && DetailMatch(match);
 
     return (
-        <div className="pd-block-1 flex-col-rev">
+        <div className="sc-page flex-col-rev">
             {match.stats.map((stat,i) => {
                 const bat   = stat.bat
                 const bowl  = stat.bowl
-                const extras = (stat.bat.wide || 0) + (stat.bat.noBall || 0) + (stat.bye || 0) 
+                const wides = bat.wide || 0
+                const noBalls = bat.noBall || 0
+                const byes = stat.bye || 0
+                const extras = wides + noBalls + byes
                 const completedOvers    = Math.floor(stat.totalBalls / 6) || 0
                 const ongoingOverBalls  = (stat.totalBalls % 6) || 0
                 const overs = `${completedOvers}.${ongoingOverBalls}`
+                const batters = bat.batters.filter(Boolean)
 
                 return (
-                    <section className={`inn${i}`} style={{paddingBottom: '.4rem'}} key={stat.bat._id}>
-                        <input 
-                            type="checkbox" name="ViewMatch--toggle-scoreboard" 
+                    <section className={`sc-card inn${i}`} key={stat.bat._id}>
+                        <input
+                            type="checkbox" name="ViewMatch--toggle-scoreboard"
                             id={"toggle"+ i} className="dis-none"
                             defaultChecked={i === 0 ? true : false }
                         />
 
-                        <label htmlFor={"toggle"+ i} className="bg-green parent-full-width flex between capital pd-1 r-v-center" style={{color: '#fff', padding: '.4rem 1rem'}}>
-                            <span className="title-small">{bat.name}</span>
-
-                            <div style={{fontSize: '1rem'}}>
-                                <span>{bat.score || 0} / {bat.wickets || 0}</span> &nbsp;
-                                <span>({overs})</span>
+                        <label htmlFor={"toggle"+ i} className="sc-head capital">
+                            <span className="sc-head-team text-eclipse">
+                                <span className="sc-head-label">{i === 0 ? "Innings 1" : `Innings ${i + 1}`}</span>
+                                {bat.name}
+                            </span>
+                            <span className="sc-head-score">
+                                <b>{bat.score || 0}/{bat.wickets || 0}</b>
+                                <small>({overs} ov)</small>
                                 <IoIosArrowUp   size={20}  className="viewMatch--arrow-up"/>
                                 <IoIosArrowDown size={20}  className="viewMatch--arrow-down"/>
-                            </div>
-
+                            </span>
                         </label>
 
-
-                        <section className="players-score" style={{fontSize: '1.1rem', padding: '0 .5rem'}}>
-                            <div className="batsman-score flex-col" style={{gap: '0.5rem'}}>
-                                <h5 className="pd-block-06">Batsman</h5>
+                        <section className="sc-body">
+                            <div className="sc-table">
                                 <BatTemplate />
-                                {
-                                    bat.batters.map( bats =>  {
-                                        if(!bats) return
-                                        return(
-                                            <React.Fragment key={bats?._id+ "View2"}>
-                                                <div className="capital">
-                                                    <Bats bats={bats}/>
-                                                    <div  className="font-xxsmall grey-light" style={{textTransform: "initial"}}>
-                                                        {
-                                                            bats?.out ?
-                                                            <span>{bats.out}</span>
-                                                            : (<span>not out</span>)
-                                                        }
-                                                    </div>
-                                                </div>
-                                                <hr />
-                                            </React.Fragment>
-                                        )
-                                    } )
-                                }
+                                {batters.length > 0
+                                    ? batters.map((bats) => (
+                                        <React.Fragment key={bats._id + "View2"}>
+                                            <Bats bats={bats} />
+                                        </React.Fragment>
+                                    ))
+                                    : <div className="sc-empty">No batters yet</div>}
                             </div>
 
-                            <div className="extras pd-block-06 flex between font-xsmall">
-                                <span><b>Total </b>&nbsp;{bat.score}/{bat.wickets || 0}</span>
-                                <span><b>Extras</b>&nbsp;{extras}&nbsp;
-                                    <span style={{fontSize: ".9rem", color: 'gray'}}>({`wd ${stat.bat.wide||0},nb ${stat.bat.noBall || 0},bye ${stat.bye || 0}`})</span>
-                                </span>
+                            <div className="sc-extras">
+                                <div>
+                                    <span className="sc-extras-label">Extras</span>
+                                    <b>{extras}</b>
+                                    <small>{`wd ${wides}, nb ${noBalls}, b ${byes}`}</small>
+                                </div>
+                                <div className="sc-total">
+                                    <span className="sc-extras-label">Total</span>
+                                    <b>{bat.score || 0}/{bat.wickets || 0}</b>
+                                    <small>({overs} ov)</small>
+                                </div>
                             </div>
 
-                            <div className="bowling capital flex-col gap-06" style={{paddingBottom: "1rem"}}>
-                                <h5>Bowlers</h5>
+                            <div className="sc-table">
                                 <BowlTemplate />
-                                {
-                                    bowl.bowlers.map( bowler => {
-                                        return(
-                                            <div key={bowler._id+"View2Bowlers"}>
-                                                <Bowler bowler={bowler} />
-                                                <hr />
-                                            </div>
-                                        )
-                                    })
-                                }
+                                {bowl.bowlers.length > 0
+                                    ? bowl.bowlers.map((bowler) => (
+                                        <React.Fragment key={bowler._id + "View2Bowlers"}>
+                                            <Bowler bowler={bowler} />
+                                        </React.Fragment>
+                                    ))
+                                    : <div className="sc-empty">No bowlers yet</div>}
                             </div>
                         </section>
                     </section>
