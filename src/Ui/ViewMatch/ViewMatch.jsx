@@ -115,7 +115,7 @@ const Bats = ({bats}) => {
         <div className="sc-row sc-bat">
             <span className="sc-name">
                 <span className={`sc-player capital text-eclipse ${bats.strike && !bats.out ? "sc-striker" : ""}`}>
-                    {bats.strike && !bats.out && <i className="sc-dot" />}{bats.name}
+                    {bats.name}{bats.strike && !bats.out && <i className="sc-dot" />}
                 </span>
                 <span className="sc-sub">{bats.out ? bats.out : "not out"}</span>
             </span>
@@ -140,7 +140,7 @@ const Bowler = ({bowler}) => {
         <div className="sc-row sc-bowl">
             <span className="sc-name">
                 <span className={`sc-player capital text-eclipse ${bowler.strike ? "sc-striker" : ""}`}>
-                    {bowler.strike && <i className="sc-dot" />}{bowler.name}
+                    {bowler.name}{bowler.strike && <i className="sc-dot" />}
                 </span>
             </span>
             <span className="sc-num">{overs}</span>

@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import { MdMenu } from 'react-icons/md'
 import { Backbutton } from './Backbutton'
 
-export const TopNav = ({ title = "Title", menu = true, toggleMenu, confirmPage , children, backConfirm, confirmRef, replace }) => {
+export const TopNav = ({ back = true, title = "Title", menu = true, toggleMenu, confirmPage , children, backConfirm, confirmRef, replace }) => {
     const checkRef = useRef()
     const menuRef = useRef()
 
@@ -34,7 +34,7 @@ export const TopNav = ({ title = "Title", menu = true, toggleMenu, confirmPage ,
 
     return (
         <div className='top-nav bg-primary preview-top-bar relative'>
-            <Backbutton size={24} backConfirm={backConfirm} confirmRef ={confirmRef} replace={replace} />
+            {back && <Backbutton size={24} backConfirm={backConfirm} confirmRef ={confirmRef} replace={replace} />}
             <h2 className='top-nav-title text-eclipse'>{title}</h2>
 
             <div className='top-nav-actions'>

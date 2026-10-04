@@ -15,7 +15,7 @@ export const LoginFeature = () => {
     <>
       <title className='flex center between pd-1'>
         <h2 className='primary-color flex gap-06 r-v-center'><MdLogin color='#1dac1d' /> Login</h2>
-        <Link to='/' replace={true}><h5>Create Account</h5></Link>
+        <Link to='/register' replace={true}><h5>Create Account</h5></Link>
       </title>
 
       <ShowMsg text={msg} error={msg?.[0] === '$' ? false : true }/>

@@ -1,8 +1,8 @@
 import "./App.css";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 // Layouts
-import { EntryLayout, SearchLayout, ViewMatchLayout, AuthGuard } from "./Layouts";
+import { EntryLayout, SearchLayout, ViewMatchLayout, AuthGuard, PublicLayout } from "./Layouts";
 // Features
 import {
     LoginFeature,
@@ -22,6 +22,7 @@ import {
     StartMatchPage,
     TeamPage,
     PublicMatchesPage,
+    PublicHomePage,
 } from "./Pages";
 import {
     PlayerRoleOutlet,
@@ -41,23 +42,24 @@ import { PlayingSquadOutlet } from "./Outlets/PlayingSquadOutlet";
 function App() {
     return (
         <Routes>
-            <Route path="/__t" element={<Navigate to="/teamPreview" replace state={{_id:"1",name:"mumbai warriors",matches:[],players:[{_id:"p1",name:"Rohit",role:"batsman"}]}} />} />
             {/* Entry Routes */}
-            <Route path="/" element={<EntryLayout />}>
-                <Route index element={<RegisterFeature />} />
+            <Route element={<EntryLayout />}>
+                <Route path="/register" element={<RegisterFeature />} />
                 <Route path="/login" element={<LoginFeature />} />
                 <Route path="/forgotPassword" element={<ForgotPasswordFeature />} />
                 <Route path="/:email/updatePassword" element={<UpdatePasswordFeature />} /> 
                 <Route path="/:email/verify" element={<VerifyEmailFeature />} />
             </Route>
 
-            {/* Public routes: no login needed to browse matches, teams and search */}
-            <Route path="/matches" element={<PublicMatchesPage />} />
-            {/* Search Page */}
-            <Route path="/search" element={<SearchLayout />}>
-                <Route index element={<SearchOutlet />}/>
+            {/* Public app (logged out): only Home, Matches and Search tabs */}
+            <Route element={<PublicLayout />}>
+                <Route path="/" element={<PublicHomePage />} />
+                <Route path="/matches" element={<PublicMatchesPage />} />
+                <Route path="/search" element={<SearchLayout />}>
+                    <Route index element={<SearchOutlet />}/>
+                </Route>
             </Route>
-            {/* TeamPage */}
+            {/* TeamPage (public) */}
             <Route path="/team/:id" element={<TeamPage />} />
 
             {/* Protected routes: redirect to /login when not authenticated */}

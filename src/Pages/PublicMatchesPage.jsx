@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { NavLink, Link } from "react-router-dom";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { NavLink } from "react-router-dom";
 import { BiSad } from "react-icons/bi";
-import { MdSensors, MdEmojiEvents, MdApps, MdLogin } from "react-icons/md";
+import { MdSensors, MdEmojiEvents, MdApps } from "react-icons/md";
 import req from "../api/request";
-import { TopNav, Loader } from "../Components";
+import { Loader } from "../Components";
 import { MatchCard } from "../Components/MatchCard";
 
 // Public page: anyone (logged in or not) can browse matches and open their scorecard.
@@ -21,33 +21,48 @@ export const PublicMatchesPage = () => {
     const [loadingMore, setLoadingMore] = useState(false);
     const [error, setError] = useState("");
 
+    // Only the most recent request may update the list. Without this, tapping "Live" while
+    // the earlier "All" request is still loading lets the slower response overwrite the Live list.
+    const latest = useRef({ id: 0, controller: null });
+
     const load = useCallback(async (nextPage, nextStatus, append) => {
+        latest.current.controller?.abort();
+        const controller = new AbortController();
+        const id = ++latest.current.id;
+        latest.current.controller = controller;
+        const isStale = () => id !== latest.current.id;
+
         try {
             setError("");
-            const res = await req.get(`/matches?page=${nextPage}&limit=10${nextStatus ? `&status=${nextStatus}` : ""}`);
+            const res = await req.get(
+                `/matches?page=${nextPage}&limit=10${nextStatus ? `&status=${nextStatus}` : ""}`,
+                { signal: controller.signal }
+            );
+            if (isStale()) return;
             const data = res.data;
             setMatches((prev) => (append && prev ? [...prev, ...data.matches] : data.matches));
             setPage(data.page);
             setHasMore(data.hasMore);
         } catch (e) {
+            if (isStale() || e?.code === "ERR_CANCELED") return;
             setError(typeof e?.response?.data === "string" ? e.response.data : "Could not load matches.");
             setMatches((prev) => prev || []);
         } finally {
-            setLoadingMore(false);
+            if (!isStale()) setLoadingMore(false);
         }
     }, []);
 
     // reload the list whenever the filter changes
     useEffect(() => {
         setMatches(null);
+        setHasMore(false);
+        setPage(1);
         load(1, status, false);
+        return () => latest.current.controller?.abort();
     }, [status]);
 
     return (
         <div className="public-matches full-display relative">
-            <TopNav title="Matches" menu={false} replace={false}>
-                <Link to="/login" className="top-nav-menu" aria-label="Login" title="Login"><MdLogin size={22} /></Link>
-            </TopNav>
 
             <div className="filter-chips">
                 {FILTERS.map((f) => (
