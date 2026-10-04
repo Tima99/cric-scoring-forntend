@@ -1,5 +1,7 @@
 import React from 'react'
 import { DetailMatch } from '../Services'
+import { TbCricket } from 'react-icons/tb'
+import { MdPlace } from 'react-icons/md'
 
 export const MatchCard = ({
     match
@@ -11,9 +13,9 @@ export const MatchCard = ({
     <div
         className='match-container pd-block-06 pd-1'
     >
-        <div className="font-xsmall grey-light">Individual Match</div>
+        <div className="font-xsmall grey-light flex gap-06 r-v-center"><TbCricket color="#1dac1d" /> Individual Match</div>
         <div className="font-xxsmall capital text-eclipse">
-            {!match.toss
+            {match.toss && <MdPlace color="#1e90ff" style={{verticalAlign: 'middle'}} />} {!match.toss
                 ? "Match Not Started"
                 : match.venue 
             }

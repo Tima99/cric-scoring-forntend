@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 
 // Layouts
-import { EntryLayout, SearchLayout, ViewMatchLayout } from "./Layouts";
+import { EntryLayout, SearchLayout, ViewMatchLayout, AuthGuard } from "./Layouts";
 // Features
 import {
     LoginFeature,
@@ -49,6 +49,8 @@ function App() {
                 <Route path="/:email/verify" element={<VerifyEmailFeature />} />
             </Route>
 
+            {/* Protected routes: redirect to /login when not authenticated */}
+            <Route element={<AuthGuard />}>
             {/* Home Page if user authenticated */}
             <Route path="/home" element={<HomePage />}>
                 <Route index element={<ProfileOutlet />} />
@@ -144,6 +146,8 @@ function App() {
                     />
                 </Route>
                 <Route path="/scoring/matchOver" element={<MatchOver />}></Route>
+            </Route>
+
             </Route>
 
             {/* Match View Page */}

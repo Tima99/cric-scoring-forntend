@@ -1,6 +1,8 @@
 import axios from "axios"
+// API routes are mounted under /api; tolerate an env value with or without it
+const apiBase = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "")
 const req = axios.create({
-    baseURL: import.meta.env.VITE_API_BASE_URL,
+    baseURL: apiBase.endsWith("/api") ? apiBase : `${apiBase}/api`,
     timeout: 18000,
     withCredentials: true,
 });
@@ -59,6 +61,10 @@ export const UserAuthentic = async ( ) => {
     try {
         // { email, ["new-email"]: newEmail }
         const res = await req.get('/auth')
+        // /auth responds with the user's email; anything else (e.g. "Not valid route.") means not authenticated
+        const d = res.data
+        const ok = d && (typeof d === 'object' || (typeof d === 'string' && d.includes('@')))
+        if (!ok) return Promise.reject(new Error('Unauthenticated'))
         return res.data
     } catch (error) {
         return Promise.reject(error)

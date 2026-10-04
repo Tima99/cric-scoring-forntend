@@ -4,6 +4,7 @@ import { VerifyOtp } from '../api/request'
 
 import { LabelInput, Button, ShowMsg } from '../Components'
 import { useSubmitForm, useStopWatch } from '../Hooks'
+import { MdMarkEmailRead } from 'react-icons/md'
 import { ResendOtp } from '../Services'
 
 export const VerifyEmailFeature = () => {
@@ -18,6 +19,7 @@ export const VerifyEmailFeature = () => {
   return (
     <div>
       <div style={{textAlign: 'center'}}>
+        <div className='verify-icon'><MdMarkEmailRead size={44} /></div>
         <h4> Enter OTP sent on &nbsp;<b><u>{ email }</u></b>&nbsp; email </h4>
       </div>
 

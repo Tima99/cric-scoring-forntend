@@ -9,18 +9,20 @@ export const SearchLayout = () => {
     const navigate = useNavigate()
     return (
         <div>
-            <div
-                className={`${styles["nav-layout-container"]}`}
-            >
-                <div className="pd-1"
+            <div className={styles["search-nav"]}>
+                <button
+                    className={styles["search-nav-back"]}
                     onClick={() => { navigate(-1) }}
+                    aria-label="Go back"
                 >
-                    <MdArrowBackIos size={24}/>
-                </div>
+                    <MdArrowBackIos size={20} />
+                </button>
 
-                <Link to={"/"} className={styles["mobile-logo"]}>
+                <Link to={"/"} className={styles["search-nav-logo"]}>
                     <img src={brandLogo} alt="Logo" />
                 </Link>
+
+                <span className={styles["search-nav-spacer"]} />
             </div>
             <div className="relative flex-col">
                 <Outlet />

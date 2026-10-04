@@ -1,5 +1,6 @@
 import React , { useRef , useState} from 'react'
 import { Link } from 'react-router-dom'
+import { MdLogin } from 'react-icons/md'
 import { Login } from '../api/request'
 
 import { LabelInput, Button, ShowMsg } from '../Components'
@@ -13,7 +14,7 @@ export const LoginFeature = () => {
   return (
     <>
       <title className='flex center between pd-1'>
-        <h2 className='primary-color'>Login</h2>
+        <h2 className='primary-color flex gap-06 r-v-center'><MdLogin color='#1dac1d' /> Login</h2>
         <Link to='/' replace={true}><h5>Create Account</h5></Link>
       </title>
 

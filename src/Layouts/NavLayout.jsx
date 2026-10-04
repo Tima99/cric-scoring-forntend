@@ -9,6 +9,7 @@ import {BiAddToQueue} from "react-icons/bi"
 import {RiBoxingLine} from "react-icons/ri"
 import {BsTrophy, BsSearch} from "react-icons/bs"
 import { BiLogOut } from 'react-icons/bi'
+import { MdHome, MdGroups, MdSearch } from 'react-icons/md'
 import req from "../api/request"
 import brandLogo from "../assets/fox-sports-logo.png"
 import { Backbutton } from '../Components'
@@ -18,6 +19,17 @@ export const NavLayout = ({ activeTab }) => {
   const navigate = useNavigate()
   const {state} = useLocation()
   const ref = useRef()
+
+  const logout = async (e) => {
+    e.preventDefault()
+    try {
+      const res = await req.get('/logout')
+      if(res.data.toLowerCase().includes("logout"))
+        navigate('/')
+    } catch (error) {
+      alert("We are not able to logout.\nSomething went wrong 😟")
+    }
+  }
   
   return (
     <div className={styles['nav-layout-container']}>
@@ -28,7 +40,7 @@ export const NavLayout = ({ activeTab }) => {
           {
             state && typeof state._id === "string" && !state.email
             ? <Backbutton size={26} replace={true} />
-            : <TbGridDots />
+            : null
           }       
           
       </label>
@@ -127,22 +139,33 @@ export const NavLayout = ({ activeTab }) => {
         </Link>
 
         <Link
-          onClick={async(e) => {
-            e.preventDefault()
-            try {
-              const res = await req.get('/logout')
-              if(res.data.toLowerCase().includes("logout"))
-                navigate('/')
-            } catch (error) {
-              alert("We are not able to logout.\nSomething went wrong 😟")
-            }
-          }}
+          onClick={logout}
         >
             <BiLogOut size={22}/>
             <li>Logout</li>
         </Link>
 
       </ul>
+
+      <button className={styles['logout-mobile']} onClick={logout} aria-label="Logout">
+        <BiLogOut size={24} />
+      </button>
+
+      {/* Mobile app-style bottom navigation */}
+      <nav className={styles['bottom-nav']}>
+        <Link to='/home' replace className={activeTab===1 ? styles['active'] : ''}>
+          <MdHome /><span>Home</span>
+        </Link>
+        <Link to='/home/teams' replace className={activeTab===2 ? styles['active'] : ''}>
+          <MdGroups /><span>Teams</span>
+        </Link>
+        <Link to='/home/teams/matches' replace className={activeTab===3 ? styles['active'] : ''}>
+          <TbCricket /><span>Matches</span>
+        </Link>
+        <Link to='/search' state={{placeholder: "Search for teams, players and more..."}}>
+          <MdSearch /><span>Search</span>
+        </Link>
+      </nav>
 
     </div>
   )

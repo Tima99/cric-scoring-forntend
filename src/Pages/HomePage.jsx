@@ -7,7 +7,7 @@ import { NavLayout } from '../Layouts'
 export const UserContext = createContext()
 
 export const HomePage = () => {
-  const {state}                   = useLocation()
+  const {state, pathname}          = useLocation()
   const user                      = useStore(state)
   const [activeTab, setActiveTab] = useState(1)
   
@@ -15,7 +15,7 @@ export const HomePage = () => {
     <UserContext.Provider value={{authUser: user}}>
       <div className='full-display relative'>
         <NavLayout activeTab={activeTab} />
-        <div className="outlet-container relative">
+        <div className={`outlet-container relative ${pathname === '/home' ? 'home-index' : ''}`}>
           <Outlet context={{setActiveTab, user}} />
         </div>
       </div>

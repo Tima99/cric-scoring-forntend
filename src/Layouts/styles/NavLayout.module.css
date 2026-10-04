@@ -1,14 +1,18 @@
 .nav-layout-container {
     width: 100%;
     height: var(--nav-height);
-    background-color: var(--primary);
+    background: var(--gradients-primary);
     color: #fff;
-    /* position: relative; */
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: var(--shadows-md);
     font-size: 0.95rem;
 }
 .nav-button {
     display: none;
 }
+.mobile-logo img { filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)); }
 ul.wraper {
     width: 100%;
     height: 100%;
@@ -26,17 +30,22 @@ ul.wraper > a {
     justify-content: center;
     align-items: center;
     color: inherit;
-    padding: 0 0.2rem;
+    padding: 0 0.9rem;
     gap: 0.4rem;
+    font-weight: 500;
+    transition: background var(--motion-fast), transform var(--motion-fast);
 }
+ul.wraper > a:hover svg { transform: scale(1.18) rotate(-6deg); }
+ul.wraper > a svg { transition: transform var(--motion-base) var(--motion-ease); }
 .nav-layout-container ul.wraper > a:hover,
 .teams-menu li:hover {
     background-color: #dddddd4f;
 }
 
 .nav-layout-container ul.wraper a:is(.active) {
-    font-weight: bold;
-    background-color: var(--primary-dark);
+    font-weight: 700;
+    background: rgba(0, 0, 0, 0.18);
+    box-shadow: inset 0 -3px 0 #fff;
 }
 
 .nav-layout-container .search-bar-contain {
@@ -46,14 +55,22 @@ ul.wraper > a {
     display: flex;
     align-items: center;
 }
-.search-bar-contain input {
+.nav-layout-container .search-bar-contain input {
     width: 100%;
+    min-width: 0;
     line-height: 1.5rem;
-    padding: 0.2rem 2.6rem 0.2rem 0.5rem;
+    padding: 0.45rem 3rem 0.45rem 1rem;
+    text-indent: 0;
+    color: var(--colors-text);
+    background: #f2f7f3;
     font-size: 0.95rem;
     outline: none;
-    border: 1px solid var(--primary-dark);
+    border: none;
+    border-radius: var(--radius-pill);
+    box-shadow: var(--shadows-sm);
+    transition: box-shadow var(--motion-fast);
 }
+.search-bar-contain input:focus { box-shadow: var(--shadows-glow); }
 /* logo */
 .logo img, .mobile-logo img{
     width: 63px;
@@ -86,7 +103,8 @@ ul.wraper a.teams label span:nth-child(2) {
     background-color: #fff;
     min-width: 80%;
     min-width: 250px;
-    box-shadow: var(--shadow-light);
+    box-shadow: var(--shadows-lg);
+    animation: slideDown var(--motion-fast) var(--motion-ease);
     transform: translate(30%);
     -webkit-transform: translate(30%);
     -moz-transform: translate(30%);
@@ -112,14 +130,27 @@ ul.wraper a.teams label span:nth-child(2) {
 .search-button{
     position: absolute;
     right: 4px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
     line-height: 1rem;
-    background-color: #fff;
-    color: var(--primary) !important;
+    background: var(--gradients-primary);
+    color: #fff !important;
     border: none;
-    padding: 0 .5rem;
+    box-shadow: var(--shadows-sm);
+    padding: 0;
+    min-height: 0;
+    font-size: 1rem;
 }
 .search-button:hover{
-    background-color: #fff;
+    background: var(--gradients-primary);
+    box-shadow: var(--shadows-md);
+    transform: translateY(-50%) scale(1.1);
 }
 
 @media screen and (min-width: 650px) {
@@ -163,9 +194,6 @@ ul.wraper a.teams label span:nth-child(2) {
         width: 100%;
         padding: .1rem .4rem;
     }
-    .search-button{
-        margin-right: .4rem;
-    }
     .nav-button {
         font-size: 1.6rem;
         height: 100%;
@@ -203,6 +231,7 @@ ul.wraper a.teams label span:nth-child(2) {
         -ms-transform: translate(10px, calc(var(--nav-height) + 5px));
         -o-transform: translate(10px, calc(var(--nav-height) + 5px));
         box-shadow: var(--shadow);
+        animation: slideDown var(--motion-base) var(--motion-ease);
         transition: all 0.6s;
         -webkit-transition: all 0.6s;
         -moz-transition: all 0.6s;
@@ -273,7 +302,9 @@ ul.wraper a.teams label span:nth-child(2) {
         width: 100%;
         height: 100%;
         position: absolute;
-        background-color: rgba(51, 51, 51, 0.082);
+        background-color: rgba(20, 40, 28, 0.35);
+        backdrop-filter: blur(2px);
+        animation: fadeIn var(--motion-base) both;
         z-index: 9;
         display: none;
         height: calc(100vh - var(--nav-height));
@@ -291,3 +322,137 @@ ul.wraper a.teams label span:nth-child(2) {
     }
 
 }
+
+
+/* ---- Mobile app-style bottom navigation (hidden on larger screens) ---- */
+.bottom-nav, .logout-mobile { display: none; }
+
+@media screen and (max-width: 650px) {
+    /* no hamburger / drawer on mobile */
+    ul.wraper, .hide-menu-full { display: none !important; }
+    .nav-button { min-width: 15%; }
+
+    .logout-mobile {
+        display: flex;
+        justify-self: end;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        min-height: 0;
+        margin-right: .4rem;
+        padding: 0;
+        line-height: 1;
+        background: rgba(255, 255, 255, 0.18);
+        box-shadow: none;
+        border-radius: 50%;
+        color: #fff;
+    }
+
+    .bottom-nav {
+        display: flex;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1000;
+        background: #f3f7f4;
+        border-top: 1px solid var(--colors-border);
+        box-shadow: 0 -4px 16px rgba(20, 60, 30, 0.14);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .bottom-nav a {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+        padding: .5rem 0 .45rem;
+        color: var(--colors-muted);
+        font-size: .7rem;
+        font-weight: 500;
+        position: relative;
+        transition: color var(--motion-fast);
+    }
+    .bottom-nav a svg {
+        font-size: 1.55rem;
+        transition: transform var(--motion-base) var(--motion-ease);
+    }
+    .bottom-nav a:active svg { transform: scale(.85); }
+    .bottom-nav a.active {
+        color: var(--colors-primary-dark);
+        font-weight: 700;
+    }
+    .bottom-nav a.active svg { transform: translateY(-2px) scale(1.12); }
+    .bottom-nav a.active::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 34px;
+        height: 3px;
+        border-radius: 0 0 4px 4px;
+        background: var(--gradients-primary);
+    }
+}
+
+/* keep desktop/tablet nav items on one line and let the search bar shrink */
+@media screen and (min-width: 651px) {
+    ul.wraper > a { white-space: nowrap; padding: 0 .7rem; }
+    .nav-layout-container .search-bar-contain { flex: 1 1 auto; min-width: 140px; margin-inline: .6rem; }
+    ul.wraper { justify-content: flex-end; gap: .1rem; padding-left: .6rem; }
+    ul.wraper > a.logo { margin-right: auto; }
+}
+@media screen and (min-width: 651px) and (max-width: 900px) {
+    ul.wraper > a { font-size: .85rem; gap: .25rem; padding: 0 .5rem; }
+}
+
+/* ---- Nav search: the link wrapper must not inherit nav-link padding/hover ---- */
+.nav-layout-container ul.wraper > a.search-bar-contain {
+    padding: 0;
+    height: auto;
+    background: transparent;
+    box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    position: relative;
+}
+.nav-layout-container ul.wraper > a.search-bar-contain:hover { background: transparent; }
+.nav-layout-container ul.wraper > a.search-bar-contain svg { transform: none; }
+
+/* ---- Search page top bar (all screen sizes) ---- */
+.search-nav {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    height: var(--nav-height);
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
+    align-items: center;
+    padding: 0 .6rem;
+    background: var(--gradients-primary);
+    box-shadow: var(--shadows-md);
+}
+.search-nav-back {
+    width: 40px;
+    height: 40px;
+    min-height: 0;
+    padding: 0 0 0 .35rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: none;
+    color: #fff;
+}
+.search-nav-back:hover { background: rgba(255, 255, 255, 0.3); transform: none; box-shadow: none; }
+.search-nav-logo {
+    justify-self: center;
+    display: flex;
+    align-items: center;
+}
+.search-nav-logo img { height: 36px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)); }

@@ -3,7 +3,11 @@
     height: auto;
     min-height: 5vmax;
     background-color: #fff;
-    border-radius: var(--radius);
+    border: 1px solid var(--colors-border);
+    border-left: 4px solid var(--colors-primary);
+    transition: transform var(--motion-base) var(--motion-ease), box-shadow var(--motion-base);
+    animation: fadeInUp var(--motion-base) var(--motion-ease) both;
+    border-radius: var(--radius-md);
     -webkit-border-radius: var(--radius);
     -moz-border-radius: var(--radius);
     -ms-border-radius: var(--radius);
@@ -17,8 +21,10 @@
 
 .team-logo {
     overflow: hidden;
-    max-width: 40px;
-    max-height: 40px;
+    flex-shrink: 0;
+    max-width: 46px;
+    max-height: 46px;
+    border: 2px solid var(--colors-primary-light);
     border-radius: 100%;
     -webkit-border-radius: 100%;
     -moz-border-radius: 100%;
@@ -38,8 +44,13 @@
 }
 
 .team-card-container ul li:first-child {
-    color: dodgerblue;
-    font-size: 1.2rem;
+    color: var(--colors-secondary-dark);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+.team-card-container:hover{
+    transform: translateY(-3px);
+    box-shadow: var(--shadows-md);
 }
 .team-card-container ul li:last-child {
     font-size: 0.9rem;

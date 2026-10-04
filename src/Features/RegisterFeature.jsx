@@ -5,7 +5,7 @@ import { LabelInput, Button, ShowMsg, Backbutton } from '../Components'
 import { useSubmitForm } from '../Hooks/useSubmitForm'
 
 import { ChangeEmail, Register } from '../api/request'
-import { MdArrowBack } from 'react-icons/md'
+import { MdArrowBack, MdPersonAddAlt1 } from 'react-icons/md'
 
 export const RegisterFeature = () => {
   const {state: changeEmail}            = useLocation()  
@@ -29,8 +29,8 @@ export const RegisterFeature = () => {
               <MdArrowBack size={24}/>
             </span>
           }
-          <h2 className='primary-color'>
-            Create Account
+          <h2 className='primary-color flex gap-06 r-v-center'>
+            <MdPersonAddAlt1 color='#1dac1d' /> Create Account
           </h2>
         </span>
         <Link to='/login' replace={true}><h5>Login</h5></Link>
@@ -46,16 +46,6 @@ export const RegisterFeature = () => {
           ? 
           <>
             <LabelInput type='password' name='password' id='type-password' label='Password' required onChange={setInputData} />
-            <ul style={{
-              listStylePosition: "inside",
-              alignSelf: "flex-start",
-              opacity: '.85',
-              fontSize: ".75rem"
-            }}>
-              <h5>Password must be</h5>
-              <li>Minimum length 6</li>
-              <li>Atleast one - <span className='pd-1'>Alphabet, Digit and Symbol</span></li>
-            </ul>
             <LabelInput type='password' name='confirm-password' id='type-confirm-password' label='Confirm Password' required onChange={setInputData} />
           </>
           : null

@@ -27,8 +27,15 @@ export const SearchOutlet = () => {
     const context = useOutletContext();
     const { setOpponent, setScorer } = context || {};
     const resultContainer = useRef()
+    const inputRef = useRef()
     const [isSearching, setIsSearching] = useState(false)
     // console.log(isSelection, setOpponent);
+
+    // focus the search box as soon as the page opens (all screen sizes)
+    useEffect(() => {
+        const id = setTimeout(() => inputRef.current?.focus(), 50)
+        return () => clearTimeout(id)
+    }, [])
 
     useEffect(() => {
         let timeoutId = setTimeout(setMsg, 2000, "");
@@ -133,6 +140,9 @@ export const SearchOutlet = () => {
                         type="text"
                         name="search"
                         id="type-search"
+                        ref={inputRef}
+                        autoFocus
+                        autoComplete="off"
                         placeholder={placeholder}
                         value={query}
                         onChange={(e) => {

@@ -31,8 +31,10 @@
     -ms-border-radius: var(--radius);
     -o-border-radius: var(--radius);
     outline: none;
-    border: 1px solid var(--light);
-    box-shadow: var(--shadow-light);
+    border: 1.5px solid var(--colors-border);
+    background: #fff;
+    box-shadow: var(--shadows-sm);
+    transition: box-shadow var(--motion-fast), border-color var(--motion-fast);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
 }
 .wraper select option{
@@ -63,3 +65,4 @@
         align-items: flex-start;
     }
 }
+.wraper select:focus{ border-color: var(--colors-primary); box-shadow: var(--shadows-glow); }

@@ -1,0 +1,61 @@
+/* Base: typography, page background, scroll, form controls. Uses theme tokens. */
+html { scroll-behavior: smooth; }
+* { font-family: 'Poppins', 'Segoe UI', system-ui, -apple-system, 'Trebuchet MS', sans-serif; -webkit-tap-highlight-color: transparent; }
+body {
+    background: var(--gradients-page);
+    background-attachment: fixed;
+    color: var(--colors-text);
+    min-height: 100vh;
+}
+.full-display { background: var(--gradients-page); min-height: 100vh; height: auto; }
+a { color: var(--colors-secondary); transition: color var(--motion-fast); }
+h1, h2, h3, h4, h5 { letter-spacing: .2px; }
+::selection { background: var(--colors-primary); color: #fff; }
+
+/* Buttons */
+button {
+    font-size: 1rem;
+    line-height: 2.4rem;
+    border-radius: var(--radius-pill);
+    background: var(--gradients-primary);
+    background-size: 160% 160%;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: .3px;
+    box-shadow: var(--shadows-md);
+    transition: transform var(--motion-fast) var(--motion-ease), box-shadow var(--motion-fast), filter var(--motion-fast), background-position var(--motion-base);
+    -webkit-tap-highlight-color: transparent;
+}
+button:hover { background: var(--gradients-primary); background-position: 100% 50%; filter: brightness(1.06); transform: translateY(-1px); box-shadow: var(--shadows-lg); }
+button:active { transform: translateY(1px) scale(.98); box-shadow: var(--shadows-sm); }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgba(30,144,255,.45); outline-offset: 2px; }
+
+.btn-link, .btn-link:hover, .btn-squid, .btn-squid:hover {
+    min-height: 0; background: transparent; box-shadow: none; transform: none; filter: none; }
+.btn-link { color: var(--colors-primary-dark); font-weight: 600; }
+.btn-squid { background: var(--gradients-primary); color: #fff; border: none; border-radius: var(--radius-pill); padding: 0 .8rem; }
+.btn-squid:hover { background: var(--gradients-primary); text-decoration: none; filter: brightness(1.08); }
+button[data="out"] { background: var(--gradients-danger); border: none; border-radius: var(--radius-pill) !important; }
+button[data="out"]:hover { background: var(--gradients-danger); color: #fff; }
+.set-btn { background: linear-gradient(135deg, #d9e84a, #a9c41d); border: none; color: #333; }
+.set-btn:hover { background: linear-gradient(135deg, #e4f25a, #b6d22a); color: #333; }
+.disable, .disable-btn-contain button { background: #aeb5b0 !important; box-shadow: none !important; }
+
+/* Form controls */
+input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, textarea {
+    font-size: 1rem;
+    transition: box-shadow var(--motion-fast), border-color var(--motion-fast), background var(--motion-fast);
+}
+input[type="checkbox"], input[type="radio"] { accent-color: var(--colors-primary); }
+.search-container input[name="search"] { border: 1.5px solid var(--colors-border); border-radius: var(--radius-pill); text-indent: 0; padding: 0 1.1rem; background: #f2f7f3; min-width: 0; }
+.bottom-bar-input { background: #fff; border: 1px solid var(--colors-border); border-radius: var(--radius-sm); padding: .3rem .6rem; }
+
+.title, .title-small { color: var(--colors-text); }
+.primary-color { color: var(--colors-primary-dark); }
+.bg-primary { background: var(--gradients-primary); }
+.bg-white { background: var(--colors-surface); }
+.caption { color: var(--colors-muted); }
+.green { color: var(--colors-success); }
+.red { color: var(--colors-danger); }
+.icon { color: var(--colors-primary-dark); }
