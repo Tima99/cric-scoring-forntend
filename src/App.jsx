@@ -23,6 +23,7 @@ import {
     TeamPage,
     PublicMatchesPage,
     PublicHomePage,
+    RootRedirect,
 } from "./Pages";
 import {
     PlayerRoleOutlet,
@@ -53,7 +54,9 @@ function App() {
 
             {/* Public app (logged out): only Home, Matches and Search tabs */}
             <Route element={<PublicLayout />}>
-                <Route path="/" element={<PublicHomePage />} />
+                <Route path="/" element={<RootRedirect />} />
+                {/* Home tab: the login / sign up landing, reachable from the tab bar */}
+                <Route path="/welcome" element={<PublicHomePage />} />
                 <Route path="/matches" element={<PublicMatchesPage />} />
                 <Route path="/search" element={<SearchLayout />}>
                     <Route index element={<SearchOutlet />}/>

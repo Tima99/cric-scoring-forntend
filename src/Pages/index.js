@@ -7,3 +7,4 @@ export { ScoringPage } from "./ScoringPage"
 export { PublicMatchesPage } from "./PublicMatchesPage";
 
 export { PublicHomePage } from "./PublicHomePage";
+export { RootRedirect } from "./RootRedirect";

@@ -14,7 +14,7 @@ export const PublicLayout = () => {
     UserAuthentic().then(() => setIsAuth(true)).catch(() => setIsAuth(false))
   }, [])
 
-  const homeTo = isAuth ? '/home' : '/'
+  const homeTo = isAuth ? '/home' : '/welcome'
   const searchState = { placeholder: 'Search for teams, players and more...' }
 
   const links = (

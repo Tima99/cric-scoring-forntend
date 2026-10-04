@@ -324,7 +324,7 @@ export const ViewMatch3 = ({ state }) => {
 
                         <label htmlFor={"toggle"+ i} className="sc-head capital">
                             <span className="sc-head-team text-eclipse">
-                                <span className="sc-head-label">{i === 0 ? "Innings 1" : `Innings ${i + 1}`}</span>
+                                <span className="sc-head-label">{`Innings ${match.stats.length - i}`}</span>
                                 {bat.name}
                             </span>
                             <span className="sc-head-score">
