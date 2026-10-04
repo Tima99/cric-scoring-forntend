@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { BiSad } from "react-icons/bi";
 import { MdSensors, MdEmojiEvents, MdApps } from "react-icons/md";
 import req from "../api/request";
-import { Loader } from "../Components";
+import { RiLoader4Line } from "react-icons/ri";
 import { MatchCard } from "../Components/MatchCard";
 
 // Public page: anyone (logged in or not) can browse matches and open their scorecard.
@@ -52,6 +52,11 @@ export const PublicMatchesPage = () => {
         }
     }, []);
 
+    // A new filter always starts from the first post: jump to the top before anything re-renders
+    useLayoutEffect(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }, [status]);
+
     // reload the list whenever the filter changes
     useEffect(() => {
         setMatches(null);
@@ -79,7 +84,7 @@ export const PublicMatchesPage = () => {
 
             <main className="public-matches-list stagger">
                 {matches === null ? (
-                    <div className="public-matches-loading"><Loader style={{ position: "relative", height: "6rem" }} /></div>
+                    <div className="public-matches-loading"><RiLoader4Line size={44} color="var(--primary)" className="loader" /></div>
                 ) : matches.length === 0 ? (
                     <div className="flex-col center gap-06 pd-block-1">
                         <BiSad size={64} color="grey" />

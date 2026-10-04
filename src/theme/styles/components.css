@@ -460,9 +460,14 @@ input[type="radio"]:checked + label > span, input[name="checkbox-score"]:checked
 .view-match-page .scroll-content-container .live-spell { margin-inline: 0; }
 
 /* ---------- Public matches page ---------- */
-.public-matches-list { display: flex; flex-direction: column; gap: .8rem; width: 100%; max-width: 760px; margin: 0 auto; padding: .4rem .8rem 1.5rem; }
-.public-matches-loading { position: relative; min-height: 6rem; }
-.filter-chips { display: flex; gap: .5rem; justify-content: center; padding: .8rem .8rem .4rem; position: sticky; top: 0; z-index: 5; }
+.public-matches-list {
+    display: flex; flex-direction: column; gap: .8rem; width: 100%; max-width: 760px; margin: 0 auto; padding: .4rem .8rem 1.5rem;
+    /* keep the page tall while a filter loads, so the scroll position never collapses/jumps */
+    min-height: calc(100dvh - var(--nav-height) - 60px); overflow-anchor: none;
+}
+/* loader sits in normal flow BELOW the sticky filter chips, never behind them */
+.public-matches-loading { display: flex; justify-content: center; align-items: flex-start; padding: 3rem 0; }
+.filter-chips { display: flex; gap: .5rem; justify-content: center; padding: .8rem .8rem .5rem; position: sticky; top: 0; z-index: 5; background: rgba(238,243,238,.94); backdrop-filter: blur(6px); }
 .filter-chip {
     display: inline-flex; align-items: center; gap: .35rem; min-height: 38px; padding: 0 1rem; line-height: 1; font-size: .88rem;
     background: #f2f7f3; color: var(--colors-primary-dark); border: 1.5px solid var(--colors-border); box-shadow: none; border-radius: var(--radius-pill);
