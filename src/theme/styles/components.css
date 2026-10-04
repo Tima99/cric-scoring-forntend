@@ -198,11 +198,18 @@ input[type="radio"]:checked + label > span, input[name="checkbox-score"]:checked
 /* ---------- Shared headers: one consistent, aligned layout ---------- */
 .back-btn {
     width: 40px; height: 40px; flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
-    border-radius: 50%; background: rgba(255,255,255,.18); color: #fff; cursor: pointer; line-height: 1;
-    transition: background var(--motion-fast), transform var(--motion-fast);
+    border-radius: 50%; cursor: pointer; line-height: 1;
+    /* default (works on white/light pages): solid green circle with a white arrow */
+    background: var(--gradients-primary); color: #fff; box-shadow: var(--shadows-md);
+    transition: background var(--motion-fast), transform var(--motion-fast), box-shadow var(--motion-fast);
 }
-.back-btn:hover { background: rgba(255,255,255,.3); }
+.back-btn:hover { filter: brightness(1.08); }
 .back-btn:active { transform: scale(.9); }
+/* on already-coloured / dark headers use a translucent white circle so it still stands out */
+.top-nav .back-btn, .top-bar .back-btn, .search-nav .back-btn, [class*="nav-layout-container"] .back-btn, [class*="scoring-page"] [class*="top-bar"] .back-btn {
+    background: rgba(255,255,255,.2); box-shadow: none; filter: none;
+}
+.top-nav .back-btn:hover, .top-bar .back-btn:hover, [class*="nav-layout-container"] .back-btn:hover { background: rgba(255,255,255,.32); filter: none; }
 .back-btn svg, .top-nav svg { display: block; flex: 0 0 auto; }
 
 .top-nav {
@@ -262,7 +269,7 @@ input[type="radio"]:checked + label > span, input[name="checkbox-score"]:checked
     padding: 1rem; background: rgba(20, 40, 28, .5); backdrop-filter: blur(3px); animation: fadeIn var(--motion-fast) both;
 }
 .modal-card {
-    position: relative; width: 100%; max-width: 400px; max-height: 90vh; overflow-y: auto;
+    position: relative; width: 100%; max-width: 400px; max-height: 90vh; max-height: 90dvh; overflow-y: auto; overscroll-behavior: contain;
     background: #f2f7f3; border-radius: var(--radius-lg); box-shadow: var(--shadows-lg);
     padding: 1.5rem 1.25rem 1.25rem; animation: popIn var(--motion-base) var(--motion-ease) both;
 }
@@ -344,3 +351,58 @@ input[type="radio"]:checked + label > span, input[name="checkbox-score"]:checked
 }
 
 .selected-tab-outlet .stats { padding-top: 1rem; }
+
+/* ---------- Spell / over balls (scoring page + match live view) ---------- */
+.spell-balls { list-style: none; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: clamp(.3rem, 1.6vw, .5rem); margin: 0; padding: 0; width: 100%; }
+.ball {
+    --ball-size: clamp(28px, 7.5vw, 34px);
+    width: var(--ball-size); height: var(--ball-size); flex: 0 0 auto;
+    display: flex; align-items: center; justify-content: center; border-radius: 50%;
+    font-size: clamp(.78rem, 3.1vw, .92rem); font-weight: 700; line-height: 1; color: #fff; text-shadow: none;
+    background: var(--colors-ball-run); color: var(--colors-text); border: 2px solid transparent;
+    box-shadow: 0 2px 6px rgba(0,0,0,.2); animation: popIn var(--motion-base) var(--motion-ease) both;
+}
+.ball-long { font-size: clamp(.55rem, 2.2vw, .66rem); letter-spacing: -.2px; }
+.ball-dot { background: var(--colors-ball-dot); color: #4b5a50; }
+.ball-run { background: #fff; color: var(--colors-text); border-color: #d3dcd5; }
+.ball-four { background: var(--colors-ball-four); color: #fff; }
+.ball-six { background: var(--colors-ball-six); color: #fff; }
+.ball-wicket { background: var(--colors-ball-wicket); color: #fff; box-shadow: 0 0 0 3px rgba(229,57,53,.25), 0 2px 6px rgba(0,0,0,.25); }
+.ball-extra { background: var(--colors-ball-extra); color: #fff; }
+
+/* Live spell section on match detail */
+.live-spell {
+    background: #f2f7f3; border: 1px solid var(--colors-border); border-radius: var(--radius-md);
+    padding: .9rem .8rem 1rem; margin-top: 1.2rem; box-shadow: var(--shadows-sm);
+}
+.live-spell-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: .8rem; }
+.live-spell-title { font-size: 1.05rem; font-weight: 700; }
+.spell-empty { text-align: center; color: var(--colors-muted); font-size: .9rem; padding: .4rem 0; }
+
+/* ---------- Option picker (Out type etc.) ---------- */
+.radio-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .6rem; }
+.radio-card {
+    position: relative; display: flex; align-items: center; justify-content: center; min-height: 52px; padding: .5rem .6rem;
+    text-align: center; cursor: pointer; background: #fff; color: var(--colors-text);
+    border: 1.5px solid var(--colors-border); border-radius: var(--radius-md); box-shadow: var(--shadows-sm);
+    transition: border-color var(--motion-fast), background var(--motion-fast), transform var(--motion-fast) var(--motion-ease);
+}
+.radio-card input { position: absolute; opacity: 0; pointer-events: none; }
+.radio-card-text { font-weight: 600; font-size: .92rem; text-transform: capitalize; line-height: 1.2; }
+.radio-card:hover { border-color: var(--colors-primary); }
+.radio-card:active { transform: scale(.96); }
+.radio-card.selected {
+    background: var(--colors-ball-wicket); border-color: var(--colors-ball-wicket); color: #fff;
+    box-shadow: 0 0 0 3px rgba(229, 57, 53, .22);
+}
+.modal-actions button:disabled { cursor: not-allowed; filter: none; transform: none; }
+
+/* Confirm action (e.g. confirm a dismissal): green, clearly different from a red "Out" */
+.confirm-btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+    min-width: 140px; padding: 0 1.4rem; font-size: 1rem; font-weight: 700;
+    background: var(--gradients-primary); color: #fff; border: none; border-radius: var(--radius-pill);
+}
+.confirm-btn svg { font-size: 1.25rem; }
+.confirm-btn-off { background: #aeb8b1 !important; box-shadow: none !important; cursor: not-allowed; opacity: .85; }
+.confirm-btn-off:hover { transform: none; filter: none; }

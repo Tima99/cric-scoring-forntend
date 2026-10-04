@@ -15,7 +15,9 @@ import {
     NavLink,
 } from "react-router-dom";
 import req from "../api/request";
-import { Backbutton, Loader, Radios } from "../Components";
+import { Backbutton, Loader, Radios, SpellBall } from "../Components";
+import { TbCricket } from "react-icons/tb";
+import { MdSportsBaseball } from "react-icons/md";
 import styles from "./ScoringPage.module.css";
 import { DetailMatch } from "../Services";
 import {io} from "socket.io-client"
@@ -121,13 +123,9 @@ export const ScoringPage = () => {
         }
         const arr = [...current.overSpell]
         // console.log(arr, current.overSpell);
-        const spellJsxs = arr.map((ballRun, indx) => {
-            if(ballRun?.toString().includes("lb") || ballRun?.toString().includes("bye") || ballRun?.toString().includes("nb+"))
-                ballRun = <span style={{fontSize: '.7rem'}}>{ballRun}</span>
-            return (
-                <li key={indx}>{ballRun}</li>
-            )
-        });
+        const spellJsxs = arr.map((ballRun, indx) => (
+            <SpellBall key={indx} value={ballRun} />
+        ));
         if (current.bowlerOversBowlCompleted) {
             setIsOverCompleted(true);
         } else {
@@ -185,13 +183,24 @@ export const ScoringPage = () => {
                     titles={titles}
                     pageTitle="Out Type"
                     btnClick={action}
+                    onClose={() => setRenderComponent("")}
                 />
             );
         }
     }
 
+    const changeStrikeState = {
+        titleText: "Change Strike",
+        text: "Do you want to change strike.",
+        cancelNavigateTo: -1,
+        okText: "Yes",
+        cancelText: "No",
+        okNavigateTo: -1,
+        okAction: ["ChangeStrike", "Services"],
+    };
+
     return (
-        <div className="full-display relative flex-col">
+        <div className={styles["scoring-page"]}>
             {
                 !isSocketConnected
                 ? <div className="full-display abs top-0 z99999" style={{background: "rgba(0,0,0,0.14)", backdropFilter: "blur(1px)"}}>
@@ -200,216 +209,162 @@ export const ScoringPage = () => {
                 : ''
             }
             {renderComponent}
-            <section className="nav pd-1 pd-block-06 abs top-0 left-0 z9999">
+            <section className={styles["top-bar"]}>
                 <Backbutton
-                    size={25}
+                    size={24}
                     replace={true}
                     backTimes={1}
                     setStateEmpty={renderComponent && setRenderComponent}
                 />
+                <span className={styles["top-title"]}><TbCricket /> Live Scoring</span>
+                <span className={styles["top-spacer"]} />
             </section>
 
-            <section
-                className={`${styles["scoreboard-container"]} flex-col center relative`}
-            >
-                <div className="score flex center gap-1 parent-full-width pd-1">
-                    <span className="title bold text-eclipse">{current.batTeamName}</span> <span className="title bold">:</span>
-                    <div className="title-small">
-                        <span>{current.score}</span>/
-                        <span>{current.wicketsDown}</span>
-                        &nbsp;&nbsp;
-                        <span>{`(${current.overs})`}</span>
+            <section className={styles["scoreboard-container"]}>
+                <div className={styles["score-card"]}>
+                    <div className={styles["team-name"]}>{current.batTeamName}</div>
+                    <div className={styles["score-main"]}>
+                        <span className={styles["score-runs"]}>{current.score}</span>
+                        <span className={styles["score-slash"]}>/</span>
+                        <span className={styles["score-wkts"]}>{current.wicketsDown}</span>
+                        <span className={styles["score-overs"]}>({current.overs})</span>
                     </div>
+
+                    <div className={styles["chips"]}>
+                        <span className={styles["chip"]}>CRR <b>{current.runRate}</b></span>
+                        {current.totalInn > 1 && (
+                            <span className={styles["chip"]}>RRR <b>{current.requiredRunRate}</b></span>
+                        )}
+                    </div>
+                    {current.chaseTarget && <div className={styles["target"]}>{current.chaseTarget}</div>}
                 </div>
 
-                <div
-                    className={`${styles["run-rate"]} parent-full-width pd-block-06 flex around`}
-                >
-                    {current.totalInn > 1 && <div>RRR: {current.requiredRunRate}</div>}
-                    <div>CRR: {current.runRate}</div>
-                </div>
-                <b>{current.chaseTarget}</b>
-
-                <div className={`${styles["bottom-score-contain"]} capital`}>
-                    <div
-                        className={`${styles["batsman-score"]} flex parent-full-width`}
-                    >
+                <div className={styles["batsmen"]}>
+                    {[onCreaseBats[0], onCreaseBats[1]].map((bat, i) => (
                         <NavLink
+                            key={i}
                             to="/scoring/changeStrike"
-                            state={{
-                                titleText: "Change Strike",
-                                text: "Do you want to change strike.",
-                                cancelNavigateTo: -1,
-                                okText: "Yes",
-                                cancelText: "No",
-                                okNavigateTo: -1,
-                                okAction: ["ChangeStrike", "Services"],
-                            }}
-                            style={{ color: "white" }}
-                            className={
-                                strikerBats?._id == onCreaseBats[0]?._id
-                                    ? `${styles["strike"]} tap-hightlight-none`
-                                    : "tap-hightlight-none"
-                            }
+                            state={changeStrikeState}
+                            className={`${styles["batsman"]} ${bat && strikerBats?._id == bat?._id ? styles["strike"] : ""} tap-hightlight-none`}
                         >
-                            <span className="bats-name">
-                                <span>
-                                    {strikerBats?._id == onCreaseBats[0]?._id &&
-                                        "*"}
-                                </span>
-                                {onCreaseBats[0]?.name || "undefined"} &nbsp;
-                            </span>
-                            <span>
-                                {onCreaseBats[0]?.runs || 0}(
-                                {onCreaseBats[0]?.balls || 0})
-                            </span>
-                        </NavLink>
-                        <NavLink
-                            to="/scoring/changeStrike"
-                            state={{
-                                titleText: "Change Strike",
-                                text: "Do you want to change strike.",
-                                cancelNavigateTo: -1,
-                                okText: "Yes",
-                                cancelText: "No",
-                                okNavigateTo: -1,
-                                okAction: ["ChangeStrike", "Services"],
-                            }}
-                            style={{ color: "white" }}
-                            className={
-                                strikerBats?._id == onCreaseBats[1]?._id
-                                    ? `${styles["strike"]} tap-hightlight-none`
-                                    : "tap-hightlight-none"
-                            }
-                        >
-                            {onCreaseBats[1] && (
+                            {bat ? (
                                 <>
-                                    <span>
-                                        {" "}
-                                        <span>
-                                            {strikerBats._id ==
-                                                onCreaseBats[1]?._id && "*"}
-                                        </span>{" "}
-                                        {onCreaseBats[1]?.name || "not define"}
-                                        &nbsp;{" "}
+                                    <span className={styles["bat-name"]}>
+                                        {strikerBats?._id == bat._id && <TbCricket className={styles["strike-icon"]} />}
+                                        {bat.name}
                                     </span>
-                                    <span>
-                                        {onCreaseBats[1]?.runs || "0"}(
-                                        {onCreaseBats[1]?.balls || 0})
+                                    <span className={styles["bat-score"]}>
+                                        <b>{bat.runs || 0}</b>
+                                        <small>({bat.balls || 0})</small>
                                     </span>
                                 </>
-                            )}{" "}
+                            ) : (
+                                <span className={styles["bat-name"]}>—</span>
+                            )}
                         </NavLink>
-                    </div>
+                    ))}
+                </div>
 
-                    <div className={`${styles["spell-runs"]} relative`}>
-                        <div className="strike-bowler capital font-xxsmall abs top-0 right-0 translate-right-1 pd-top-03">
-                            <span>{current.strikeBowler.name}</span>&nbsp;
-                            <span>{current.strikeBowler.wickets || 0}</span>-
-                            <span>{current.strikeBowler.runs || 0}</span> &nbsp;
-                            <span>{`(${current.bowlerOversBowl})`}</span>
-                        </div>
-                        <ul>{spellEle}</ul>
+                <div className={styles["bowler-card"]}>
+                    <div className={styles["bowler-line"]}>
+                        <span className={styles["bowler-name"]}>
+                            <MdSportsBaseball /> {current.strikeBowler.name}
+                        </span>
+                        <span className={styles["bowler-fig"]}>
+                            {current.strikeBowler.wickets || 0}-{current.strikeBowler.runs || 0}
+                            <small> ({current.bowlerOversBowl})</small>
+                        </span>
                     </div>
+                    {spellEle && spellEle.length > 0
+                        ? <ul className="spell-balls">{spellEle}</ul>
+                        : <div className={styles["spell-hint"]}>New over — waiting for the first ball</div>}
                 </div>
             </section>
 
             <section className={styles["score-keyboard-container"]}>
                 <ul className={styles["keyboard-wraper"]}>
                     <li
-                        className="flex-col"
-                        onClick={() =>
-                            socket.current.emit("add-unrunning-runs", 0)
-                        }
+                        className={`${styles["key"]} ${styles["k-dot"]}`}
+                        onClick={() => socket.current.emit("add-unrunning-runs", 0)}
                     >
-                        <span>0</span>
-                        <div className="caption">Dot</div>
+                        <span>0</span><small>Dot</small>
+                    </li>
+                    {[1, 2, 3].map((r) => (
+                        <li
+                            key={r}
+                            className={styles["key"]}
+                            onClick={() => socket.current.emit("add-runs-ball", { runs: r })}
+                        >
+                            <span>{r}</span>
+                        </li>
+                    ))}
+                    <li
+                        className={`${styles["key"]} ${styles["k-four"]}`}
+                        onClick={() => socket.current.emit("add-unrunning-runs", 4)}
+                    >
+                        <span>4</span><small>Four</small>
                     </li>
                     <li
-                        onClick={() =>
-                            socket.current.emit("add-runs-ball", { runs: 1 })
-                        }
+                        className={`${styles["key"]} ${styles["k-six"]}`}
+                        onClick={() => socket.current.emit("add-unrunning-runs", 6)}
                     >
-                        1
+                        <span>6</span><small>Six</small>
                     </li>
                     <li
-                        onClick={() =>
-                            socket.current.emit("add-runs-ball", { runs: 2 })
-                        }
+                        className={`${styles["key"]} ${styles["k-extra"]}`}
+                        onClick={() => socket.current.emit("wide")}
                     >
-                        2
+                        <span>Wd</span><small>Wide</small>
                     </li>
                     <li
-                        onClick={() =>
-                            socket.current.emit("add-runs-ball", { runs: 3 })
-                        }
+                        className={`${styles["key"]} ${styles["k-extra"]}`}
+                        onClick={() => {
+                            const runs = prompt("Enter runs: " , 0)
+                            if(runs === null) return
+                            socket.current.emit("legBye", runs)
+                        }}
                     >
-                        3
+                        <span>Lb</span><small>Leg bye</small>
                     </li>
                     <li
-                        className="flex-col"
-                        onClick={() =>
-                            socket.current.emit("add-unrunning-runs", 4)
-                        }
-                    >
-                        <span className="blue">4</span>
-                        <div className="caption">Four</div>
-                    </li>
-                    <li
-                        className="flex-col"
-                        onClick={() =>
-                            socket.current.emit("add-unrunning-runs", 6)
-                        }
-                    >
-                        <span className="green">6</span>
-                        <div className="caption">Six</div>
-                    </li>
-                    <li className="flex-col" onClick={() => socket.current.emit("wide")}>
-                        <span>Wd</span>
-                        <span className="caption">Wide</span>
-                    </li>
-
-                    <li onClick={() => {
-                        const runs = prompt("Enter runs: " , 0)
-                        if(runs === null) return
-                        socket.current.emit("legBye", runs)
-                    }}>Lb</li>
-                    <li
+                        className={styles["key"]}
                         onClick={() => {
                             const runs = prompt("Enter runs: ", 0)
 
                             if(runs == 0 || runs === null) return
                             socket.current.emit("add-runs-ball", {runs : new Number(runs) })
                         }}
-                    >5,7...</li>
+                    >
+                        <span>5,7…</span><small>Other</small>
+                    </li>
                     {
-                        spellEle && spellEle[spellEle.length - 1]?.props.children.toString().includes("nb")
-                        ? <li>Out</li>
-                        : <li className="red" onClick={  (e) => {
-                            SelectType(e)    
-                        } }>
-                            Out
+                        spellEle && spellEle[spellEle.length - 1]?.props.value?.toString().includes("nb")
+                        ? <li className={`${styles["key"]} ${styles["k-out"]} ${styles["k-disabled"]}`}><span>Out</span></li>
+                        : <li className={`${styles["key"]} ${styles["k-out"]}`} onClick={(e) => { SelectType(e) }}>
+                            <span>Out</span>
                         </li>
                     }
                     <li
-                        className="flex-col"
+                        className={`${styles["key"]} ${styles["k-extra"]}`}
                         onClick={() => {
                             const runs = prompt("Enter runs: ", 0)
                             if(runs === null) return
                             socket.current.emit("noBall", runs)
                         }}
                     >
-                        <span>Nb</span>
-                        <span className="caption">No-ball</span>
+                        <span>Nb</span><small>No-ball</small>
                     </li>
                     <li
+                        className={`${styles["key"]} ${styles["k-extra"]}`}
                         onClick={() => {
                             const runs = prompt("Enter runs: ", 0)
                             
                             if(runs == 0 || runs === null) return
                             socket.current.emit("bye", runs)
                         }}
-                    >Bye</li>
+                    >
+                        <span>Bye</span><small>Bye</small>
+                    </li>
                 </ul>
             </section>
 

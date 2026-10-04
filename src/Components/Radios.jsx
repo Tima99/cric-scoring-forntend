@@ -1,50 +1,64 @@
 import React, { useMemo, useState } from "react";
+import { MdClose } from "react-icons/md";
+import { Modal } from "./Modal";
 
-const RadioButton = ({ title, outBatsman, many, wideShow=false, noBallShow=false, setData }) => {
+// One selectable option card (radio input stays hidden for accessibility)
+const RadioButton = ({ title, outBatsman, many, wideShow = false, noBallShow = false, selected, setData }) => {
     return (
-        <div style={{ color: "black" }} className="grid-media-layout">
-            <input type="radio" name="radio-out" id={title} onChange={e => setData({outType: title,many, wideShow, noBallShow, outBatsman})}/>
-            <label
-                htmlFor={title}
-                style={{ textTransform: "capitalize" }}
-                className="title"
-            >
-                {title}
-            </label>
-        </div>
+        <label className={`radio-card ${selected ? "selected" : ""}`}>
+            <input
+                type="radio"
+                name="radio-out"
+                checked={selected}
+                onChange={() => setData({ outType: title, many, wideShow, noBallShow, outBatsman })}
+            />
+            <span className="radio-card-text">{title}</span>
+        </label>
     );
 };
 
-export const Radios = ({ titles, pageTitle, btnClick }) => {
-    const [data, setData] = useState()
+export const Radios = ({ titles, pageTitle, btnClick, onClose }) => {
+    const [data, setData] = useState();
 
-    const radios = useMemo(()=>{
+    const options = useMemo(() => {
         return titles.map((title) => {
             const isArray = Array.isArray(title);
-            const outBatsman = isArray && title[1]
-            const many = isArray && title[2] || 0
-            const wideShow = isArray && title[3]
-            const noBallShow = isArray && title[4]
-            
-            title = isArray ? title[0] : title;
-
-            return (
-                <React.Fragment key={title}>
-                    <RadioButton title={title} outBatsman={outBatsman} many={many} wideShow={wideShow} noBallShow={noBallShow} setData={setData} />
-                </React.Fragment>
-            );
+            return {
+                title: isArray ? title[0] : title,
+                outBatsman: isArray && title[1],
+                many: (isArray && title[2]) || 0,
+                wideShow: isArray && title[3],
+                noBallShow: isArray && title[4],
+            };
         });
-    }, [])
+    }, [titles]);
 
     return (
-        <div className="abs top-0 left-0 flex-col gap-1 pd-1 c-v-center z999 bg-body full-display">
-            <h2 style={{ color: "var(--primary-dark)" }}>{pageTitle}</h2>
-            <div>{radios}</div>
-            <div className="flex parent-full-width"
-            onClick={e => btnClick(data)}
-            >
-                <button className="btn-squid btn margin-left-auto">Next</button>
+        <Modal onClose={onClose}>
+            {onClose && (
+                <button className="modal-close" onClick={onClose} aria-label="Close">
+                    <MdClose size={18} />
+                </button>
+            )}
+            <h2 className="modal-title">{pageTitle}</h2>
+            <p className="modal-sub">Choose one option to continue</p>
+
+            <div className="radio-grid">
+                {options.map((o) => (
+                    <RadioButton
+                        key={o.title}
+                        {...o}
+                        selected={data?.outType === o.title}
+                        setData={setData}
+                    />
+                ))}
             </div>
-        </div>
+
+            <div className="modal-actions" style={{ marginTop: "1rem" }}>
+                <button disabled={!data} className={!data ? "disable" : ""} onClick={() => data && btnClick(data)}>
+                    Next
+                </button>
+            </div>
+        </Modal>
     );
 };

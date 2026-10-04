@@ -17,3 +17,5 @@ export {Loader} from "./Loader"
 export {ShowMsg} from "./ShowMsg"
 export {Button} from "./Button"
 export { Modal } from "./Modal"
+
+export { SpellBall } from "./SpellBall"

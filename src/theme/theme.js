@@ -20,6 +20,13 @@ export const theme = {
         text: "#25302a",
         muted: "#7b867f",
         border: "#d9e2db",
+        // cricket ball outcomes (spell / over display)
+        ballWicket: "#e53935",
+        ballSix: "#16b8c8",
+        ballFour: "#22b04a",
+        ballExtra: "#f0a21b",
+        ballDot: "#c9d3cc",
+        ballRun: "#ffffff",
     },
     gradients: {
         primary: "linear-gradient(135deg, #25c425 0%, #1dac1d 45%, #0f7d2a 100%)",

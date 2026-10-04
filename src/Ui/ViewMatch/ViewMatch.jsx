@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation, useOutletContext, Link } from "react-router-dom";
 import { DetailMatch } from "../../Services";
+import { SpellBall } from "../../Components/SpellBall";
 import defaultLogo from "../../assets/user-circle.jpg";
 import { BiRightArrow } from "react-icons/bi";
 import {IoIosArrowDown, IoIosArrowUp} from "react-icons/io"
@@ -199,9 +200,7 @@ export const ViewMatch2 = ({ state }) => {
     // console.log(current.overSpell);
     const spell = useMemo(() => {
         return current.overSpell.map( (spellBall , i) => {
-            return(
-                <li key={i} >{spellBall}</li>
-            )
+            return <SpellBall key={i} value={spellBall} />
         })
     }, [])
 
@@ -302,13 +301,18 @@ export const ViewMatch2 = ({ state }) => {
                 </div>
             </section>
 
-            <section className="spell-runs relative flex-col pd-block-1">
-                <div className="title-small">Spell</div>
-                <ul style={{listStyle: 'none'}} className="flex evenly">
-                {   
-                 spell   
-                }
-                </ul>
+            <section className="live-spell">
+                <div className="live-spell-head">
+                    <span className="live-spell-title">This Over</span>
+                    {strikeBowler?.[0] && (
+                        <span className="caption capital text-eclipse">
+                            {strikeBowler[0].name}
+                        </span>
+                    )}
+                </div>
+                {spell.length > 0
+                    ? <ul className="spell-balls">{spell}</ul>
+                    : <div className="spell-empty">No balls bowled in this over yet</div>}
             </section>
         </div>
     );

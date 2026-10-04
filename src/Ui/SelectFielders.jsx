@@ -10,6 +10,7 @@ import {
 import { Backbutton } from "../Components";
 import { BiUserPlus, BiUserCheck } from "react-icons/bi";
 import { TbCricket } from "react-icons/tb";
+import { MdCheckCircle } from "react-icons/md";
 
 const SelectFielder = ({ num = 1, _state, fielder }) => {
     return (
@@ -200,6 +201,11 @@ export const SelectFielders = () => {
         return field;
     }, [state]);
 
+    // everything required for this dismissal has been chosen -> Confirm becomes active
+    const canConfirm = !!outBatsman
+        && !(state.many > 0 && !fielder)
+        && !(battersIgnore.length !== battersPlayers.length && !fielder?.nextBatsman);
+
     return (
         <div className="abs top-0 left-0 bg-body full-display">
             <section className="nav pd-block-06 z9999 flex r-v-center gap-1 pd-block-1 bg-primary pd-1 relative">
@@ -265,7 +271,7 @@ export const SelectFielders = () => {
                             </div>
                         )}
                         <div
-                            className="flex pd-1 pd-block-1 btn-out"
+                            className="flex pd-1 pd-block-1 btn-out flex-1"
                             onClick={(e) => {
                                 if (!outBatsman) return "";
                                 if (state.many > 0 && !fielder) return "";
@@ -292,10 +298,10 @@ export const SelectFielders = () => {
                             }}
                         >
                             <button
-                                className="btn-squid btn margin-left-auto"
-                                data="out"
+                                className={`confirm-btn margin-left-auto ${canConfirm ? "" : "confirm-btn-off"}`}
+                                aria-disabled={!canConfirm}
                             >
-                                Out
+                                <MdCheckCircle /> Confirm
                             </button>
                         </div>
                     </div>
