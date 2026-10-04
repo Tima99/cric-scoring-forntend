@@ -21,6 +21,7 @@ import {
     ScoringPage,
     StartMatchPage,
     TeamPage,
+    PublicMatchesPage,
 } from "./Pages";
 import {
     PlayerRoleOutlet,
@@ -50,6 +51,15 @@ function App() {
                 <Route path="/:email/verify" element={<VerifyEmailFeature />} />
             </Route>
 
+            {/* Public routes: no login needed to browse matches, teams and search */}
+            <Route path="/matches" element={<PublicMatchesPage />} />
+            {/* Search Page */}
+            <Route path="/search" element={<SearchLayout />}>
+                <Route index element={<SearchOutlet />}/>
+            </Route>
+            {/* TeamPage */}
+            <Route path="/team/:id" element={<TeamPage />} />
+
             {/* Protected routes: redirect to /login when not authenticated */}
             <Route element={<AuthGuard />}>
             {/* Home Page if user authenticated */}
@@ -64,12 +74,6 @@ function App() {
                 <Route path={"/home/teams/matches"} element={<MatchOutlet />} />
             </Route>
 
-            {/* Search Page */}
-            <Route path="/search" element={<SearchLayout />}>
-                <Route index element={<SearchOutlet />}/>
-            </Route>
-            {/* TeamPage */}
-            <Route path="/team/:id" element={<TeamPage />} />
 
             {/* Team Preview List */}
             <Route path="/teamPreview" element={<PreviewTeamPage />}>

@@ -1,5 +1,6 @@
 import React, { useLayoutEffect, useState } from 'react'
-import { Outlet, Navigate } from 'react-router-dom'
+import { Outlet, Navigate, Link } from 'react-router-dom'
+import { MdSportsCricket } from 'react-icons/md'
 import { UserAuthentic } from '../api/request'
 import { Loader } from "../Components"
 import logo from "../assets/fox-sports-logo.png"
@@ -29,6 +30,9 @@ export const EntryLayout = () => {
         <div className='bg-image'></div>
         <Outlet />
       </div>
+      <Link to='/matches' className='browse-matches'>
+        <MdSportsCricket /> Browse live matches &amp; scorecards <span>no login needed</span>
+      </Link>
       {
         userAuthentic === null  // if Loading shows Loader component 
         ? <Loader size={'20vmin'} bg="#444" speed='0.75' style={{zIndex: "9999999"}}/>

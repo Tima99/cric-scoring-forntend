@@ -458,3 +458,27 @@ input[type="radio"]:checked + label > span, input[name="checkbox-score"]:checked
 /* match detail pages: less side padding so content uses the screen width */
 .view-match-page .scroll-content-container .pd-1 { padding-inline: .6rem; }
 .view-match-page .scroll-content-container .live-spell { margin-inline: 0; }
+
+/* ---------- Public matches page ---------- */
+.public-matches-list { display: flex; flex-direction: column; gap: .8rem; width: 100%; max-width: 760px; margin: 0 auto; padding: .4rem .8rem 1.5rem; }
+.public-matches-loading { position: relative; min-height: 6rem; }
+.filter-chips { display: flex; gap: .5rem; justify-content: center; padding: .8rem .8rem .4rem; position: sticky; top: 0; z-index: 5; }
+.filter-chip {
+    display: inline-flex; align-items: center; gap: .35rem; min-height: 38px; padding: 0 1rem; line-height: 1; font-size: .88rem;
+    background: #f2f7f3; color: var(--colors-primary-dark); border: 1.5px solid var(--colors-border); box-shadow: none; border-radius: var(--radius-pill);
+}
+.filter-chip:hover { background: var(--colors-primary-soft); transform: none; box-shadow: none; filter: none; }
+.filter-chip.active { background: var(--gradients-primary); color: #fff; border-color: transparent; box-shadow: var(--shadows-sm); }
+.load-more { align-self: center; padding: 0 1.6rem; background: #f2f7f3; color: var(--colors-primary-dark); border: 1.5px solid var(--colors-border); box-shadow: none; }
+.load-more:hover { background: var(--colors-primary-soft); box-shadow: none; transform: none; filter: none; }
+.load-more:disabled { opacity: .6; cursor: default; }
+
+/* link under the login/register card */
+.browse-matches {
+    position: relative; z-index: 1; margin-top: 1.1rem; display: inline-flex; align-items: center; gap: .45rem; flex-wrap: wrap; justify-content: center;
+    padding: .55rem 1.1rem; border-radius: var(--radius-pill); background: #eef4ef; border: 1px solid #c5d8c9; color: #17803a; font-weight: 600; font-size: .85rem;
+    box-shadow: var(--shadows-sm); text-align: center;
+}
+.browse-matches svg { font-size: 1.15rem; }
+.browse-matches span { font-weight: 500; font-size: .72rem; color: var(--colors-muted); }
+.browse-matches:hover { box-shadow: var(--shadows-md); color: #17803a; }
