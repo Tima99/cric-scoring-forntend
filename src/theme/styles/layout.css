@@ -40,7 +40,7 @@ button, input, select, .btn-link, a.btn-link { min-height: 40px; }
 }
 
 /* Safe areas for notched devices */
-.nav-layout-container, .preview-top-bar { padding-top: env(safe-area-inset-top); }
+.nav-layout-container { padding-top: env(safe-area-inset-top, 0px); }
 body { padding-bottom: env(safe-area-inset-bottom); }
 
 /* room for the fixed bottom navigation on phones */

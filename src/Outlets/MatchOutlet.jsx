@@ -4,49 +4,39 @@ import req from "../api/request";
 import { MatchCard } from "../Components/MatchCard";
 import { CgClose } from "react-icons/cg";
 import { BiSad } from "react-icons/bi";
-import { Loader } from "../Components";
-import { MdPlayCircleFilled } from "react-icons/md";
+import { Loader, Modal } from "../Components";
+import { MdPlayCircleFilled, MdVisibility, MdChevronRight } from "react-icons/md";
+import { TbCricket } from "react-icons/tb";
 import { UserContext } from "../Pages/HomePage";
 
 const MatchCardOptions = ({onClick, optionShow}) => {
     return (
-        <div className="abs top-0 left-0 full-display bg-shadow pd-1 overflow-hidden pos-fixed flex center z99999">
-            <div className="relative entry-container flex-col c-v-center pd-1 gap-1">
-                <div
-                    className="abs top-0 right-0 pd-1 pd-block-1"
-                    onClick={onClick}
-                >
-                    <CgClose size={20} color="gray" />
-                </div>
-                <h2 className="pd-1">Select Option</h2>
-                <label htmlFor="view-match" className="title pd-1">
-                    <input
-                        type="radio"
-                        name="select-option"
-                        id="view-match"
-                    />
-                    <NavLink
-                        style={{ color: "inherit" }}
-                        to={"/viewMatch"}
-                        state={optionShow}
-                        className="pd-1"
-                    >
-                        View Match
-                    </NavLink>
-                </label>
-                <label htmlFor="scoring" className="title pd-1">
-                    <input type="radio" name="select-option" id="scoring" />
-                    <NavLink
-                        style={{ color: "inherit" }}
-                        to={`/scoring`}
-                        state={optionShow}
-                        className="pd-1"
-                    >
-                        Scoring
-                    </NavLink>
-                </label>
+        <Modal onClose={onClick}>
+            <button className="modal-close" onClick={onClick} aria-label="Close">
+                <CgClose size={18} />
+            </button>
+            <h2 className="modal-title">Select Option</h2>
+            <p className="modal-sub">What would you like to do with this match?</p>
+
+            <div className="modal-options">
+                <NavLink className="modal-option" to={"/viewMatch"} state={optionShow}>
+                    <span className="modal-option-icon"><MdVisibility /></span>
+                    <span className="modal-option-text">
+                        <b>View Match</b>
+                        <small>Live score, scorecard and squads</small>
+                    </span>
+                    <MdChevronRight className="modal-option-arrow" />
+                </NavLink>
+                <NavLink className="modal-option" to={`/scoring`} state={optionShow}>
+                    <span className="modal-option-icon scoring"><TbCricket /></span>
+                    <span className="modal-option-text">
+                        <b>Scoring</b>
+                        <small>Continue scoring this match</small>
+                    </span>
+                    <MdChevronRight className="modal-option-arrow" />
+                </NavLink>
             </div>
-        </div>
+        </Modal>
     );
 };
 
@@ -67,7 +57,7 @@ export const MatchOutlet = () => {
         (async () => {
             try {
                 const res = await req.get("/myMatches");
-                if(!authUser){
+                if(!authUser || typeof authUser !== "string" && !authUser.email){
                     const res2 = await req.get("/auth");
                     setUser(res2.data);
                 }
@@ -82,8 +72,11 @@ export const MatchOutlet = () => {
     const MyMatches = useMemo(() => {
         if (!Array.isArray(myMatches)) return null;
 
+        // `user` may be the email string (from /auth) or the user object (from login state)
+        const userEmail = typeof user === "string" ? user : user?.email;
+
         return myMatches.map((match) => {
-            return match.scoringBy === user && match.winTeam === null ? (
+            return userEmail && match.scoringBy === userEmail && !match.winTeam ? (
                 <div
                     onClick={() => {
                         const $match = match;
@@ -104,7 +97,7 @@ export const MatchOutlet = () => {
                 </NavLink>
             );
         });
-    }, [myMatches]);
+    }, [myMatches, user]);
 
     return (
         <div className="flex-col pd-1 pd-block-1">

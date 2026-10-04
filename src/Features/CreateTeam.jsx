@@ -43,7 +43,7 @@ export const CreateTeam = () => {
                 required
             />
             
-            <div className="flex gap-1 parent-full-width">
+            <div className="check-row">
                 <input type="checkbox" name="admin" id="is-admin" onChange={(e)=>{ 
                     setInputData(p => {return {...p, admin: e.target.checked}})
                 }} />

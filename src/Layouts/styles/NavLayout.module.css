@@ -456,3 +456,11 @@ ul.wraper a.teams label span:nth-child(2) {
     align-items: center;
 }
 .search-nav-logo img { height: 36px; width: auto; filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)); }
+
+/* ---- Exact centering of header items (logo / back / icons) ---- */
+.logo, .search-nav-logo { display: flex; align-items: center; justify-content: center; line-height: 0; }
+.mobile-logo img, .logo img, .search-nav-logo img { display: block; }
+.nav-button { display: flex; align-items: center; justify-content: center; padding: 0 !important; width: 100%; height: 100%; }
+.nav-button > * { display: flex; align-items: center; justify-content: center; }
+@media screen and (min-width: 651px) { .nav-button { display: none; } }
+@media screen and (max-width: 650px) { .mobile-logo { display: flex; align-items: center; justify-content: center; line-height: 0; } }

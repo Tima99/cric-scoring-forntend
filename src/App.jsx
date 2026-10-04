@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 // Layouts
 import { EntryLayout, SearchLayout, ViewMatchLayout, AuthGuard } from "./Layouts";
@@ -40,6 +40,7 @@ import { PlayingSquadOutlet } from "./Outlets/PlayingSquadOutlet";
 function App() {
     return (
         <Routes>
+            <Route path="/__t" element={<Navigate to="/teamPreview" replace state={{_id:"1",name:"mumbai warriors",matches:[],players:[{_id:"p1",name:"Rohit",role:"batsman"}]}} />} />
             {/* Entry Routes */}
             <Route path="/" element={<EntryLayout />}>
                 <Route index element={<RegisterFeature />} />

@@ -15,8 +15,8 @@ export const Backbutton = ({size : sizeIcon, replace, backTimes=1, backConfirm=f
     }
     
     return (
-        <span onClick={(e) => back(e) } style={{zIndex: 999}}>
-            <MdArrowBack size={sizeIcon}/>
+        <span className='back-btn' role='button' aria-label='Go back' onClick={(e) => back(e) } style={{zIndex: 999}}>
+            <MdArrowBack size={sizeIcon || 24}/>
         </span>
     )
 }

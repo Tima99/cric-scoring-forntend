@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import { MdError } from "react-icons/md";
 import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
 import { ChangeStrike } from "../Services";
+import { Modal } from "./Modal";
 
 export const Confirm = ({
     titleText = "Confirm",
@@ -30,41 +31,33 @@ export const Confirm = ({
 
     const navigate = useNavigate();
 
+    const cancel = () => state && navigate(state?.cancelNavigateTo)
+
     return (
-        <div className="abs top-0 left-0 full-display z999 flex center overflow-hidden bg-shadow pd-1">
-            <div className="entry-container pd-1 relative flex-col between">
-                <span className="flex gap-1 r-v-center pd-1">
-                    <MdError color="goldenrod" size={"50px"} />
-                    <span className="title">
-                        <b>{titleText}</b>
-                    </span>
-                </span>
-
-                <div className="pd-block-1 pd-1 contain-text">{text}</div>
-
-                <div className="flex between pd-1">
-                    <button
-                        className="btn-squid btn grey"
-                        onClick={(e) =>
-                            state && navigate(state?.cancelNavigateTo)
-                        }
-                    >
-                        {state.cancelText || "Cancel"}
-                    </button>
-                    <button
-                        className="btn btn-squid"
-                        onClick={(e) =>
-                            state &&
-                            okBtn.Action()
-                            .then(() => 
-                                navigate(state?.okNavigateTo)
-                            )
-                        }
-                    >
-                        {state.okText || "Ok"}
-                    </button>
-                </div>
+        <Modal onClose={cancel}>
+            <div className="modal-head">
+                <MdError color="#e0a526" size={44} />
+                <h2 className="modal-title">{titleText}</h2>
             </div>
-        </div>
+
+            <div className="modal-body contain-text">{text}</div>
+
+            <div className="modal-actions">
+                <button className="modal-btn-secondary" onClick={cancel}>
+                    {state?.cancelText || "Cancel"}
+                </button>
+                <button
+                    onClick={(e) =>
+                        state &&
+                        okBtn.Action()
+                        .then(() => 
+                            navigate(state?.okNavigateTo)
+                        )
+                    }
+                >
+                    {state?.okText || "Ok"}
+                </button>
+            </div>
+        </Modal>
     );
 };

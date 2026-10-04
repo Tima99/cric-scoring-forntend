@@ -46,11 +46,11 @@ export const TeamPage = () => {
         const offSet = 2
         const teamName = navBar.querySelector(".team--name .name-text")
         if(scrollTop <= top+offSet){
-            navBar.style.background="var(--primary)"
+            navBar.style.background="var(--gradients-primary)"
             teamName && (teamName.innerText = team.name || '')
             return
         }
-            navBar.style.background="transparent"
+            navBar.style.background="linear-gradient(180deg, rgba(10,30,18,.55) 0%, rgba(10,30,18,0) 100%)"
             teamName && (teamName.innerText = '')
     }
 
@@ -87,23 +87,34 @@ export const TeamPage = () => {
         );
     }, [team]);
 
+    // Center a tab inside the horizontally scrollable tab strip
+    // (never uses scrollIntoView: that also scrolls the page and fights the fixed header)
+    const centerTab = (tabEl) => {
+        const strip = tabEl?.parentElement;
+        if (!strip) return;
+        const left = tabEl.offsetLeft - (strip.clientWidth - tabEl.offsetWidth) / 2;
+        strip.scrollTo({ left, behavior: "smooth" });
+    };
+
     const ScrollMySelect = (e) => {
         e.preventDefault();
-        currentActiveTab.current.classList.remove("active");
-        currentActiveTab.current = e.target.parentElement;
-        currentActiveTab.current.classList.add("active");
+        const tab = e.currentTarget.parentElement;
+        currentActiveTab.current?.classList.remove("active");
+        currentActiveTab.current = tab;
+        tab.classList.add("active");
 
-        const id = e.target.href.split("#")[1];
-        const view = document.getElementById(id);
-        view.scrollIntoView({ behavior: "smooth" });
-        e.target.scrollIntoView();
+        // slide only the horizontal panel container to the chosen section
+        const view = document.getElementById(e.currentTarget.getAttribute("href").slice(1));
+        const panel = view?.parentElement;
+        if (panel) panel.scrollTo({ left: view.offsetLeft, behavior: "smooth" });
+        centerTab(tab);
     };
 
     const [Components, setComponents] = useState({});
 
     const handleScroll = async (e) => {
-        const sectionWidth = window.innerWidth;
-        const scrollLeft = e.target.scrollLeft;
+        const sectionWidth = e.target.clientWidth;
+        const scrollLeft = Math.round(e.target.scrollLeft);
         const containerSectionOrders = [
             "Members",
             "Stats",
@@ -122,7 +133,7 @@ export const TeamPage = () => {
             currentActiveTab.current.classList.remove("active");
             currentActiveTab.current = activeTab;
             currentActiveTab.current.classList.add("active");
-            currentActiveTab.current.scrollIntoView();
+            centerTab(currentActiveTab.current);
 
             // see component already added or not
             // this avoid reenders
